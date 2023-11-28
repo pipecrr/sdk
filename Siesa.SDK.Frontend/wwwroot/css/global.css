@@ -166,6 +166,9 @@
 
     --color_input_back_disabled: #E9E9E9;
 
+    --dxbl-fl-item-spacing-x: 2rem; 
+    --dxbl-fl-item-spacing-y: 1rem:
+
     /*Variables Scrollbar para el Modo Predeterminado*/
 
     --color_scroll_hover: #7b7b7b;
@@ -415,6 +418,7 @@ a:hover
     background-color: var(--color_delete) !important;
     border-color: var(--color_delete) !important;
     border-radius: var(--border_radius_btn) !important;
+    color: var(--color_light) !important;
     font-weight: 700;
 }
 
@@ -503,6 +507,13 @@ a:hover
     text-decoration: underline;
     text-underline-offset: 0.25rem;
     margin: 0;
+    background: none !important;
+    border: none !important;
+}
+.btn_link_def_1:hover
+{
+    background: none !important;
+    border: none !important;
 }
 
 .nav_btn_standar {
@@ -1865,7 +1876,7 @@ color: var(--color_text);
 
 .rz-card {
     margin: 0px !important;
-    padding: 0px !important;
+    padding: 1rem !important;
     background-color: var(--color_panel_back) !important;
     box-shadow: var(--shadow_standar) !important;
     border: var(--color_border) !important;
@@ -2497,6 +2508,7 @@ border-color: var(--color_border) !important;
     border-color: var(--color_border) !important;
 } */
 
+
 .dx-checkbox-icon
 {
     border: 2px solid var(--color_border) !important;
@@ -2614,6 +2626,31 @@ opacity:40%
     background-color: var(--color_primary) !important;
     color: var(--color_light_text)!important;
 }
+
+.dxbl-btn-info, .btn_secondary_link, .dxbl-btn-success, .dxbl-btn-warning, .dxbl-btn-light, .dxbl-btn-text-success, .dxbl-btn{
+    border-radius: var(--border_radius_btn) !important;
+}
+.region_tooltip .dxbl-row
+ {
+   margin:0 -15px !important;
+ }
+
+ .dxbl-text-edit.dxbl-readonly
+{
+  background-color: var(--color_input_back_disabled) !important;
+  border-color: var(--color_form_border) !important; 
+}
+.dxbl-text-edit.dxbl-readonly .dxbl-text-edit-input
+{
+  background-color: var(--color_input_back_disabled) !important;
+  border-color: var(--color_form_border) !important; 
+}
+.dxbl-text-edit.dxbl-readonly textarea
+{
+  background-color: var(--color_input_back_disabled) !important;
+  border-color: var(--color_form_border) !important; 
+}
+
 
 
        
