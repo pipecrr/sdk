@@ -45,13 +45,13 @@ public partial class SDKChartStepLineSeries<TData, TArgument, TValue> : SDKCompo
     /// Hover mode for the series.
     /// </summary>
     [Parameter]
-    public ChartContinuousSeriesHoverMode HoverMode { get; set; }
+    public SDKChartContinuousSeriesHoverMode HoverMode { get; set; }
 
     /// <summary>
     /// Selection mode for the series.
     /// </summary>
     [Parameter]
-    public ChartContinuousSeriesSelectionMode SelectionMode { get; set; }
+    public SDKChartContinuousSeriesSelectionMode SelectionMode { get; set; }
 
     /// <summary>
     /// Whether to break on empty points.
