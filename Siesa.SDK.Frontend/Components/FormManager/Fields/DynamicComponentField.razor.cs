@@ -228,13 +228,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
             string rowidProp = "Rowid"+Property;
             Context.GetType().GetProperty(rowidProp)?.SetValue(Context, value?.Rowid);
         }
-        
-        private int Onchange(int item)
-        {
-               
-            return item;
-        }
-        
+                
         protected override async Task OnParametersSetAsync()
         {
             if (IsEditable){
