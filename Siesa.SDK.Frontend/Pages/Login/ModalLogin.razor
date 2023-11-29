@@ -16,9 +16,28 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Shared.DataAnnotations
 @using Siesa.SDK.Frontend.Components.Fields
+
+
 <div class="sdk-modal-login">
+    <img class="image_modal_login"src="/_content/Siesa.SDK.Frontend/assets/img/re_login.svg" />
+    <h4 class="title_modal_login">
+        <ResourceViewer ResourceTag="BLUser.ReLogin.Title" />
+    </h4>
+    <p class="text_modal_login">
+        <ResourceViewer ResourceTag="BLUser.ReLogin.Text" />
+    </p>
     <EditForm id="@FormID" Model="@model" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
         <DataAnnotationsValidator />
+         <div class="form-group">
+            <label class="col-form-label col-form-label-sm font-weight-bold" for="Username">
+                <ResourceViewer ResourceTag="BLUser.Username" />
+            </label>
+            <SDKCharField 
+                @bind-Value="model.Username"  
+                AutomationId="BLLogin.Password"
+                ReadOnly="true"
+            />
+        </div>
         <div class="form-group">
             <label class="col-form-label col-form-label-sm font-weight-bold" for="Password">
                 <ResourceViewer ResourceTag="BLUser.Password" />
@@ -49,13 +68,15 @@
     [Parameter]
     public DialogService DialogService { get; set; }
 
+    [Parameter]
+    public bool IsPortal { get; set; }
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        model.Username = AuthenticationService.User.Id;
+
+        model.Username = IsPortal ? AuthenticationService?.PortalUser?.Email : AuthenticationService?.User?.Id;
     }
-
-
 
     private async void HandleValidSubmit()
     {
@@ -83,7 +104,16 @@
 
         try
         {
-            await AuthenticationService.Login(model.Username, model.Password,SelectedConnection.Rowid, true);
+            if(IsPortal)
+            {
+                await AuthenticationService.LoginPortal(model.Username, model.Password,SelectedConnection.Rowid, true);
+            }
+            else
+            {
+                await AuthenticationService.Login(model.Username, model.Password,SelectedConnection.Rowid, true);
+            }
+            
+
             NavigationManager.TryGetQueryString("returnUrl", out string returnUrl);
             if (returnUrl == null || returnUrl == "null")
             {
