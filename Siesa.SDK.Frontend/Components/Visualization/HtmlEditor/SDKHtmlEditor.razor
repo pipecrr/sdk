@@ -1,0 +1,15 @@
+@inherits SDKComponent
+
+<RadzenHtmlEditor
+Value="@Value"
+ShowToolbar="@ShowToolbar"
+Mode="@Mode.Get()"
+UploadHeaders="@UploadHeaders"
+Input="@Input"
+Paste="@_onPaste"
+UploadError="@_onUploadError"
+Execute="@_onExecute"
+UploadUrl="@UploadUrl"
+Change="@ValueChanged"
+/>
+

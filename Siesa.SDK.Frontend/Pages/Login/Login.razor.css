@@ -90,7 +90,7 @@
     margin: 0;
     border: none;
     font-size: .875rem;
-    max-width: calc(63% - 60px);
+    max-width: calc(80% - 60px);
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -127,6 +127,10 @@
     border-right: 9px solid transparent;
     border-bottom: 9px solid var(--color_light);
     border-left: 9px solid transparent;
+ }
+ .region_tooltip ::deep div .dxbl-fl .dxbl-row
+ {
+   margin:0 -15px !important;
  }
  .region_tooltip>div{
     max-height:240px; 

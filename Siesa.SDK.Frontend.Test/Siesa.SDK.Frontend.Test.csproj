@@ -8,6 +8,7 @@
     <IsPackable>false</IsPackable>
     <DisableGclm>true</DisableGclm>
 		<VersionSuffix>dev</VersionSuffix>
+    <Version>1.0.0-dev</Version>
   </PropertyGroup>
 
   <ItemGroup>
