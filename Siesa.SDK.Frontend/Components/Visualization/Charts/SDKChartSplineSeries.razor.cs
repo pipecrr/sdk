@@ -45,13 +45,13 @@ public partial class SDKChartSplineSeries<TData, TArgument, TValue> : SDKCompone
     /// Mouse hover mode for the chart series.
     /// </summary>
     [Parameter]
-    public ChartContinuousSeriesHoverMode HoverMode { get; set; }
+    public SDKChartContinuousSeriesHoverMode HoverMode { get; set; }
 
     /// <summary>
     /// Selection mode for the chart series.
     /// </summary>
     [Parameter]
-    public ChartContinuousSeriesSelectionMode SelectionMode { get; set; }
+    public SDKChartContinuousSeriesSelectionMode SelectionMode { get; set; }
 
     /// <summary>
     /// Determines if it should break on empty points.
