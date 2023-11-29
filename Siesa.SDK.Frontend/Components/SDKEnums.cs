@@ -201,6 +201,29 @@ namespace Siesa.SDK.Frontend.Components
                 _ => Radzen.HtmlEditorMode.Design
             };
         }
+
+        public static ChartContinuousSeriesHoverMode Get(this SDKChartContinuousSeriesHoverMode hoverMode)
+        {
+            return hoverMode switch
+            {
+                SDKChartContinuousSeriesHoverMode.NearestPoint => ChartContinuousSeriesHoverMode.NearestPoint,
+                SDKChartContinuousSeriesHoverMode.SeriesAndAllPoints => ChartContinuousSeriesHoverMode.SeriesAndAllPoints,
+                SDKChartContinuousSeriesHoverMode.Series => ChartContinuousSeriesHoverMode.Series,
+                SDKChartContinuousSeriesHoverMode.None => ChartContinuousSeriesHoverMode.None,
+                _ => ChartContinuousSeriesHoverMode.NearestPoint
+            };
+        }
+
+        public static ChartContinuousSeriesSelectionMode Get(this SDKChartContinuousSeriesSelectionMode selectionMode)
+        {
+            return selectionMode switch
+            {
+                SDKChartContinuousSeriesSelectionMode.Series => ChartContinuousSeriesSelectionMode.Series,
+                SDKChartContinuousSeriesSelectionMode.SeriesAndAllPoints => ChartContinuousSeriesSelectionMode.SeriesAndAllPoints,
+                SDKChartContinuousSeriesSelectionMode.None => ChartContinuousSeriesSelectionMode.None,
+                _ => ChartContinuousSeriesSelectionMode.Series
+            };
+        }
     }
 
     public enum SDKClearButtonDisplayMode
@@ -313,6 +336,21 @@ namespace Siesa.SDK.Frontend.Components
     {
         Determinate = ProgressBarMode.Determinate,
         Indeterminate = ProgressBarMode.Indeterminate
+    }
+    public enum SDKChartContinuousSeriesHoverMode 
+    {
+        NearestPoint = 0,
+        SeriesAndAllPoints = 1,
+        Series = 2,
+        None = 3
+
+    }
+
+    public enum SDKChartContinuousSeriesSelectionMode
+    {
+        Series = 0,
+        SeriesAndAllPoints = 1,
+        None = 2
     }
 
     public enum SDKFlexWrap

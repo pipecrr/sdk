@@ -3,16 +3,13 @@
 @typeparam TData
 @typeparam TArgument
 @typeparam TValue
-
 @inherits SDKComponent
 
-<DxChartAreaSeries
-
+<DxChartStackedLineSeries
 T ="TData"
 TArgument ="TArgument"
 TValue="TValue"
 HoverMode="@HoverMode.Get()"
-Opacity="@Opacity"
 SelectionMode="@SelectionMode.Get()"
 Data= "@Data"
 ArgumentField="@ArgumentField"
@@ -22,9 +19,6 @@ Color="@Color"
 Filter="@Filter"
 Pane="@Pane"
 BreakOnEmptyPoints="@BreakOnEmptyPoints"
-Axis="@Axis"
->
-
- @ChildContent
-
-</DxChartAreaSeries>
+Axis="@Axis">
+@ChildContent
+</DxChartStackedLineSeries>
