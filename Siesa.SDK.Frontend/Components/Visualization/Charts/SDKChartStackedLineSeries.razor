@@ -1,0 +1,24 @@
+@using Siesa.SDK.Frontend.Components
+
+@typeparam TData
+@typeparam TArgument
+@typeparam TValue
+@inherits SDKComponent
+
+<DxChartStackedLineSeries
+T ="TData"
+TArgument ="TArgument"
+TValue="TValue"
+HoverMode="@HoverMode.Get()"
+SelectionMode="@SelectionMode.Get()"
+Data= "@Data"
+ArgumentField="@ArgumentField"
+ValueField="@ValueField"
+Name="@Name"
+Color="@Color"
+Filter="@Filter"
+Pane="@Pane"
+BreakOnEmptyPoints="@BreakOnEmptyPoints"
+Axis="@Axis">
+@ChildContent
+</DxChartStackedLineSeries>

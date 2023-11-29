@@ -14,6 +14,7 @@
 
 
 export function checkAndRenewToken(dotnethelper) {
+
     var timeout_seconds = 10;
     var token = localStorage.getItem('usertoken');
     if (token) {
@@ -21,11 +22,20 @@ export function checkAndRenewToken(dotnethelper) {
         var now = new Date();
         var tokenExpiration = new Date(tokenData.exp * 1000);
         var lastInteraction = localStorage.getItem('lastInteraction');
-        if (now > new Date(tokenExpiration - 60000 * 5) && ((now - lastInteraction) < 60000 * 2)) {
+        if (now > new Date(tokenExpiration - 60000 * 5) && ((now - lastInteraction) < 60000 * 2)) 
+        {
             dotnethelper.invokeMethodAsync("RenewToken");
             timeout_seconds = 5;
-        } else if (now > tokenExpiration) {
-            dotnethelper.invokeMethodAsync("ShowLogin");
+        } else if (now > tokenExpiration) 
+        {
+            var isPortal = document.querySelector('.sdk_dashboard_portal');
+            if (isPortal) 
+            {
+                dotnethelper.invokeMethodAsync("ShowLogin", true)
+            }else
+            {
+                dotnethelper.invokeMethodAsync("ShowLogin");
+            }
             timeout_seconds = 5;
         }else{
             //check if exits a div with class sdk-modal-login

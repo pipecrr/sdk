@@ -9,6 +9,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Siesa.SDK.Backend.Services;
+using Microsoft.Extensions.Configuration;
+using Siesa.SDK.Shared.Configurations;
 
 namespace Siesa.SDK.Backend.Access
 {
@@ -24,6 +26,7 @@ namespace Siesa.SDK.Backend.Access
         bool GetUseLazyLoadingProxies();
         void SetUseLazyLoadingProxies(bool value);
         Task<DbContextOptionsBuilder> GetContextOptionTenant(short rowIdDBConnection, string hostName = "");
+        string GetConnectionString(SDKDbConnection _dbConnection);
     }
     public class TenantProvider: ITenantProvider
     {
@@ -38,6 +41,7 @@ namespace Siesa.SDK.Backend.Access
         private readonly IAuthenticationService _authenticationService;
 
         private readonly MemoryService _memoryService;
+        private readonly IConfiguration _configuration;
 
         private bool UseLazyLoadingProxies = false;
 
@@ -66,10 +70,11 @@ namespace Siesa.SDK.Backend.Access
             }
         }
     
-        public TenantProvider(IAuthenticationService authenticationService, MemoryService memoryService, List<SDKDbConnection> tenants, SDKConnectionConfig config = null)
+        public TenantProvider(IAuthenticationService authenticationService, MemoryService memoryService, IConfiguration configuration, List<SDKDbConnection> tenants, SDKConnectionConfig config = null)
         {
             _authenticationService = authenticationService;
             _memoryService = memoryService;
+            _configuration = configuration;
 
             if (config != null)
             { 
@@ -134,6 +139,54 @@ namespace Siesa.SDK.Backend.Access
 
         public void SetUseLazyLoadingProxies(bool value) => UseLazyLoadingProxies = value;
 
+        public string GetConnectionString(SDKDbConnection _dbConnection)
+        {
+            var connectionString = _dbConnection.ConnectionString;
+            if (_dbConnection.ProviderName == EnumDBType.InMemory)
+            {
+                return connectionString;
+            }else if(_dbConnection.ProviderName == EnumDBType.PostgreSQL)
+            {
+                return connectionString;
+            }else { //Default to SQL Server
+                //add Application Name= if not present
+                if(!connectionString.Contains("Application Name=")){
+                    var serviceConfiguration = _configuration.GetSection("ServiceConfiguration");
+                    ServiceConfiguration sc = serviceConfiguration.Get<ServiceConfiguration>();
+                    var currentUrl = sc?.GetCurrentUrl();
+                    if(!string.IsNullOrEmpty(currentUrl)){
+                        //delete http:// or https://
+                        currentUrl = currentUrl.Replace("http://", "");
+                        currentUrl = currentUrl.Replace("https://", "");
+                        //delete last /
+                        if(currentUrl.Last() == '/'){
+                            currentUrl = currentUrl.Substring(0, currentUrl.Length - 1);
+                        }
+                    }
+                    //get machine name
+                    var machineName = Environment.MachineName;
+                    //check if last char is ;
+                    if(connectionString.Last() != ';'){
+                        connectionString += ";";
+                    }
+                    var appName = $"{machineName}";
+
+                    if(!string.IsNullOrEmpty(currentUrl)){
+                        appName += $"-{currentUrl}";
+                    }
+                    connectionString += $"Application Name=SDK-{appName};";
+                }
+                //add Encrypt=False if not present
+                if(!connectionString.Contains("Encrypt=")){
+                    if(connectionString.Last() != ';'){
+                        connectionString += ";";
+                    }
+                    connectionString += "Encrypt=False;";
+                }
+                return connectionString;
+            }
+        }
+
         public async Task<DbContextOptionsBuilder> GetContextOptionTenant(short rowIdDBConnection, string hostName = "")
         {
             try
@@ -158,12 +211,12 @@ namespace Siesa.SDK.Backend.Access
 
                 if (_tenant.ProviderName == EnumDBType.PostgreSQL)
                 {
-                    tenantOptions.UseNpgsql(_tenant.ConnectionString);
+                    tenantOptions.UseNpgsql(this.GetConnectionString(_tenant));
                 }
                 else
                 {
                     //Default to SQL Server
-                    tenantOptions.UseSqlServer(_tenant.ConnectionString);
+                    tenantOptions.UseSqlServer(this.GetConnectionString(_tenant));
                 }
 
                 tenantOptions.AddInterceptors(new SDKDBInterceptor());

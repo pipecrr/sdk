@@ -83,5 +83,10 @@ public partial class SDKMultiSelectField<TValue> : RadzenDropDown<TValue>
         StateHasChanged();
     }
 
+    protected override async Task OnSelectItem(object item, bool isFromKey = false)
+    {
+       await base.OnSelectItem(item, isFromKey).ConfigureAwait(true);
 
+       SelectedItemChanged?.Invoke(item);
+    }
 }

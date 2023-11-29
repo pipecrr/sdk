@@ -66,6 +66,10 @@ namespace Siesa.SDK.Frontend.Components.Fields
         /// </summary>
         [Parameter] public string EmptyResourceTag {get; set;} = "Custom.SDKEntityMultiSelector.Empty";
         /// <summary>
+        /// Gets or sets the flag if it is a detail view.
+        /// </summary>
+        [Parameter] public bool IsDetail {get; set;}
+        /// <summary>
         /// Gets or sets the SDKGlobalLoaderService dependency.
         /// </summary>
         [Inject] public SDKGlobalLoaderService LoaderService {get; set;}

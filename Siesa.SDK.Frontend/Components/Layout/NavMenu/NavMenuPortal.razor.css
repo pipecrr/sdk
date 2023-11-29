@@ -1,14 +1,14 @@
-﻿.menu_content {
+﻿.menu_content_portal {
     overflow: hidden;    
-    min-height: 0vh;
-    max-height: 0vh;
+    min-height: 100vh;
+    max-height: 100vh;
     width: 48px;
     display: flex !important;
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
     padding-top: 56px;
-    background: transparent;
+    background: var(--color_light_nav);
     transition-duration: .25s;
     position: fixed;
 }
@@ -64,6 +64,22 @@ input#menu:checked~.menu_content {
     .collapse_open_btn {
         bottom: 84px;
     }
+}
+
+@media (min-width: 1300px) 
+{
+    .menu_content_portal 
+    {
+        min-height: 50%;
+        /* left: 5%; */
+        top: 50%;
+        transform: translateY(-50%);
+        max-height: 50%;
+        border-radius: 0.5rem;
+        padding-top: 0;
+        box-shadow: -1px 1px 17px 0px rgba(0,0,0,0.15);
+    }
+
 }
 
 @media (max-width: 575.98px) {

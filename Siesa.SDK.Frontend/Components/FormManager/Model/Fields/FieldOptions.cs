@@ -85,6 +85,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         };
         
         public List<List<object>> Filters { get; set; }
+        /// <summary>
+        /// Get or set the custom filters for custom components
+        /// </summary>
+        public List<string> FiltersCustom { get; set; }
 
         public int MinCharsEntityField { get; set; } = 2;
         public string EntityRowidField;
@@ -158,15 +162,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 if (String.IsNullOrEmpty(ResourceTag))
                 {
                     var modelTypeName = field.ModelObj.GetType().Name;
-                    if(modelTypeName.EndsWith("DTO"))
+                    if(modelTypeName.EndsWith("DTO", StringComparison.OrdinalIgnoreCase))
                     {
                         modelTypeName = $"DTO.{modelTypeName.Substring(0, modelTypeName.Length - 3)}";
                     }
                     ResourceTag = $"{modelTypeName}.{field.Name}";
                 }
-                var propertyType = field.ModelObj.GetType().GetProperty(field.Name).PropertyType;
+                var propertyType = field.ModelObj.GetType().GetProperty(field.Name)?.PropertyType;
                 originalPropertyType = propertyType;
-                var customAttr = field.ModelObj.GetType().GetProperty(field.Name).GetCustomAttributes(true);
+                var customAttr = field.ModelObj.GetType().GetProperty(field.Name)?.GetCustomAttributes(true);
                 if (customAttr != null)
                 {
                     foreach (var item in customAttr)
@@ -185,13 +189,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                         }
                     }
                 }
-                //Console.WriteLine(fieldName + " , " + propertyType);
-                if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                if (propertyType != null && propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
                     propertyType = propertyType.GetGenericArguments()[0];
                     IsNullable = true;
                 }
-                switch (propertyType.Name)
+                switch (propertyType?.Name)
                 {
                     case "String":
                         FieldType = FieldTypes.CharField;

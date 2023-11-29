@@ -142,7 +142,8 @@ namespace Siesa.SDK.Utils.Test
             {
                 Rowid = 1,
                 Id = "IdExternalUser",
-                RowidMainRecord = 1
+                RowidMainRecord = 1,
+                Email = "EmailExternalUser@siesa.com"
             };
             var UserTest = new JwtUserData()
             {
