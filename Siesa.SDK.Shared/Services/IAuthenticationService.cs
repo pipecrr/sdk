@@ -129,6 +129,11 @@ namespace Siesa.SDK.Shared.Services
         public long RowidMainRecord { get; set; }
 
         /// <summary>
+        /// Email address. This property represents the email address of the Portal User.
+        /// </summary>
+        public string Email { get; set; }
+
+        /// <summary>
         /// Overrides the ToString() method to provide a custom string representation of the PortalUserDTO.
         /// </summary>
         /// <returns>A formatted string containing the user id and name.</returns>

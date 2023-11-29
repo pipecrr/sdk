@@ -23,9 +23,6 @@ namespace Siesa.SDK.Entities
 
 		public virtual int? RowidAttachment { get; set; }
 
-		[SDKRequired]
-		public virtual enumStatusBaseMaster Status { get; set; }
-
 
 		public virtual T Record { get; set; }
 

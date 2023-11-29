@@ -63,21 +63,25 @@ else if (BusinessObj.BaseObj.Rowid != 0)
                     @foreach (var panel in Panels.Skip(1))
                     {
                         <CascadingValue Value="@EditFormContext">
-                            <div class="row pt-3">
-                                <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                            <div class="col-12">
+                                <div class="row">
+                                    <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                </div>
                             </div>
                         </CascadingValue>
                     }
                 }else
                 {
-                    <div class="pt-2">
+                    <div class="col-12 pt-2">
                         <SDKTabs>
                             @foreach (var panel in Panels.Skip(1))
                             {
                                 <SDKTab IconCssClass="@panel.IconClass" TitleResourceTag="@panel.ResourceTag">
                                     <CascadingValue Value="@EditFormContext">
-                                        <div class="row pt-3">
-                                            <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                        <div class="col-12 px-0">
+                                            <div class="row">
+                                                <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                            </div>
                                         </div>
                                     </CascadingValue>
                                 </SDKTab>
@@ -88,7 +92,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
                 }
             }
             @if(PanelsCollapsable?.Count>0){
-                <div class="w-100">
+                <div class="col-12">
                     <SDKCollapse>
                         <Items>
                             @foreach (var panel in PanelsCollapsable)
@@ -99,7 +103,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
                                             <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
                                         </CascadingValue>
                                     </div>
-                                        <div class="buttons-aditional-fiels mb-2">
+                                        <div class="buttons-aditional-fiels mt-3">
                                             <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" ResourceTag="Borrar" Click="@(()=>ConfirmDelete(panel.RowidGroupDynamicEntity))"/>
                                             <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Editar campos" Click="@(()=>ClickInEdit(panel.RowidGroupDynamicEntity))"/>
                                             <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Agregar campos" Click="@(()=>ClickInAdd(panel.RowidGroupDynamicEntity))"/>
@@ -125,7 +129,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
                     @foreach (var company in Companies)
                     {
                         <SDKCollapseItem Text="@company.Name">
-                            <CreateView BusinessName="@BusinessNameA" BusinessNameParent="@BusinessName" BusinessObjAType="@InternalBusinessObjAType" RowidCompany="@company.Rowid" IsTableA="true" IsSubpanel="true" ShowTitle="false" ShowButtons="false" ParentForm="@this" ></CreateView>
+                            <CreateView BusinessName="@BusinessNameA" BusinessNameParent="@BusinessName" BusinessObjAType="@InternalBusinessObjAType" RowidCompany="@company.Rowid" IsTableA="true" IsSubpanel="true" ShowTitle="false" ShowButtons="false" ParentForm="@this" ViewContext="@_viewContext" ></CreateView>
                         </SDKCollapseItem>
                     }
                 </Items>

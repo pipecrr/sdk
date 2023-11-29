@@ -1,0 +1,32 @@
+@inherits SDKComponent
+
+<RadzenFieldset
+AllowCollapse="@AllowCollapse"
+Collapsed="@Collapsed"
+ExpandTitle="@ExpandTitle"
+CollapseTitle="@CollapseTitle"
+ExpandAriaLabel="@ExpandAriaLabel"
+CollapseAriaLabel="@CollapseAriaLabel"
+Icon="@Icon"
+IconColor="@IconColor"
+Text="@ResourceTag"
+Expand="@Expand"
+Collapse="@Collapse"
+Style="@Style">
+
+@if (HeaderTemplate != null)
+{
+    @HeaderTemplate
+}
+
+@if (ChildContent != null)
+{
+    @ChildContent
+}
+
+@if (SummaryTemplate != null)
+{
+    @SummaryTemplate
+}
+
+</RadzenFieldset>

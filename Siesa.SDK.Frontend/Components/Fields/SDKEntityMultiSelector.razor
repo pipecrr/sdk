@@ -7,44 +7,46 @@
 
 <div class="row whcm_row">
     @* 1er cuadro *@
-    <div class="col-12">
-        <div class="row whcm_row">
-            <div class="col-xl-6 col-lg-8 col-md-7 col-sm-8 col-12 d-flex form-group">
-                <div class="w-100">
-                    <span class="col-form-label col-form-label-sm font-weight-bold">
-                        <SDKLabel
-                            ResourceTag="@LabelResourceTag"
-                            CssClass="mb-0"
+    @if(!IsDetail){
+        <div class="col-12">
+            <div class="row whcm_row">
+                <div class="col-xl-6 col-lg-8 col-md-7 col-sm-8 col-12 d-flex form-group">
+                    <div class="w-100">
+                        <span class="col-form-label col-form-label-sm font-weight-bold">
+                            <SDKLabel
+                                ResourceTag="@LabelResourceTag"
+                                CssClass="mb-0"
+                            />
+                        </span>
+                        <SDKEntityField
+                            BaseObj="@this"
+                            FieldName="FieldRelated"
+                            @ref="SdkEntityFieldRef"
+                            IsMultiple="true"
+                            RelatedBusiness="@RelatedBusiness"
+                            Filters="@EntityFieldFilters"
                         />
-                    </span>
-                    <SDKEntityField
-                        BaseObj="@this"
-                        FieldName="FieldRelated"
-                        @ref="SdkEntityFieldRef"
-                        IsMultiple="true"
-                        RelatedBusiness="@RelatedBusiness"
-                        Filters="@EntityFieldFilters"
-                    />
+                    </div>
+                    <div class="d-flex align-items-end ml-1">
+                        <SDKButton
+                            ResourceTag="Custom.SDKEntityMultiSelector.MultiselectMessage"
+                            IconCssClass="fa-solid fa-list-check"
+                            RenderStyle="SDKButtonRenderStyle.Light"
+                            CssClass="btn_multiselect"
+                            Click="@OpenModal"
+                        />
+                    </div>
                 </div>
-                <div class="d-flex align-items-end ml-1">
+                <div class="col-xl-3 col-lg-4 col-md-5 col-sm-4 col-12 d-flex align-items-end form-group">
                     <SDKButton
-                        ResourceTag="Custom.SDKEntityMultiSelector.MultiselectMessage"
-                        IconCssClass="fa-solid fa-list-check"
-                        RenderStyle="SDKButtonRenderStyle.Light"
-                        CssClass="btn_multiselect"
-                        Click="@OpenModal"
+                        ResourceTag="@AddButtonResourceTag"
+                        RenderStyle="SDKButtonRenderStyle.Primary"
+                        Click="@AddItem"
                     />
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-5 col-sm-4 col-12 d-flex align-items-end form-group">
-                <SDKButton
-                    ResourceTag="@AddButtonResourceTag"
-                    RenderStyle="SDKButtonRenderStyle.Primary"
-                    Click="@AddItem"
-                />
             </div>
         </div>
-    </div>
+    }
     @* 2do cuadro *@
     <div class="col-12 form-group">
         <span class="col-form-label col-form-label-sm font-weight-bold">

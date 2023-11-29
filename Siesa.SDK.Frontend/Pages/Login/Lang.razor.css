@@ -9,6 +9,6 @@
     text-align: right;
 }
 .btn_ghost_def_2:hover, .btn_ghost_def_2:active, .btn_ghost_def_2:focus {
-    background-color: var(--coolor_back_2) !important;
-    border-color: var(--coolor_back_2) !important;
+    background-color: var(--color_back_2) !important;
+    border-color: var(--color_back_2) !important;
 }

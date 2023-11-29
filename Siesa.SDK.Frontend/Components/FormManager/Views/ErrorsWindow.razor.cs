@@ -29,17 +29,29 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private List<string> _generalErrors = new List<string>();
 
-        private string? _environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"); 
-        protected override async Task OnParametersSetAsync(){
+        private string? _environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+        private List<string> _stackTrace { get 
+        { 
+            if(_environment == Environments.Development && StackTrace.Any())
+                return StackTrace;
+            else
+                return new List<string>();
+        }}
+
+        protected override async Task OnParametersSetAsync()
+        {
             _errorCount = 0;
             _generalErrors = new List<string>();
             _errors = new List<SDKErrorsWindowDTO>();
 
-            if (_environment == Environments.Development && StackTrace.Any())
-                _generalErrors.AddRange(StackTrace);
+            if(_environment == Environments.Development && StackTrace.Any())
+            {
+                _generalErrors.AddRange(_stackTrace);
+            }
             
-            
-            if (EditFormContext != null && EditFormContext.GetValidationMessages().Count() > 0 && VerifyContext){
+            if (EditFormContext != null && EditFormContext.GetValidationMessages().Count() > 0 && VerifyContext)
+            {
                 var groupErrors = EditFormContext.GetValidationMessages().GroupBy(x => {
                     var errorsSplit = x.Split("//");
                     if(errorsSplit.Count() > 1){
@@ -103,38 +115,58 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     });
                 }
             }
-            if(GeneralErrors?.Count() > 0) {
-                _errorCount += GeneralErrors.Count();
-                foreach (var err in GeneralErrors){
-                    var errorMsg = "";
-                    if(err.StartsWith("Exception: ")){
-                         errorMsg = err.Replace("Exception: ", "");
-                         if(_generalErrors.Contains(errorMsg)){
-                            _generalErrors.Remove(errorMsg);
-                            //errorMsg = await UtilsManager.GetResource(errorMsg);
-                            errorMsg = errorMsg;
-                         }
-                         if (errorMsg.Split("//").Count() > 1)
-                         {
-                                var errorSplit = errorMsg.Split("//");
-                                var resourceTag = errorSplit[0];
+            if(GeneralErrors?.Count > 0) 
+            {
+                _errorCount += GeneralErrors.Count;
+                var errorMsg = "";
 
-                                var errorFormat = errorSplit.Skip(1).ToArray();
+                foreach (var err in GeneralErrors)
+                {
+                    if (err.Split("//").Length > 1)
+                    {
+                        var errorSplit = err.Split("//");
+                        var resourceTag = errorSplit[0];
 
-                                if(!_generalerrorsFormat.ContainsKey(resourceTag))
+                        var errorFormat = errorSplit.Skip(1).ToArray();
+
+                        if (errorFormat[0].Contains(',', StringComparison.Ordinal))
+                        {
+                            var formatSplits = errorFormat[0].Split(',').Where(item => !string.IsNullOrEmpty(item)).ToArray();
+
+                            if (formatSplits.Length > 0)
+                            {
+                                var messageFragments = new List<string>();
+
+                                foreach (var item in formatSplits)
                                 {
-                                    _generalerrorsFormat.Add(resourceTag, errorFormat);
+                                    var resourceFormat = await UtilsManager.GetResource(item).ConfigureAwait(true);
+                                    messageFragments.Add(resourceFormat);
                                 }
-                         }else
-                         {
-                            _generalErrors.Add(errorMsg);
-                         }
-                    }else{
-                        //errorMsg = await UtilsManager.GetResource(err);
-                        errorMsg = err;
+
+                                var formats = string.Join("-", messageFragments);
+
+                                _generalerrorsFormat.Add(resourceTag, new object[]{formats});
+                            }
+                            
+                        }else if(!_generalerrorsFormat.ContainsKey(resourceTag))
+                        {
+                            _generalerrorsFormat.Add(resourceTag, errorFormat);
+                        }
+                    }else if(err.StartsWith("Exception: ", StringComparison.Ordinal))
+                    {
+                        errorMsg = err.Replace("Exception: ", "", StringComparison.Ordinal);
+                        if(_generalErrors.Contains(errorMsg, StringComparer.Ordinal))
+                        {
+                            _generalErrors.Remove(errorMsg);
+                        }
                         _generalErrors.Add(errorMsg);
-                        _generalErrors = _generalErrors.Distinct().ToList();
+
+                    }else
+                    {
+                        _generalErrors.Add(err);
                     }
+
+                    _generalErrors = _generalErrors.Distinct().ToList();
                 }
             }
             if (_errorCount > 0){
@@ -143,14 +175,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }else{
                 ClassError = "sdk_error_log_box_sup";
             }
+            
             await base.OnParametersSetAsync();
         }
 
         public void showDedtail(){
-            if(_detailVisible){
+            if(_detailVisible)
+            {
                 ClassError = "sdk_error_log_box_sup sdk_error_log_show";
                 _detailVisible = false;
-            }else{
+            }else
+            {
                 ClassError = "sdk_error_log_box_sup sdk_error_log_show sdk_error_log_show_detail";
                 _detailVisible = true;
             }
