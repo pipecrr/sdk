@@ -1,27 +1,12 @@
-@using System.Linq.Expressions
 
-<DxChartLegend HorizontalAlignment="@_horizontalAlignmentLegend"
-                VerticalAlignment="@_verticalAlignmentLegend"
-                Position="@_relativePositionLegend"
-                Orientation="@_orientationLegend" 
-                CssClass= "@CssClass"/>
+<DxChartLegend 
+HorizontalAlignment="@HorizontalAlignmentLegend.Get()"
+VerticalAlignment="@VerticalAlignmentLegend.Get()"
+Position="@RelativePositionLegend.Get()"
+Orientation="@OrientationLegend.Get()" 
+HoverMode="@HoverModeLegend.Get()"
+CssClass= "@CssClass"
+AllowToggleSeries="@AllowToggleSeries"
+/> 
 
-@code {
-    [Parameter] public SDKChartRelativePosition RelativePositionLegend { get; set; } = SDKChartRelativePosition.Outside;
-    [Parameter] public SDKChartHorizontalAlignment HorizontalAlignmentLegend { get; set; } = SDKChartHorizontalAlignment.Center;
-    [Parameter] public SDKChartVerticalEdge VerticalAlignmentLegend { get; set; } = SDKChartVerticalEdge.Bottom;
-    [Parameter] public SDKChartOrientation OrientationLegend { get; set; } = SDKChartOrientation.Vertical;
-    [Parameter] public string CssClass { get; set; }     
-    private RelativePosition _relativePositionLegend = RelativePosition.Outside;
-    private HorizontalAlignment _horizontalAlignmentLegend = HorizontalAlignment.Center;
-    private VerticalEdge _verticalAlignmentLegend = VerticalEdge.Bottom;
-    private DevExpress.Blazor.Orientation _orientationLegend = DevExpress.Blazor.Orientation.Vertical;
-
-    protected override void OnParametersSet()
-    {
-        _relativePositionLegend = SDKEnums.Get(RelativePositionLegend);
-        _horizontalAlignmentLegend = SDKEnums.Get(HorizontalAlignmentLegend);
-        _verticalAlignmentLegend = SDKEnums.Get(VerticalAlignmentLegend);
-        _orientationLegend = SDKEnums.Get(OrientationLegend);
-    }
-}
+ 

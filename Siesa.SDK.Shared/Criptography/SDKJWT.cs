@@ -126,6 +126,7 @@ namespace Siesa.SDK.Shared.Criptography
                 PortalUserJwt portalUserJwt = new PortalUserJwt();
                 portalUserJwt.Id = portalUser.ExternalUser.Id;
                 portalUserJwt.RowidMainRecord = portalUser.RowidMainRecord;
+                portalUserJwt.Email = portalUser.ExternalUser.Email;
                 userToken.PortalUser = portalUserJwt;
             }
 

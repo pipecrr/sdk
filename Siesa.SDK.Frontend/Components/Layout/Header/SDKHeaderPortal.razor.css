@@ -1,4 +1,4 @@
-.sdk_header{
+.sdk_header_portal{
     height: 48px;
     width: 100%;
     background: #FFFFFF;
@@ -10,6 +10,14 @@
     align-items: center;
     padding-left: 0px;
 }
+
+.sdk_header_portal_container
+{
+    width: 100%;
+    max-width: 1268px;
+    margin: auto;
+}
+
 
 .sdk_profile{
     display: flex;
@@ -56,3 +64,14 @@
         max-width: 125px;
     }
  }
+
+ @media (min-width: 1300px) and (max-width: 1400px) 
+{
+    
+    .sdk_header_portal_container
+    {
+        max-width: 1200px;
+        padding-left: 20px;
+    }
+
+}
