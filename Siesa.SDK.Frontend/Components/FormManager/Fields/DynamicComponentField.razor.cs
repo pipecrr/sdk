@@ -174,10 +174,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
                         Type actionType = typeof(Action<>).MakeGenericType(type);
                         _editableField = builder =>
                         {
+                            var action = Delegate.CreateDelegate(actionType, this, "OnChangeEnum");
                             builder.OpenComponent(0, typeof(SDKSelectField<>).MakeGenericType(type));
                             builder.AddAttribute(1, "ValueExpression", lambda);
                             builder.AddAttribute(2, "Value", Context.GetType().GetProperty(Property)?.GetValue(Context));
-                            builder.AddAttribute(3, "ValueChanged", Delegate.CreateDelegate(actionType, this, "OnChange", false, false));
+                            builder.AddAttribute(3, "ValueChanged", action);
                             builder.CloseComponent();
                         };
                     }
@@ -206,6 +207,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
             StateHasChanged();
         }
         
+        private void OnChangeEnum(int value)
+        {
+            if(OnChangeColumn != null)
+            {
+                OnChangeColumn(Context, value);
+            }
+            Context.GetType().GetProperty(Property)?.SetValue(Context, value);
+            StateHasChanged();
+        }
+        
         private void OnChangeEntity()
         {
             dynamic value = _entityReference.GetItemsSelected().FirstOrDefault();
@@ -216,6 +227,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
             Context.GetType().GetProperty(Property)?.SetValue(Context, value);
             string rowidProp = "Rowid"+Property;
             Context.GetType().GetProperty(rowidProp)?.SetValue(Context, value?.Rowid);
+        }
+        
+        private int Onchange(int item)
+        {
+               
+            return item;
         }
         
         protected override async Task OnParametersSetAsync()

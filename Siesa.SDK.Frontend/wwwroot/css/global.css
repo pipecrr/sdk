@@ -1303,6 +1303,7 @@ div .form-control:focus {
     overflow: unset !important;
     background: var(--color_panel_back);
     padding: 1rem;
+    border-radius: 0px 0px var(--border_radius_standar_max) var(--border_radius_standar_max) !important;    
 }
 
 .sdk_modal_autogestion>.rz-dialog-content
@@ -1707,8 +1708,9 @@ color: var(--color_text);
     
 
     .rz-dialog {
-        min-width: 100% !important;
-        max-width: 100%;
+        min-width: calc(100% - 2rem)  !important;
+        max-width: calc(100% - 2rem);
+        margin-top: 1rem;
     }
 }
 
@@ -1742,6 +1744,25 @@ color: var(--color_text);
         text-overflow: unset !important;
         opacity: 1 !important;
         transition: .2s !important;
+    }
+}
+
+@media (max-width: 375px) {
+    .whcm_logo_compania{
+        max-width: 60px !important;
+    }
+    .header_circles_box_1, .header_circles_box_2, .header_circles_box_3, .header_circles_box_4 {
+        transform: rotate(45deg) translateY(-48px) translateX(-38px) !important;
+    }
+    .dxbl-dropdown{
+        max-width: 260px !important;
+    }
+    .whcm_select_list.sdk-dropdown-menu {
+    	width: 260px !important;    	
+    }
+    .rz-notification {
+        max-width: calc(100% - 2rem) !important;
+        min-width: calc(100% - 2rem) !important;
     }
 }
 
