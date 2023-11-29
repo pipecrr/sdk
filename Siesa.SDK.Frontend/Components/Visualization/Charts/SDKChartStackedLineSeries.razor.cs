@@ -17,6 +17,12 @@ using System.Linq.Expressions;
 
 namespace Siesa.SDK.Frontend.Components.Visualization.Charts;
 
+/// <summary>
+/// SDKChartStackedLineSeries component, used to render a stacked line series chart.
+/// </summary>
+/// <typeparam name="TData"></typeparam>
+/// <typeparam name="TArgument"></typeparam>
+/// <typeparam name="TValue"></typeparam>
 
 public partial class SDKChartStackedLineSeries<TData, TArgument, TValue> : SDKComponent
 {
@@ -54,13 +60,13 @@ public partial class SDKChartStackedLineSeries<TData, TArgument, TValue> : SDKCo
     /// Mouse hover mode for the chart series.
     /// </summary>
     [Parameter]
-    public ChartContinuousSeriesHoverMode HoverMode { get; set; }
+    public SDKChartContinuousSeriesHoverMode HoverMode { get; set; }
 
     /// <summary>
     /// Selection mode for the chart series.
     /// </summary>
     [Parameter]
-    public ChartContinuousSeriesSelectionMode SelectionMode { get; set; }
+    public SDKChartContinuousSeriesSelectionMode SelectionMode { get; set; }
 
     /// <summary>
     /// Determines if it should break on empty points.

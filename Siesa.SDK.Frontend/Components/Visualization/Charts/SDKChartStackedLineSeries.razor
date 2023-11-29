@@ -9,8 +9,8 @@
 T ="TData"
 TArgument ="TArgument"
 TValue="TValue"
-HoverMode="@HoverMode"
-SelectionMode="@SelectionMode"
+HoverMode="@HoverMode.Get()"
+SelectionMode="@SelectionMode.Get()"
 Data= "@Data"
 ArgumentField="@ArgumentField"
 ValueField="@ValueField"
@@ -20,4 +20,5 @@ Filter="@Filter"
 Pane="@Pane"
 BreakOnEmptyPoints="@BreakOnEmptyPoints"
 Axis="@Axis">
-@ChildContent</DxChartStackedLineSeries>
+@ChildContent
+</DxChartStackedLineSeries>
