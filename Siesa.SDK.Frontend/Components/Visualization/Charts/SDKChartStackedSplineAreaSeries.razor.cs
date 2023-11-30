@@ -44,13 +44,13 @@ public partial class SDKChartStackedSplineAreaSeries<TData, TArgument, TValue> :
     /// Gets or sets the hover mode for the series.
     /// </summary>
     [Parameter]
-    public ChartContinuousSeriesHoverMode HoverMode { get; set; }
+    public SDKChartContinuousSeriesHoverMode HoverMode { get; set; }
 
     /// <summary>
     /// Gets or sets the selection mode for the series.
     /// </summary>
     [Parameter]
-    public ChartContinuousSeriesSelectionMode SelectionMode { get; set; }
+    public SDKChartContinuousSeriesSelectionMode SelectionMode { get; set; }
 
     /// <summary>
     /// Gets or sets whether to break the series on empty points.
