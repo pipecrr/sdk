@@ -5,6 +5,9 @@
     height: 100vh;
     overflow: hidden;
     padding-bottom: 1rem;
+    max-width: 1300px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .sdk_dashboard_portal ::deep .sdk_left_dashlets{
@@ -25,4 +28,18 @@
 
 .sdk_dashboard_portal ::deep .sdk_left_dashlets::-webkit-scrollbar{
     display: none;
+}
+@media (min-width: 1300px) 
+{
+    .sdk_dashboard_portal{
+        padding-left: 4.375rem;
+        padding-right: 1rem;
+    }
+}
+@media (min-width: 1400px) 
+{
+    .sdk_dashboard_portal{
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 }

@@ -12,14 +12,16 @@
 }
 
 .sdk-switch-container > ::deep .rz-switch.rz-switch-checked .rz-switch-circle {
-    background: var(--color_primary);
+    background: var(--color_primary) !important;
 }
+
 
 .sdk-switch-container > ::deep .rz-switch.rz-switch-checked .rz-switch-circle::before {
     height: 16px;
     width: 16px;
     left: 0.1rem;
     margin-top: -0.5rem;
+    background:var(--color_panel_back) !important;
 }
 
 .sdk-switch-container > ::deep .rz-switch .rz-switch-circle::before {
@@ -27,4 +29,14 @@
     width: 16px;
     left: 0.1rem;
     margin-top: -0.5rem;
+    background:var(--color_panel_back) !important;
+}
+
+::deep .rz-switch .rz-switch-circle{
+    background:var(--color_switch) !important;
+}
+
+::deep .rz-switch-circle.rz-disabled{
+    background: var(--color_input_back_disabled) !important;
+    opacity: 1 !important;
 }

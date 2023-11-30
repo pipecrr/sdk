@@ -32,14 +32,17 @@ else if (ModelLoaded == true)
             <h5 class="d-flex justify-content-center">@BusinessObj</h5>
             <hr />
         }
-    @if(ContainAttachments && !IsTableA){
-        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
-                               Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
-                               BusinessObj="@BusinessObj" BusinessName="@BusinessName"/>
-    }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
+    @if(!HideRelationshipContainer)
     {
-        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" 
-                               BusinessName="@BusinessName"/>
+        @if(ContainAttachments && !IsTableA){
+            <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
+                                Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
+                                BusinessObj="@BusinessObj" BusinessName="@BusinessName" IsDetail="true"/>
+        }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
+        {
+            <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" 
+                                BusinessName="@BusinessName" IsDetail="true"/>
+        }
     }
     <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
         @if(Panels?.Count > 0){
@@ -60,20 +63,25 @@ else if (ModelLoaded == true)
             {
                 @foreach (var panel in Panels.Skip(1))
                 {
-                    <div class="row pt-3">
-                        <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                    <div class="col-12">
+                        <div class="row">
+                            <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                        </div>
                     </div>
+
                 }
                 
             }else
             {
-                <div class="pt-2">
+                <div class="col-12 pt-2">
                     <SDKTabs>
                         @foreach (var panel in Panels.Skip(1))
                         {
                             <SDKTab IconCssClass="@panel.IconClass" TitleResourceTag="@panel.ResourceTag">
-                                <div class="row pt-3">
-                                    <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                <div class="col-12 px-0">
+                                    <div class="row">
+                                        <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                    </div>
                                 </div>
                             </SDKTab>
                         }
@@ -82,7 +90,7 @@ else if (ModelLoaded == true)
             }
         }
         @if(PanelsCollapsable?.Count>0){
-            <div class="w-100">
+            <div class="col-12">
                 <SDKCollapse>
                     <Items>
                         @foreach (var panel in PanelsCollapsable)

@@ -89,44 +89,9 @@ namespace Siesa.SDK.Backend.Extensions
                 }
                 else if(tenant.ProviderName == EnumDBType.PostgreSQL)
                 {
-                    opts.UseNpgsql(tenant.ConnectionString);
+                    opts.UseNpgsql(tenantProvider.GetConnectionString(tenant));
                 }else { //Default to SQL Server
-                    //add Application Name= if not present
-                    if(!tenant.ConnectionString.Contains("Application Name=")){
-                        var serviceConfiguration = configurationManager.GetSection("ServiceConfiguration");
-                        ServiceConfiguration sc = serviceConfiguration.Get<ServiceConfiguration>();
-                        var currentUrl = sc?.GetCurrentUrl();
-                        if(!string.IsNullOrEmpty(currentUrl)){
-                            //delete http:// or https://
-                            currentUrl = currentUrl.Replace("http://", "");
-                            currentUrl = currentUrl.Replace("https://", "");
-                            //delete last /
-                            if(currentUrl.Last() == '/'){
-                                currentUrl = currentUrl.Substring(0, currentUrl.Length - 1);
-                            }
-                        }
-                        //get machine name
-                        var machineName = Environment.MachineName;
-                        //check if last char is ;
-                        if(tenant.ConnectionString.Last() != ';'){
-                            tenant.ConnectionString += ";";
-                        }
-                        var appName = $"{machineName}";
-
-                        if(!string.IsNullOrEmpty(currentUrl)){
-                            appName += $"-{currentUrl}";
-                        }
-                        tenant.ConnectionString += $"Application Name=SDK-{appName};";
-                    }
-                    //add Encrypt=False if not present
-                    if(!tenant.ConnectionString.Contains("Encrypt=")){
-                        if(tenant.ConnectionString.Last() != ';'){
-                            tenant.ConnectionString += ";";
-                        }
-                        tenant.ConnectionString += "Encrypt=False;";
-                    }
-                    opts.UseSqlServer(tenant.ConnectionString);
-
+                    opts.UseSqlServer(tenantProvider.GetConnectionString(tenant));
                 }
                 opts.AddInterceptors(new SDKDBInterceptor());
                 opts.ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.LazyLoadOnDisposedContextWarning));

@@ -1,7 +1,7 @@
 @using System.Linq.Expressions
 @typeparam ItemType
 @inherits SDKComponent
-@inject UtilsManager UtilManager
+
 
 
 <div class="sdk-selectbar-container">
@@ -10,67 +10,17 @@
             <RadzenSelectBar Value=@Value Change="@ValueChanged" TValue="ItemType" Disabled = "@Disabled" ValueExpression="@ValueExpression"  
                     data-automation-id="@GetAutomationId()">
                     <Items>
-                            <SDKSelectBarItem Text="@AffirmationText" Value="true" />
-                            <SDKSelectBarItem Text="@DenialText" Value="false" />
+                            <SDKSelectBarItem ResourceTag="@AffirmationResourceTag" Value="true" />
+                            <SDKSelectBarItem ResourceTag="@DenialResourceTag" Value="false" />
                     </Items>
             </RadzenSelectBar>
         }else
         {
+                <RadzenSelectBar Value=@Value Change="@ValueChanged" TValue="ItemType"
+                        Data="@Data" TextProperty="Name" ValueProperty="Key" Disabled = "@Disabled" ValueExpression="@ValueExpression"  
+                        data-automation-id="@GetAutomationId()" Items="@Items">
 
-            <RadzenSelectBar Value=@Value Change="@ValueChanged" TValue="ItemType"
-                    Data="@Data" TextProperty="Name" ValueProperty="Key" Disabled = "@Disabled" ValueExpression="@ValueExpression"  
-                    data-automation-id="@GetAutomationId()" />
-        
+                </RadzenSelectBar>
+
         }
 </div>   
-
-
-@code{
-        [Parameter] public Expression<Func<ItemType>> ValueExpression { get; set; }
-        [Parameter] public string FieldName { get; set; }
-
-        [Parameter] public string DenialResourceTag {get; set;}
-        [Parameter] public string AffirmationResourceTag {get; set;}
-
-        private string DenialText {get; set;}
-        private string AffirmationText {get; set;}
-
-
-
-        protected override string GetAutomationId()
-        {
-            if(string.IsNullOrEmpty(AutomationId))
-            {
-                if (!string.IsNullOrEmpty(FieldName))
-                {
-                        AutomationId = FieldName;
-                }
-            }
-            return base.GetAutomationId();
-        }
-
-        private async Task GetResources()
-        {
-            if(typeof(ItemType) == typeof(bool))
-            {   
-                DenialResourceTag = string.IsNullOrEmpty(DenialResourceTag) ? "Custom.Selectbar.Boolean.No" : DenialResourceTag;
-                AffirmationResourceTag = string.IsNullOrEmpty(AffirmationResourceTag) ? "Custom.Selectbar.Boolean.Yes" : AffirmationResourceTag;
-
-                DenialText = await UtilManager.GetResource(DenialResourceTag);
-                AffirmationText = await UtilManager.GetResource(AffirmationResourceTag);
-                StateHasChanged();
-            }
-        }
-
-        protected override async Task OnInitializedAsync()
-        {
-            await base.OnInitializedAsync();
-            await GetResources();
-        }
-
-        protected override async Task OnParametersSetAsync()
-        {
-            base.OnParametersSet();
-            await GetResources();
-        }
-}
