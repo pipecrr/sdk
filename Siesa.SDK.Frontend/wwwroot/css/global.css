@@ -127,42 +127,42 @@
     --color_grayscale_800: #262626;
 
     /* flex chart colors */
-    --color_chart_flex_1: #80c9a7;
-    --color_chart_flex_2: #bada8c;
-    --color_chart_flex_3: #326fac;
-    --color_chart_flex_4: #32b9b0;
-    --color_chart_flex_5: #56bd8d;
-    --color_chart_flex_6: #d1e5b1;
-    --color_chart_flex_7: #ffd690;
-    --color_chart_flex_8: #5ac5d9;
-    --color_chart_flex_9: #6691c0;
-    --color_chart_flex_10: #00a89d;
-    --color_chart_flex_11: #addfea;
-    --color_chart_flex_12: #f27c93;
-    --color_chart_flex_13: #84d1e0;
-    --color_chart_flex_14: #134b95;
-    --color_chart_flex_15: #a8d9c4;
-    --color_chart_flex_16: #a3cf66;
-    --color_chart_flex_17: #f9a94b;
-    --color_chart_flex_18: #f9bca5;
-    --color_chart_flex_19: #69c7c2;
-    --color_chart_flex_20: #ffe3b5;
-    --color_chart_flex_21: #8cc640;
-    --color_chart_flex_22: #f5a6b7;
-    --color_chart_flex_23: #f9be77;
-    --color_chart_flex_24: #f05a26;
-    --color_chart_flex_25: #ed294e;
-    --color_chart_flex_26: #f69c7b;
-    --color_chart_flex_27: #2fb6d0;
-    --color_chart_flex_28: #f79420;
-    --color_chart_flex_29: #ef5370;
-    --color_chart_flex_30: #f37a50;
-    --color_chart_flex_31: #ffca6d;
-    --color_chart_flex_32: #9bd7d5;
-    --color_chart_flex_33: #1eb473;
-    --color_chart_flex_34: #fcbb48;
-    --color_chart_flex_35: #fcd4a4;
-    --color_chart_flex_36: #98b7d5;
+    --color_chart_flex_1: #57BCFF;
+    --color_chart_flex_2: #F95A87;
+    --color_chart_flex_3: #F9CC5A;
+    --color_chart_flex_4: #9477E5;
+    --color_chart_flex_5: #59DD97;
+    --color_chart_flex_6: #FF957D;
+    --color_chart_flex_7: #C4C4C4;
+    --color_chart_flex_8: #009CFF;
+    --color_chart_flex_9: #F00054;
+    --color_chart_flex_10: #F6B62B;
+    --color_chart_flex_11: #603CD5;
+    --color_chart_flex_12: #00CA69;
+    --color_chart_flex_13: #FF6646;
+    --color_chart_flex_14: #7B7B7B;
+    --color_chart_flex_15: #008DFF;
+    --color_chart_flex_16: #E00052;
+    --color_chart_flex_17: #F5A927;
+    --color_chart_flex_18: #5537CE;
+    --color_chart_flex_19: #00BA5E;
+    --color_chart_flex_20: #F96042;
+    --color_chart_flex_21: #555555;
+    --color_chart_flex_22: #0E7AFD;
+    --color_chart_flex_23: #CA004F;
+    --color_chart_flex_24: #F39725;
+    --color_chart_flex_25: #452FC5;
+    --color_chart_flex_26: #00A750;
+    --color_chart_flex_27: #EA593C;
+    --color_chart_flex_28: #434343;
+    --color_chart_flex_29: #1A67EA;
+    --color_chart_flex_30: #B6004C;
+    --color_chart_flex_31: #F28723;
+    --color_chart_flex_32: #342ABD;
+    --color_chart_flex_33: #009545;
+    --color_chart_flex_34: #DC5238;
+    --color_chart_flex_35: #262626;
+    --color_chart_flex_36: #2345CB;
 
     --color_input_back_disabled: #E9E9E9;
 
@@ -1303,6 +1303,7 @@ div .form-control:focus {
     overflow: unset !important;
     background: var(--color_panel_back);
     padding: 1rem;
+    border-radius: 0px 0px var(--border_radius_standar_max) var(--border_radius_standar_max) !important;    
 }
 
 .sdk_modal_autogestion>.rz-dialog-content
@@ -1707,8 +1708,9 @@ color: var(--color_text);
     
 
     .rz-dialog {
-        min-width: 100% !important;
-        max-width: 100%;
+        min-width: calc(100% - 2rem)  !important;
+        max-width: calc(100% - 2rem);
+        margin-top: 1rem;
     }
 }
 
@@ -1742,6 +1744,25 @@ color: var(--color_text);
         text-overflow: unset !important;
         opacity: 1 !important;
         transition: .2s !important;
+    }
+}
+
+@media (max-width: 375px) {
+    .whcm_logo_compania{
+        max-width: 60px !important;
+    }
+    .header_circles_box_1, .header_circles_box_2, .header_circles_box_3, .header_circles_box_4 {
+        transform: rotate(45deg) translateY(-48px) translateX(-38px) !important;
+    }
+    .dxbl-dropdown{
+        max-width: 260px !important;
+    }
+    .whcm_select_list.sdk-dropdown-menu {
+    	width: 260px !important;    	
+    }
+    .rz-notification {
+        max-width: calc(100% - 2rem) !important;
+        min-width: calc(100% - 2rem) !important;
     }
 }
 
