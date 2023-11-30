@@ -21,6 +21,12 @@
     height: 60px;
 } */
 /* Mobile */
+
+.py-area2
+{
+    padding-top: 1.8rem !important;
+    padding-bottom: 1rem !important;
+}
 @media only screen and (max-width: 600px) {
     .gridlayout-content {
         min-width: 100%;

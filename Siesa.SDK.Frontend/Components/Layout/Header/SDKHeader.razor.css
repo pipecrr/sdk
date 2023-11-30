@@ -10,6 +10,7 @@
     align-items: center;
     padding: .5rem 0.875rem;
 }
+
 .header_circles_box{
     height: 48px;
     width: 690px;
@@ -100,13 +101,17 @@
     line-height: 1.2;
 }
 .sdk_conection>div> ::deep .btn_connect{
-    background: none;
-    color: white;
+    background: none !important;
+    color: white !important;
     font-size: .75rem;
     text-align: right;
     margin: 0;
     border: none;
     line-height: 1.2;  
+}
+.sdk_conection>div> ::deep .btn_connect:hover, .sdk_conection>div> ::deep .btn_connect:focus{
+    background: none !important;
+    box-shadow: none !important;
 }
 .sdk_conection>div>.btn_connect>div>p{
     max-width: 160px;
@@ -216,6 +221,8 @@
     }
 }
 
+
+
 @media (max-width: 991.98px) { 
     .header_circles_box {
         left: -250px;
@@ -275,7 +282,7 @@
         left: 0;
         bottom: 0;
         padding: 0.5rem;
-        background-color: var(--color_light);
+        background-color: var(--color_light_nav);
         box-shadow: var(--shadow_standar);
     }
     .header_circles_box {

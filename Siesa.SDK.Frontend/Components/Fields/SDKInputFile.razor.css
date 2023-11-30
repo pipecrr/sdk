@@ -7,6 +7,16 @@
     cursor: pointer;
     font-size: 0;
   }
+
+  .upload_file_icon{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   height: 100%;
+   color: var(--color_text_2);
+   font-size: 1.75rem;
+   padding: 0.25rem;
+}
   
 
   .file-input::-webkit-file-upload-button {
@@ -76,6 +86,7 @@
     border: 2px dashed var(--color_border);
     border-radius: var(--border_radius_standar);
     position: relative;
+    background: var(--color_back_body);
  }
  .file-upload-container img{
     object-fit: cover;
