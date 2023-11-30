@@ -18,7 +18,7 @@
 }
 else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
 {
-    <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList" StackTrace="@StackTrace" VerifyContext="@ClickInSave"/>
+    <ErrorsWindow EditFormContext="@EditFormContext" MessagesDTO="@ErrorList" VerifyContext="@ClickInSave"/>
 }
 else if (BusinessObj.BaseObj.Rowid != 0)
 {
@@ -35,7 +35,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
             <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" ShowAditionalFields="@ShowAditionalFields"/>
     }
     <CascadingValue Value="@this">        
-        <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList" VerifyContext="@ClickInSave"/>
+        <ErrorsWindow EditFormContext="@EditFormContext" MessagesDTO="@ErrorList" VerifyContext="@ClickInSave"/>
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"

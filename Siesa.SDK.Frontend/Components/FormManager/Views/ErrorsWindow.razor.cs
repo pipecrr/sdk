@@ -8,167 +8,80 @@ using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Components.FormManager.Model;
 using Siesa.SDK.Shared.DTOS;
 using Microsoft.Extensions.Hosting;
+using Siesa.Global.Enums;
+using Siesa.SDK.Frontend.Services;
+using Siesa.SDK.Frontend.Components.Fields;
+using Siesa.SDK.Components.Visualization;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
     public partial class ErrorsWindow {
         [Inject] public IAuthenticationService AuthenticationService { get; set; }
         [Inject] public UtilsManager UtilsManager { get; set; }
+        [Inject] public SDKNotificationService _notificationService { get; set; }
+        [Inject] public SDKDialogService _sdkDialogService { get; set; }
         [Parameter] public EditContext EditFormContext { get; set; }
-        [Parameter] public List<string> GeneralErrors { get; set; }
-        [Parameter] public List<string> ErrorMsg { get; set; }
         [Parameter] public bool VerifyContext { get; set; }
-        [Parameter] public List<string> StackTrace { get; set; } = new List<string>();
+        [Parameter] public List<ModelMessagesDTO> MessagesDTO { get; set; } = new List<ModelMessagesDTO>();
         private bool _detailVisible = false;
         private int _errorCount = 0;
         private string ClassError = "sdk_error_log_box_sup";
 
-        private List<SDKErrorsWindowDTO> _errors = new List<SDKErrorsWindowDTO>();
+        private List<SDKErrorsWindowDTO> _formErrors = new();
 
-        private Dictionary<string, object[]> _generalerrorsFormat = new Dictionary<string, object[]>();
+        private readonly string _environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-        private List<string> _generalErrors = new List<string>();
-
-        private string? _environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
-        private List<string> _stackTrace { get 
-        { 
-            if(_environment == Environments.Development && StackTrace.Any())
-                return StackTrace;
-            else
-                return new List<string>();
-        }}
-
-        protected override async Task OnParametersSetAsync()
+        private void FormErrors()
         {
-            _errorCount = 0;
-            _generalErrors = new List<string>();
-            _errors = new List<SDKErrorsWindowDTO>();
-
-            if(_environment == Environments.Development && StackTrace.Any())
-            {
-                _generalErrors.AddRange(_stackTrace);
-            }
-            
-            if (EditFormContext != null && EditFormContext.GetValidationMessages().Count() > 0 && VerifyContext)
-            {
-                var groupErrors = EditFormContext.GetValidationMessages().GroupBy(x => {
-                    var errorsSplit = x.Split("//");
-                    if(errorsSplit.Count() > 1){
-                        return errorsSplit[1];
-                    }else{
-                        return "General";
-                    }
-                });
-                foreach (var item in groupErrors){
-                    
-                    if(!item.Key.Equals("General")){
-                        //var field = await UtilsManager.GetResource(item.Key);
-                        var field = item.Key;                        
-                        Dictionary<string, object[]> errorsFormat = new Dictionary<string, object[]>();
-                        var listErrors = item.Select(x => {
-                            var errorTag = x.Split("//");
-                            var resourceTag = errorTag[0];
-                            //var resourceTagValue = UtilsManager.GetResource(resourceTag).Result;
-                            //var resourceTagValue = resourceTag;
-                            var errorSkip = errorTag.Skip(1);
-                            // if(errorSkip[0].Equals(item.Key)){
-                            //     errorSkip[0] = field;
-                            // }
-                            errorsFormat.Add(resourceTag, errorSkip.ToArray());
-                            //string errorFormat = errorFormat = string.Format(resourceTagValue, errorSkip);
-                            return resourceTag;
-                        }).ToList();                        
-                        _errors.Add(new SDKErrorsWindowDTO(){
-                            Field = field,
-                            Errors = errorsFormat
-                        });
-                    }else{
-                        _generalErrors.AddRange(item);
-                    }
+            var groupErrors = EditFormContext.GetValidationMessages().GroupBy(x => {
+                var errorsSplit = x.Split("//");
+                if(errorsSplit.Count() > 1)
+                {
+                    return errorsSplit[1];
+                }else{
+                    return "General";
                 }
-                _errorCount = _errors.Count();
-            }
-            if(ErrorMsg?.Count() > 0) {
-                _errorCount += ErrorMsg.Count();
-                var groupErrors = ErrorMsg.GroupBy(x => x.Split("//")[1]);
-                foreach (var item in groupErrors){
-                    //var field = UtilsManager.GetResource(item.Key).Result;
-                    var field = item.Key;
-                    Dictionary<string, object[]> errorsFormat = new Dictionary<string, object[]>();
-                    var listErrors = item.Select(x => {
+            });
+            foreach (var item in groupErrors)
+            {
+                if(!item.Key.Equals("General",StringComparison.Ordinal))
+                {
+                    var field = item.Key;                        
+                    Dictionary<string, object[]> errorsFormat = new();
+
+                    var listErrors = item.Select(x => 
+                    {
                         var errorTag = x.Split("//");
                         var resourceTag = errorTag[0];
-                        //var resourceTagValue = UtilsManager.GetResource(resourceTag).Result;
-                        //var resourceTagValue = resourceTag;
-                        var errorSkip = errorTag.Skip(1).ToArray();
-                        // if(errorSkip[0].Equals(item.Key)){
-                        //     errorSkip[0] = field;
-                        // }
+                        var errorSkip = errorTag.Skip(1);
+
                         errorsFormat.Add(resourceTag, errorSkip.ToArray());
-                        //string errorFormat = errorFormat = string.Format(resourceTagValue, errorSkip);
+
                         return resourceTag;
                     }).ToList();
-                    _errors.Add(new SDKErrorsWindowDTO(){
+
+                    _formErrors.Add(new SDKErrorsWindowDTO()
+                    {
                         Field = field,
                         Errors = errorsFormat
                     });
                 }
             }
-            if(GeneralErrors?.Count > 0) 
+            _errorCount += _formErrors.Count;
+        }
+
+        protected override async Task OnParametersSetAsync()
+        {
+            _errorCount = 0;
+            _formErrors = new List<SDKErrorsWindowDTO>();
+
+            if (EditFormContext != null && EditFormContext.GetValidationMessages().Any() && VerifyContext)
             {
-                _errorCount += GeneralErrors.Count;
-                var errorMsg = "";
-
-                foreach (var err in GeneralErrors)
-                {
-                    if (err.Split("//").Length > 1)
-                    {
-                        var errorSplit = err.Split("//");
-                        var resourceTag = errorSplit[0];
-
-                        var errorFormat = errorSplit.Skip(1).ToArray();
-
-                        if (errorFormat[0].Contains(',', StringComparison.Ordinal))
-                        {
-                            var formatSplits = errorFormat[0].Split(',').Where(item => !string.IsNullOrEmpty(item)).ToArray();
-
-                            if (formatSplits.Length > 0)
-                            {
-                                var messageFragments = new List<string>();
-
-                                foreach (var item in formatSplits)
-                                {
-                                    var resourceFormat = await UtilsManager.GetResource(item).ConfigureAwait(true);
-                                    messageFragments.Add(resourceFormat);
-                                }
-
-                                var formats = string.Join("-", messageFragments);
-
-                                _generalerrorsFormat.Add(resourceTag, new object[]{formats});
-                            }
-                            
-                        }else if(!_generalerrorsFormat.ContainsKey(resourceTag))
-                        {
-                            _generalerrorsFormat.Add(resourceTag, errorFormat);
-                        }
-                    }else if(err.StartsWith("Exception: ", StringComparison.Ordinal))
-                    {
-                        errorMsg = err.Replace("Exception: ", "", StringComparison.Ordinal);
-                        if(_generalErrors.Contains(errorMsg, StringComparer.Ordinal))
-                        {
-                            _generalErrors.Remove(errorMsg);
-                        }
-                        _generalErrors.Add(errorMsg);
-
-                    }else
-                    {
-                        _generalErrors.Add(err);
-                    }
-
-                    _generalErrors = _generalErrors.Distinct().ToList();
-                }
+                FormErrors();
             }
+
+            _errorCount += MessagesDTO.Count(x => x.TypeMessange == EnumModelMessageType.Error);
+
             if (_errorCount > 0){
                 ClassError = "sdk_error_log_box_sup sdk_error_log_show sdk_error_log_show_detail";
                 _detailVisible = true;
@@ -176,10 +89,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 ClassError = "sdk_error_log_box_sup";
             }
             
-            await base.OnParametersSetAsync();
+            await base.OnParametersSetAsync().ConfigureAwait(true);
         }
 
-        public void showDedtail(){
+        public void showDedtail()
+        {
             if(_detailVisible)
             {
                 ClassError = "sdk_error_log_box_sup sdk_error_log_show";
@@ -190,5 +104,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 _detailVisible = true;
             }
         }
+
+        
     }
 }

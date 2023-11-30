@@ -21,6 +21,8 @@ using System.Runtime.CompilerServices;
 using Microsoft.Extensions.DependencyInjection;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.SDK.Shared.Utilities;
+using Siesa.SDK.Shared.DTOS;
+using Siesa.SDK.Protos;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -97,7 +99,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public List<Panel> PanelsCollapsable = new List<Panel>();
         public Boolean ModelLoaded = false;
         public String ErrorMsg = "";
-        public List<string> ErrorList = new List<string>();
+        public List<ModelMessagesDTO> ErrorList = new ();
         protected bool CanCreate;
         protected bool CanEdit;
         protected bool CanDelete;
@@ -125,7 +127,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         internal string BusinessNameA { get; set; }
         public List<DetailView> DetailViewsTablesA { get; set; } = new List<DetailView>();
         internal List<E00201_Company> Companies { get; set; } = new List<E00201_Company>();
-        private List<string> StackTrace = new ();
 
         private void setViewContextField(FieldOptions field)
         {
@@ -261,7 +262,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                     catch (System.Exception ex)
                     {
-                        StackTrace.Add(ex.Message);
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            Message = "Custom.Generic.Message.Error",
+                            StackTrace = ex.StackTrace
+                        });
                     }
                 }
 
@@ -300,7 +305,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 //ErrorMsg = "No hay definición para la vista de detalle";
                 ErrorMsg = "Custom.Generic.ViewdefNotFound";
-                ErrorList.Add(ErrorMsg);
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.ViewdefNotFound"
+                });
             }
             else
             {
@@ -508,8 +516,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 Loading = false;
                 this.ModelLoaded = false;
                 ErrorMsg = "";
-                ErrorList = new List<string>();
-                await InitView(BusinessName);
+                ErrorList = new ();
+                await InitView(BusinessName).ConfigureAwait(true);
             }
         }
 
@@ -553,20 +561,40 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private async Task DeleteBusiness()
         {
-            dynamic result = null;
+            DeleteBusinessObjResponse result = null;
             try{
                 result = await BusinessObj.DeleteAsync();
-            }catch(Exception ex){
-                //ErrorMsg = ex.Message;
-                ErrorList.Add("Custom.Generic.Message.Error");
-                StackTrace.Add(ex.Message);
+            }catch(Exception ex)
+            {
+
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = ex.StackTrace
+                });
             }
 
             if (result != null && result.Errors.Count > 0)
             {
-                foreach(var error in result.Errors){
-                    NotificationService.ShowError(error.Message);
-                    ErrorList.Add(error.Message);
+                foreach (var error in result.Errors)
+                {
+                    _ = NotificationService.ShowError("Custom.Generic.Message.Error");
+                    if (error.Format != null && error.Format.Any())
+                    {
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            MessageFormat = new Dictionary<string, List<string>>()
+                            {
+                                { error.Message, error.Format.ToList() }
+                            },
+                        });
+                    }else
+                    {
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            Message = error.Message
+                        });
+                    }
                 }
                 // ErrorMsg = "<ul>";
                 // foreach (var error in result.Errors)
@@ -645,9 +673,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 if (!CanDetail)
                 {
                     ErrorMsg = "Custom.Generic.Unauthorized";
-                    NotificationService.ShowError("Custom.Generic.Unauthorized");
-                    ErrorList.Add("Custom.Generic.Unauthorized");
-                    if(!IsSubpanel){
+
+                    _ = NotificationService.ShowError("Custom.Generic.Unauthorized");
+
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        Message = "Custom.Generic.Unauthorized"
+                    });
+
+                    if(!IsSubpanel)
+                    {
                         // NavigationService.NavigateTo("/", replace: true);
                     }
                 }
@@ -669,7 +704,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             catch (System.Exception ex)
             {
-                StackTrace.Add(ex.Message);
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = ex.StackTrace
+                });
             }
         }
 

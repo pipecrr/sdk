@@ -1185,7 +1185,11 @@ namespace Siesa.SDK.Business
                                                 .Select(x => x.Message)
                                                 .SelectMany(msg => regex.Matches(msg).Cast<Match>())
                                                 .Select(match => match?.Groups[1].Value.Split('.').Last()).Distinct().FirstOrDefault();
-                            response.Errors.Add(new OperationError() { Message = $"Exception: Custom.Generic.Message.DeleteErrorWithRelations//{relatedTable}.Plural" });
+                            response.Errors.Add(new OperationError() 
+                            { 
+                                Message = $"Custom.Generic.Message.DeleteErrorWithRelations",
+                                Format = { $"{relatedTable}.Plural" } 
+                            });
                         }
                         else
                         {

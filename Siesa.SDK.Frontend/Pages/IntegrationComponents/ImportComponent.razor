@@ -42,7 +42,7 @@
 @inject IServiceProvider ServiceProvider
 
 @if(ErrorList!=null && ErrorList.Count>0){
-    <ErrorsWindow GeneralErrors="@ErrorList"/>
+    <ErrorsWindow MessagesDTO="@ErrorList"/>
 }
 
 
@@ -212,7 +212,7 @@
     public bool StatusTransaction {get; set;}
     public int FlexRowId { get; set; } = 52;
     public Dictionary<string, object> filters = new Dictionary<string, object>();
-    public List<string> ErrorList { get; set; } = new List<string>();
+    public List<ModelMessagesDTO> ErrorList { get; set; } = new();
 
     private List<string> HiddenFields { get; set; } = new List<string>(); 
     private List<Shared.DTOS.MapFkRelationsImportDTO> ListMapRelationsImport = new ();
@@ -380,10 +380,16 @@
                 JsonObject = JsonConvert.SerializeObject(response.Guid, Newtonsoft.Json.Formatting.None);
             }
             
-        }else{
-            NotificationService.ShowError(result.Errors.FirstOrDefault());
+        }else
+        {
+           _ = NotificationService.ShowError(result.Errors.FirstOrDefault());
             //JsonObject = JsonConvert.SerializeObject(result.Errors, Newtonsoft.Json.Formatting.None);
-            ErrorList = result.Errors.ToList();
+
+            ErrorList.AddRange(result.Errors.Select(x => new ModelMessagesDTO()
+            {
+                Message = x,
+            }));
+
         }
         StateHasChanged();
     }
@@ -447,7 +453,9 @@
 
         if(Type == "application/wps-office.xlsx") return DocumentFormat.Xlsx;
 
-        ErrorList.Add("Custom.SDK.Integration.Msg.ErrorFileType");
+        ErrorList.Add(new ModelMessagesDTO(){
+            Message = "Custom.SDK.Integration.Msg.ErrorFileType",
+        });
         return null;
 
     } 
@@ -460,11 +468,18 @@
                 if(ConfigPage is not null){
                     return CheckConfigPage(ConfigPage);
                 }
-                ErrorList.Add("No cuenta con la pagina de configuración");
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "No cuenta con la pagina de configuración"
+                });
                 return true;
                 
-            }else{
-                ErrorList.Add("No cuenta con la cantidad de paginas requeridas");
+            }else
+            {
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "No cuenta con la pagina de configuración"
+                });
                 return true;
             }
         }else{
@@ -476,12 +491,20 @@
         if(Config.HasData){
             if(Config["B1"].Value.IsText && Config["B1"].Value.TextValue == IdCompanyGroup){
                 return false;
-            }else{
-                ErrorList.Add("El grupo de compañia es diferente al actual en sesion");
+            }else
+            {
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "El grupo de compañia es diferente al actual en sesion"
+                });
                 return true;
             }
-        }else{
-            ErrorList.Add("La pagina de configuraciones se encuentra vacia");
+        }else
+        {
+            ErrorList.Add(new ModelMessagesDTO()
+            {
+                Message = "La pagina de configuraciones se encuentra vacia"
+            });
             return true;
         }
     }
@@ -577,8 +600,12 @@
                 {
                     SelectedIndex = 0;
                     //NotificationService.ShowError("Custom.SDK.Import.ErrorLoadFile");
-                    if(!ErrorList.Contains("Custom.SDK.Import.ErrorLoadFile")){
-                        ErrorList.Add("Custom.SDK.Import.ErrorLoadFile");
+                    if(!ErrorList.Any(x=> x.Message.Equals("Custom.SDK.Import.ErrorLoadFile")))
+                    {
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            Message = "Custom.SDK.Import.ErrorLoadFile",
+                        });
                     }
                 }else{
                     ErrorList.Clear();
@@ -589,8 +616,12 @@
                 {
                     SelectedIndex = 0;
                     //NotificationService.ShowError("Custom.SDK.Import.ErrorMappingData"); 
-                    if(!ErrorList.Contains("Custom.SDK.Import.ErrorMappingData")){
-                        ErrorList.Add("Custom.SDK.Import.ErrorMappingData");
+                    if(!ErrorList.Any(x=> x.Message.Equals("Custom.SDK.Import.ErrorMappingData")))
+                    {
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            Message = "Custom.SDK.Import.ErrorMappingData",
+                        });
                     }
                 }else
                 {

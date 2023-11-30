@@ -11,6 +11,7 @@ using Siesa.Global.Enums;
 using System.Reflection;
 using Siesa.SDK.Shared.DataAnnotations;
 using System.Linq;
+using Siesa.SDK.Shared.DTOS;
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
     public abstract class DynamicBaseViewModel: ComponentBase
@@ -62,7 +63,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         public string ErrorMsg { get; set; }
 
-        public List<string> ErrorList { get; set; }
+        public List<ModelMessagesDTO> ErrorList { get; set; } = new();
 
         public Type businessType;
 
@@ -77,9 +78,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         protected bool CanAccess { get; set; }
 
-        public List<string> StackTrace { get; set; } = new List<string>();
-
-
         protected virtual async Task CheckAccessPermission(bool disableAccessValidation = false)
         {
             if(!BusinessName.Equals("BLAttachmentDetail"))
@@ -93,7 +91,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             if(!disableAccessValidation && !CanAccess)
             {
                 this.ErrorMsg = "Custom.Generic.Unauthorized";
-                ErrorList.Add("Custom.Generic.Unauthorized");
+                
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Unauthorized"
+                });
             }
 
             StateHasChanged();
@@ -115,7 +117,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     if (businessType is null)
                     {
                         ErrorMsg = $"Business not found in Front: {bName}";
-                        ErrorList.Add("Custom.Generic.FrontendBusinessNotFound");
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            Message = "Custom.Generic.FrontendBusinessNotFound"
+                        });
                         return;
                     }
                     
@@ -127,14 +132,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 {
                     Console.WriteLine("Error BaseViewModel" + e.ToString());
                     ErrorMsg = e.ToString();
-                    StackTrace.Add(e.ToString());
-                    ErrorList.Add("Custom.Generic.Message.Error");
+
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        Message = "Custom.Generic.Message.Error",
+                        StackTrace = e.StackTrace
+                    });
                 }
             }
             else
             {
                 this.ErrorMsg = "404 Not Found.";
-                ErrorList.Add("Custom.Generic.BackendBusinessNotFound");
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.BackendBusinessNotFound"
+                });
             }
             StateHasChanged();
         }
@@ -192,7 +204,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                         businessType = null;
                         BusinessModel = null;
                         ErrorMsg = "";
-                        ErrorList = new List<string>();
+                        ErrorList = new ();
 
                         //await base.SetParametersAsync(parameters);
 
@@ -203,11 +215,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             catch (Exception e)
             {
-                StackTrace.Add(e.ToString());
-                ErrorList.Add("Custom.Generic.FrontendBusinessNotFound");
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.FrontendBusinessNotFound",
+                    StackTrace = e.StackTrace
+                });
             }
-
-            await base.SetParametersAsync(parameters);
+            await base.SetParametersAsync(parameters).ConfigureAwait(true);
         }
     }
 }

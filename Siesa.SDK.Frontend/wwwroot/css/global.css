@@ -2736,5 +2736,9 @@ opacity:40%
 
 
 
+.modal_stacktrace{
+    height: 50vh !important;
+}
+
 
        

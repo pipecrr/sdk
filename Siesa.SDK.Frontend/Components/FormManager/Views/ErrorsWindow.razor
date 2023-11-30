@@ -1,4 +1,8 @@
-@if(_errorCount > 0 ){
+@using Siesa.SDK.Frontend.Components.Fields;
+@using Siesa.SDK.Components.Visualization;
+
+@if(_errorCount > 0 )
+{
     <div class=@(ClassError +" col-12 p-0")>
         <button class="sdk_error_log_btn d-flex align-items-center justify-content-between" @onclick="showDedtail" @onclick:preventDefault>
             <div class="d-flex align-items-center justify-content-center">
@@ -27,7 +31,8 @@
             </div>
             <div class="col-12 sdk_card sdk_error_log_box_body py-0">
                 <div class="table-responsive">
-                    @if(_errors.Any()){
+                    @if(_formErrors.Any())
+                    {
                         <table class="table table-striped sdk_table_v2">
                             <thead>
                                 <tr>
@@ -40,7 +45,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in _errors){
+                                @foreach (var item in _formErrors){
                                     <tr>
                                         <td class="align-middle">
                                             <ResourceViewer ResourceTag= "@item.Field"/>
@@ -58,7 +63,8 @@
                             </tbody>
                         </table>
                     }
-                    @if(_generalErrors.Any() || _generalerrorsFormat.Any()){
+                    @if(MessagesDTO.Any())
+                    {
                         <table class="table table-striped sdk_table_v2">
                             <thead>
                                 <tr>
@@ -69,27 +75,34 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    @if (_generalerrorsFormat.Count() > 0)
-                                    {
-                                        <td>
-                                            <ul class="ul_list_error">
-                                                @foreach (var error in _generalerrorsFormat)
-                                                {
-                                                    <li><ResourceViewer ResourceTag= "@error.Key" FormatString="@error.Value"/></li> 
-                                                }
-                                            </ul>
-                                        </td>
-                                    }
-                                    @if (_generalErrors.Count() > 0)
-                                    {
                                     <td>
                                         <ul class="ul_list_error">
-                                            @foreach (var error in _generalErrors){
-                                               <li><ResourceViewer ResourceTag= "@error"/></li> 
+                                            @foreach (var item in MessagesDTO)
+                                            {
+                                                @if (item.MessageFormat != null && item.MessageFormat.Any())
+                                                { 
+                                                    @foreach (var error in item.MessageFormat)
+                                                    {
+                                                        <li>
+                                                            <ResourceViewer ResourceTag= "@error.Key" FormatString="@error.Value.ToArray()"/>
+                                                        </li> 
+                                                    }
+                                                }
+                                                @if (!string.IsNullOrEmpty(item.Message))
+                                                {
+                                                    <li>
+                                                        <ResourceViewer ResourceTag= "@item.Message"/>
+                                                        <SDKButton  RenderStyle="SDKButtonRenderStyle.None"
+                                                        Click="@(()=> ShowModalStackTrace(item.StackTrace))" CssClass="ml-2"
+                                                        >
+                                                            <SDKIcon Name="fa-info-circle" Style="color: #E00052;"/>
+                                                        </SDKButton>
+                                                    </li>
+                                                }
                                             }
+
                                         </ul>
                                     </td>
-                                    }
                                 </tr>
                             </tbody>
                         </table>
@@ -100,4 +113,16 @@
 
         <div class="sdk_error_log_back"></div>
     </div>
+}
+
+
+@code
+{
+    private void ShowModalStackTrace(string stackTrace)
+    {
+        if (string.IsNullOrEmpty(stackTrace))
+            _notificationService.ShowInfo("Custom.ErrorsWindow.NoStackTrace");
+            return;
+        _ = _sdkDialogService.ShowCustomDialog(ds => @<SDKTextField Value="@stackTrace" CssClass="modal_stacktrace"/>, standardWidth: SDKModalWidth.Medium, title: "Custom.ErrorsWindow.StackTrace", height: "600px");
+    }
 }

@@ -11,6 +11,7 @@ using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.SDK.Frontend.Extension;
 using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Shared.Services;
+using Siesa.SDK.Shared.DTOS;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {   
@@ -94,7 +95,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             catch (Exception e)
             {
-                ErrorList.Add("Exception: "+e.ToString());
+                ErrorList.Add(new Shared.DTOS.ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = e.StackTrace
+                });
             }
         }
 
@@ -147,7 +152,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 Console.WriteLine("Error DetailViewModel", e.ToString());
                 ErrorMsg = e.ToString();
-                ErrorList.Add("Exception: "+e.ToString());
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = e.StackTrace
+                });
             }
         }
 

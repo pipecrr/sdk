@@ -24,6 +24,7 @@ using Siesa.Global.Enums;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Shared.Utilities;
+using Siesa.SDK.Shared.DTOS;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
@@ -68,7 +69,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public bool Saving = false;
         public bool SavingFile { get; set; } = false;
         public String ErrorMsg = "";
-        public List<string> ErrorList = new List<string>();
+        public List<ModelMessagesDTO> ErrorList = new ();
         [Parameter]
         public string FormID { get; set; } = Guid.NewGuid().ToString();
         protected ValidationMessageStore _messageStore;
@@ -114,8 +115,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public string FieldUniqueIndex { get; set; } = "";
 
         private string _viewdefName = "";
-
-        public List<string> StackTrace { get; set; } = new ();
 
         public bool ContainAttachments = false;
 
@@ -183,7 +182,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 }
                 catch (System.Exception ex)
                 {
-                    StackTrace.Add(ex.Message);
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        Message = "Custom.Generic.Message.Error",
+                        StackTrace = ex.StackTrace,
+                    });
                 }
             }
         }
@@ -200,7 +203,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             catch (System.Exception ex)
             {
                 ContainAttachments = false;
-                StackTrace.Add(ex.Message);
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = ex.StackTrace,
+                });
             }
         }
         private string GetViewdef(string businessName)
@@ -275,7 +282,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             catch (System.Exception ex)
             {
-                StackTrace.Add(ex.Message);
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = ex.StackTrace,
+                });
                 _ = InvokeAsync(() => StateHasChanged());
             }
         }
@@ -299,7 +310,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             if (String.IsNullOrEmpty(metadata))
             {
                 ErrorMsg = $"Custom.Generic.ViewdefNotFound";
-                ErrorList.Add($"Custom.Generic.ViewdefNotFound");
+
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = ErrorMsg,
+                });
             }
             else
             {
@@ -311,7 +326,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             catch (System.Exception ex)
             {
-                StackTrace.Add(ex.Message);
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = ex.StackTrace,
+                });
             }
             if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
             {
@@ -614,7 +633,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         {
             ErrorMsg = "";
             ErrorList.Clear();
-            StackTrace.Clear();
             StateHasChanged();
         }
 
@@ -682,7 +700,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 }
                 catch (System.Exception ex)
                 {
-                    StackTrace.Add(ex.Message);
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        Message = "Custom.Generic.Message.Error",
+                        StackTrace = ex.StackTrace,
+                    });
                 }
             }
             return shouldUpdate;
@@ -746,7 +768,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             catch (System.Exception ex)
             {
-                StackTrace.Add(ex.Message);
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = ex.StackTrace,
+                });
             }
             //await InitView();
         }
@@ -761,7 +787,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 Loading = false;
                 ErrorMsg = "";
-                ErrorList = new List<string>();
+                ErrorList = new();
                 await InitView();
             }
         }
@@ -774,10 +800,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             SavingFile = true;
             try{
                 await fileField.Upload();
-            }catch(Exception ex){
+            }catch(Exception ex)
+            {
                 //TODO: pdte por revision 
                 SavingFile = false;
-                StackTrace.Add(ex.Message);
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = ex.StackTrace,
+                });
                 return 0;
             }
             var horaInicio = DateTime.Now.Minute;
@@ -793,7 +824,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     return result;
                 }catch(Exception ex){
                     SavingFile = false;
-                    StackTrace.Add(ex.Message);
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        Message = "Custom.Generic.Message.Error",
+                        StackTrace = ex.StackTrace,
+                    });
                     return rowid;
                 }
             }
@@ -811,27 +846,40 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         private async Task SaveBusiness()
         {   
             Saving = true;
-            if(CountUnicErrors>0)
+            var existeUniqueIndexValidation = NotificationService.Messages.Where(x => x.Summary == "Custom.Generic.UniqueIndexValidation").Any();
+            if(existeUniqueIndexValidation)
             {
                 GlobalLoaderService.Hide();
                 Saving = false;
 
                 if(FielsdUniqueIndex.Any())
                 {
-                    string fields = "";
+                    List<string> fields = new();
                     foreach (var compoundIndex in FielsdUniqueIndex)
                     {
                         foreach (var item in (List<string>)compoundIndex)
                         {
-                            fields += $"{BusinessObj.BaseObj.GetType().Name}.{item},";
+                            fields.Add($"{BusinessObj.BaseObj.GetType().Name}.{item}");
                         }
                     }
-                    
-                    ErrorList.Add($"Custom.Generic.UniqueIndexValidation.Compound//{fields}");
+
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        MessageFormat = new Dictionary<string, List<string>>()
+                        {
+                            { "Custom.Generic.UniqueIndexValidation.Compound", fields }
+                        },
+                    });
 
                 }else
                 {
-                    ErrorList.Add($"Custom.Generic.UniqueIndexValidation//{FieldUniqueIndex}");
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        MessageFormat = new Dictionary<string, List<string>>()
+                        {
+                            { "Custom.Generic.UniqueIndexValidation", new List<string>() { FieldUniqueIndex } }
+                        },
+                    });
                 }
                 
                 return;
@@ -864,18 +912,27 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                             GlobalLoaderService.Hide();
                             Saving = false;
                             ErrorMsg = ex.Message;
-                            ErrorList.Add("Custom.Generic.Message.Error");
-                            StackTrace.Add(ErrorMsg);
+                            ErrorList.Add(new ModelMessagesDTO()
+                            {
+                                Message = "Custom.Generic.Message.Error",
+                                StackTrace = ex.StackTrace,
+                            });
+                    
                             return;
                         }
                     }
                 }
-            }catch(Exception ex){
+            }catch(Exception ex)
+            {
                 GlobalLoaderService.Hide();
                 Saving = false;
                 ErrorMsg = ex.Message;
-                ErrorList.Add("Custom.Generic.Message.Error");
-                StackTrace.Add(ex.Message);
+
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = ex.StackTrace,
+                });
                 return;
             }
 
@@ -923,8 +980,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                         _messageStore.Add(fieldIdentifier, (string)error.Message);
                     }else
                     {
-                        StackTrace.Add(error.Message);
-                        ErrorList.Add(error.Message);
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            Message = (string)error.Message,
+                        });
                     }
                 }
 
@@ -988,7 +1047,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             FormHasErrors = false;
             ErrorMsg = "";
             ErrorList.Clear();
-            StackTrace.Clear();
             await SaveBusiness().ConfigureAwait(true);
             ClickInSave = true;
         }
@@ -998,11 +1056,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             FormHasErrors = true;
             NotificationService.ShowError("Custom.Generic.FormError");
             var existeUniqueIndexValidation = NotificationService.Messages.Where(x => x.Summary == "Custom.Generic.UniqueIndexValidation").Any();
-            if(existeUniqueIndexValidation){
-                ErrorList.Add("Custom.Generic.UniqueIndexValidation");
-            }else{
+            if(existeUniqueIndexValidation)
+            {
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.UniqueIndexValidation",
+                });
+                //ErrorList.Add("Custom.Generic.UniqueIndexValidation");
+
+            }else
+            {
                 ErrorList.Clear();
-                StackTrace.Clear();
             }
             ClickInSave = true;
         }
