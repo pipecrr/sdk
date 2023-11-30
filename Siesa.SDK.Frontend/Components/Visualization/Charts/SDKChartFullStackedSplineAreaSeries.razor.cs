@@ -26,11 +26,11 @@ public partial class SDKChartFullStackedSplineAreaSeries<TData, TArgument, TValu
     [Parameter]
     public string Axis { get; set; }
     [Parameter]
-    public ChartContinuousSeriesHoverMode HoverMode { get; set; }
+    public SDKChartContinuousSeriesHoverMode HoverMode { get; set; }
     [Parameter]
     public double Opacity { get; set; } = 0.5;
     [Parameter]
-    public ChartContinuousSeriesSelectionMode SelectionMode { get; set; }
+    public SDKChartContinuousSeriesSelectionMode SelectionMode { get; set; }
 
     [Parameter]
     public bool BreakOnEmptyPoints { get; set; }
