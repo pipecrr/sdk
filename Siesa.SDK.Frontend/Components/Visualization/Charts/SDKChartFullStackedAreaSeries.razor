@@ -1,0 +1,30 @@
+@using Siesa.SDK.Frontend.Components
+
+@typeparam TData
+@typeparam TArgument
+@typeparam TValue
+
+@inherits SDKComponent
+
+<DxChartFullStackedAreaSeries
+
+T ="TData"
+TArgument ="TArgument"
+TValue="TValue"
+HoverMode="@HoverMode.Get()"
+Opacity="@Opacity"
+SelectionMode="@SelectionMode.Get()"
+Data= "@Data"
+ArgumentField="@ArgumentField"
+ValueField="@ValueField"
+Name="@Name"
+Color="@Color"
+Filter="@Filter"
+Pane="@Pane"
+BreakOnEmptyPoints="@BreakOnEmptyPoints"
+Axis="@Axis"
+>
+
+ @ChildContent
+
+</DxChartFullStackedAreaSeries>
