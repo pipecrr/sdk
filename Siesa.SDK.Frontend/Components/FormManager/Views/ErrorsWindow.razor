@@ -75,37 +75,34 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    @foreach(var item in MessagesDTO)
-                                    {
-                                        @if (item.MessageFormat != null && item.MessageFormat.Any())
-                                        {
-                                            <td>
-                                                <ul class="ul_list_error">
-                                                    
+                                    <td>
+                                        <ul class="ul_list_error">
+                                            @foreach (var item in MessagesDTO)
+                                            {
+                                                @if (item.MessageFormat != null && item.MessageFormat.Any())
+                                                { 
                                                     @foreach (var error in item.MessageFormat)
                                                     {
-                                                        <li><ResourceViewer ResourceTag= "@error.Key" FormatString="@error.Value.ToArray()"/></li> 
+                                                        <li>
+                                                            <ResourceViewer ResourceTag= "@error.Key" FormatString="@error.Value.ToArray()"/>
+                                                        </li> 
                                                     }
-                                                </ul>
-                                            </td>
-                                        }
+                                                }
+                                                @if (!string.IsNullOrEmpty(item.Message))
+                                                {
+                                                    <li>
+                                                        <ResourceViewer ResourceTag= "@item.Message"/>
+                                                        <SDKButton  RenderStyle="SDKButtonRenderStyle.None"
+                                                        Click="@(()=> ShowModalStackTrace(item.StackTrace))" CssClass="ml-2"
+                                                        >
+                                                            <SDKIcon Name="fa-info-circle" Style="color: #E00052;"/>
+                                                        </SDKButton>
+                                                    </li>
+                                                }
+                                            }
 
-                                        @if (!string.IsNullOrEmpty(item.Message))
-                                        {
-                                        <td>
-                                            <ul class="ul_list_error">
-                                                <li>
-                                                    <ResourceViewer ResourceTag= "@item.Message"/>
-                                                    <SDKButton  RenderStyle="SDKButtonRenderStyle.None"
-                                                    Click="@(()=> ShowModalStackTrace(item.StackTrace))" CssClass="ml-2"
-                                                    >
-                                                        <SDKIcon Name="fa-info-circle" Style="color: #E00052;"/>
-                                                    </SDKButton>
-                                                </li> 
-                                            </ul>
-                                        </td>
-                                        }
-                                    } 
+                                        </ul>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -123,6 +120,9 @@
 {
     private void ShowModalStackTrace(string stackTrace)
     {
+        if (string.IsNullOrEmpty(stackTrace))
+            _notificationService.ShowInfo("Custom.ErrorsWindow.NoStackTrace");
+            return;
         _ = _sdkDialogService.ShowCustomDialog(ds => @<SDKTextField Value="@stackTrace" CssClass="modal_stacktrace"/>, standardWidth: SDKModalWidth.Medium, title: "Custom.ErrorsWindow.StackTrace", height: "600px");
     }
 }

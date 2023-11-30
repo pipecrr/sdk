@@ -18,6 +18,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
     public partial class ErrorsWindow {
         [Inject] public IAuthenticationService AuthenticationService { get; set; }
         [Inject] public UtilsManager UtilsManager { get; set; }
+        [Inject] public SDKNotificationService _notificationService { get; set; }
         [Inject] public SDKDialogService _sdkDialogService { get; set; }
         [Parameter] public EditContext EditFormContext { get; set; }
         [Parameter] public bool VerifyContext { get; set; }
