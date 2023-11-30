@@ -152,6 +152,8 @@ public partial class SDKInputFile : SDKComponent
     private CancellationTokenSource _cancellationToken;
     private string _display = "none"; 
 
+    private readonly List<string> _ExtensionsImage = new() { "jpg", "jpeg", "png", "gif", "bmp", "svg", "webp", "tif ", "tiff"  };
+
     protected override async Task OnInitializedAsync()
     {
        await base.OnInitializedAsync().ConfigureAwait(true);
@@ -205,6 +207,46 @@ public partial class SDKInputFile : SDKComponent
         await base.OnParametersSetAsync().ConfigureAwait(true);
     }
 
+    private string GetIconExtension(string extension)
+    {
+        if (!string.IsNullOrEmpty(extension))
+        {
+            extension = extension.Split("/")[1];
+
+            switch (extension)
+            {
+                case "pdf":
+                    return "fa-file-pdf";
+                case "xls":
+                case "xlsx":
+                case "csv":
+                    return "fa-file-excel";
+                case "doc":
+                case "docx":
+                    return "fa-file-word";
+                case "ppt":
+                case "pptx":
+                    return "fa-file-powerpoint";
+                case "zip":
+                case "rar":
+                    return "fa-file-zipper";
+                case "mp3":    
+                case "wav":
+                case "ogg":
+                    return "fa-file-audio";
+                case "mp4":
+                case "avi":
+                case "mov":
+                case "wmv":
+                    return "fa-file-video";
+                default:
+                    return "fa-file-lines";
+            }
+        }
+        return "";
+
+    }
+
     private async Task GetPreviewFile()
     {
         if (_refinputFile != null)
@@ -215,13 +257,10 @@ public partial class SDKInputFile : SDKComponent
     }
     private async Task ClosePreviewFile()
     {
-        if (!string.IsNullOrEmpty(previewImageElem.Id))
-        {
-            await JSRuntime.InvokeVoidAsync("closePreviewImage", previewImageElem).ConfigureAwait(true);
-            InputFile = null;
-            _display = "none";
-            StateHasChanged();
-        }
+        await JSRuntime.InvokeVoidAsync("closePreviewImage", previewImageElem).ConfigureAwait(true);
+        InputFile = null;
+        _display = "none";
+        StateHasChanged();
     }
     private void ClickIcon()
     {
@@ -246,7 +285,14 @@ public partial class SDKInputFile : SDKComponent
                 var files = InputFile.GetMultipleFiles();
                 foreach (var itemFile in files)
                 {
+                    if (itemFile.Size > MaxSize)
+                    {
+                        _ = Notification.ShowError("Custom.SDKInputFile.FileMaxSize", new object[] { itemFile.Name });
+                        InputFile = null;
+                        break;
+                    }
                     var file = await ConvertToIFormFile(itemFile).ConfigureAwait(true);
+                    
                     var urlImage = await GetFileUrl(file).ConfigureAwait(true);
 
                     SDKInputFieldDTO inputFieldDTO = new()
@@ -263,10 +309,21 @@ public partial class SDKInputFile : SDKComponent
             }
             else
             {
+                if (InputFile.File.Size > MaxSize)
+                {
+                    _ = Notification.ShowError("Custom.SDKInputFile.FileMaxSize", new object[] { InputFile.File.Name });
+                    InputFile = null;
+                    _display = "none";
+                    return ;
+                }
                 SingleFileSize = InputFile.File.Size / 1024;
 
-                await GetPreviewFile().ConfigureAwait(true);
+                var singleFile = await ConvertToIFormFile(_InputFile.File).ConfigureAwait(true);
+                var urlImage = await GetFileUrl(singleFile).ConfigureAwait(true);
+
+                _UrlImage = urlImage;
             }
+
             OnInputFile?.Invoke(_InputFile);
         }
     }
@@ -297,6 +354,7 @@ public partial class SDKInputFile : SDKComponent
         else
         {
             _UrlImage = "";
+            InputFile = null;
         }
         StateHasChanged();
     }
@@ -383,17 +441,13 @@ public partial class SDKInputFile : SDKComponent
     private async Task<IFormFile> ConvertToIFormFile(IBrowserFile browserFile)
     {
         var ms = new MemoryStream();
-        if (browserFile.Size > MaxSize)
-        {
-            throw new Exception("El archivo es demasiado grande");
-        }
 
         await browserFile.OpenReadStream(maxAllowedSize: MaxSize).CopyToAsync(ms).ConfigureAwait(true);
 
         var file = new FormFile(ms, 0, ms.Length, null, browserFile.Name)
         {
             Headers = new HeaderDictionary(),
-            ContentType = (browserFile.ContentType == "" ? "application/octet-stream" : browserFile.ContentType)
+            ContentType = browserFile.ContentType ?? "application/octet-stream"
         };
 
         return file;

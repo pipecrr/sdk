@@ -10,11 +10,14 @@ using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.SDK.Frontend.Components.Fields;
+using Siesa.SDK.Frontend.Components.FormManager.Model;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Fields
 {
     public partial class DynamicComponentField<TItem> : ComponentBase
     {   
+        [Inject] 
+        private UtilsManager UtilManager {get; set;}
         [Parameter] public TItem Context { get; set; }
         [Parameter] public string Property { get; set; }
         [Parameter] public bool IsEditable { get; set; }
@@ -22,6 +25,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
         [Parameter] public string RelatedBusiness { get; set; }
         private RenderFragment? _editableField;
         private SDKEntityField _entityReference;
+        private dynamic _valueColumn;
+
+        protected override async Task OnInitializedAsync()
+        {
+            await GetValueColumn().ConfigureAwait(true);
+            await base.OnInitializedAsync().ConfigureAwait(true);
+        }
         
         private void InitField()
         {
@@ -164,10 +174,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
                         Type actionType = typeof(Action<>).MakeGenericType(type);
                         _editableField = builder =>
                         {
+                            var action = Delegate.CreateDelegate(actionType, this, "OnChangeEnum");
                             builder.OpenComponent(0, typeof(SDKSelectField<>).MakeGenericType(type));
                             builder.AddAttribute(1, "ValueExpression", lambda);
                             builder.AddAttribute(2, "Value", Context.GetType().GetProperty(Property)?.GetValue(Context));
-                            builder.AddAttribute(3, "ValueChanged", Delegate.CreateDelegate(actionType, this, "OnChange", false, false));
+                            builder.AddAttribute(3, "ValueChanged", action);
                             builder.CloseComponent();
                         };
                     }
@@ -196,6 +207,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
             StateHasChanged();
         }
         
+        private void OnChangeEnum(int value)
+        {
+            if(OnChangeColumn != null)
+            {
+                OnChangeColumn(Context, value);
+            }
+            Context.GetType().GetProperty(Property)?.SetValue(Context, value);
+            StateHasChanged();
+        }
+        
         private void OnChangeEntity()
         {
             dynamic value = _entityReference.GetItemsSelected().FirstOrDefault();
@@ -207,7 +228,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
             string rowidProp = "Rowid"+Property;
             Context.GetType().GetProperty(rowidProp)?.SetValue(Context, value?.Rowid);
         }
-        
+                
         protected override async Task OnParametersSetAsync()
         {
             if (IsEditable){
@@ -216,13 +237,26 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
             await base.OnParametersSetAsync().ConfigureAwait(true);
         }
 
-        private dynamic GetValueColumn()
+        private async Task GetValueColumn()
         {
-            object val = Context.GetType().GetProperty(Property)?.GetValue(Context);
-            if(val == null){
-                return "";
+            var property = Context.GetType().GetProperty(Property);
+            if(property != null)
+            {
+                object val = property.GetValue(Context);
+                if(property.PropertyType.IsEnum)
+                {
+                    string enumTag = $"Enum.{property.PropertyType.Name}.{val}";
+                    val = await UtilManager.GetResource(enumTag).ConfigureAwait(true);
+                }
+                if(val == null)
+                {
+                    _valueColumn = "";
+                }
+                else
+                {
+                    _valueColumn = val;
+                }
             }
-            return val;
         }
     }
 }

@@ -6,13 +6,11 @@
 
 @inherits SDKComponent
 
-<DxChartAreaSeries
-
+<DxChartSplineSeries
 T ="TData"
 TArgument ="TArgument"
 TValue="TValue"
 HoverMode="@HoverMode.Get()"
-Opacity="@Opacity"
 SelectionMode="@SelectionMode.Get()"
 Data= "@Data"
 ArgumentField="@ArgumentField"
@@ -24,7 +22,5 @@ Pane="@Pane"
 BreakOnEmptyPoints="@BreakOnEmptyPoints"
 Axis="@Axis"
 >
-
- @ChildContent
-
-</DxChartAreaSeries>
+@ChildContent
+</DxChartSplineSeries>
