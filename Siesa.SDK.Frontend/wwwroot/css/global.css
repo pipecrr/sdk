@@ -127,44 +127,47 @@
     --color_grayscale_800: #262626;
 
     /* flex chart colors */
-    --color_chart_flex_1: #80c9a7;
-    --color_chart_flex_2: #bada8c;
-    --color_chart_flex_3: #326fac;
-    --color_chart_flex_4: #32b9b0;
-    --color_chart_flex_5: #56bd8d;
-    --color_chart_flex_6: #d1e5b1;
-    --color_chart_flex_7: #ffd690;
-    --color_chart_flex_8: #5ac5d9;
-    --color_chart_flex_9: #6691c0;
-    --color_chart_flex_10: #00a89d;
-    --color_chart_flex_11: #addfea;
-    --color_chart_flex_12: #f27c93;
-    --color_chart_flex_13: #84d1e0;
-    --color_chart_flex_14: #134b95;
-    --color_chart_flex_15: #a8d9c4;
-    --color_chart_flex_16: #a3cf66;
-    --color_chart_flex_17: #f9a94b;
-    --color_chart_flex_18: #f9bca5;
-    --color_chart_flex_19: #69c7c2;
-    --color_chart_flex_20: #ffe3b5;
-    --color_chart_flex_21: #8cc640;
-    --color_chart_flex_22: #f5a6b7;
-    --color_chart_flex_23: #f9be77;
-    --color_chart_flex_24: #f05a26;
-    --color_chart_flex_25: #ed294e;
-    --color_chart_flex_26: #f69c7b;
-    --color_chart_flex_27: #2fb6d0;
-    --color_chart_flex_28: #f79420;
-    --color_chart_flex_29: #ef5370;
-    --color_chart_flex_30: #f37a50;
-    --color_chart_flex_31: #ffca6d;
-    --color_chart_flex_32: #9bd7d5;
-    --color_chart_flex_33: #1eb473;
-    --color_chart_flex_34: #fcbb48;
-    --color_chart_flex_35: #fcd4a4;
-    --color_chart_flex_36: #98b7d5;
+    --color_chart_flex_1: #57BCFF;
+    --color_chart_flex_2: #F95A87;
+    --color_chart_flex_3: #F9CC5A;
+    --color_chart_flex_4: #9477E5;
+    --color_chart_flex_5: #59DD97;
+    --color_chart_flex_6: #FF957D;
+    --color_chart_flex_7: #C4C4C4;
+    --color_chart_flex_8: #009CFF;
+    --color_chart_flex_9: #F00054;
+    --color_chart_flex_10: #F6B62B;
+    --color_chart_flex_11: #603CD5;
+    --color_chart_flex_12: #00CA69;
+    --color_chart_flex_13: #FF6646;
+    --color_chart_flex_14: #7B7B7B;
+    --color_chart_flex_15: #008DFF;
+    --color_chart_flex_16: #E00052;
+    --color_chart_flex_17: #F5A927;
+    --color_chart_flex_18: #5537CE;
+    --color_chart_flex_19: #00BA5E;
+    --color_chart_flex_20: #F96042;
+    --color_chart_flex_21: #555555;
+    --color_chart_flex_22: #0E7AFD;
+    --color_chart_flex_23: #CA004F;
+    --color_chart_flex_24: #F39725;
+    --color_chart_flex_25: #452FC5;
+    --color_chart_flex_26: #00A750;
+    --color_chart_flex_27: #EA593C;
+    --color_chart_flex_28: #434343;
+    --color_chart_flex_29: #1A67EA;
+    --color_chart_flex_30: #B6004C;
+    --color_chart_flex_31: #F28723;
+    --color_chart_flex_32: #342ABD;
+    --color_chart_flex_33: #009545;
+    --color_chart_flex_34: #DC5238;
+    --color_chart_flex_35: #262626;
+    --color_chart_flex_36: #2345CB;
 
     --color_input_back_disabled: #E9E9E9;
+
+    --dxbl-fl-item-spacing-x: 2rem; 
+    --dxbl-fl-item-spacing-y: 1rem:
 
     /*Variables Scrollbar para el Modo Predeterminado*/
 
@@ -174,6 +177,67 @@
     --color_scroll_border: #c4c4c4;
 
     --color_switch:#d9d9d9;
+
+    /*VARIABLES PORTAL AUTOGESTIÓN*/
+
+    /*COLOR*/
+
+    --pa_color_text:#555555;
+    --pa_color_text_alt:#FFFFFF;
+    --pa_color_text_secondary:#9D9D9D;
+    --pa_color_text_tertiary:#7B7B7B;
+    --pa_color_calendar_task:#FF4343;
+    --pa_color_calendar_okr:#FACA2B;
+    --pa_color_calendar_okr_text:#8B6B00;
+    --pa_color_calendar_goal:#1ABEA4;
+    --pa_color_icon:#555555;
+    --pa_color_icon_disabled:#C4C4C4;
+    --pa_color_calendar_preview_hour:#BDBDBD;
+    --pa_color_vacant_salary:#008D00;
+    --pa_color_border:#D2D2D2;
+    --pa_color_body:#F5F5F5;
+    --pa_color_bg:#FFFFFF;
+    --pa_color_bg_2:#FAFAFA;
+    --pa_color_selected:#D9D9D9;
+    --pa_color_hover:#E9E9E9;
+    --pa_color_module_shadow:0px 1px 10px 4px rgba(217,217,217,1);
+
+
+    /*FONT SIZES*/
+
+    --pa_size_hello:1.438rem /*23px*/;
+    --pa_size_name:1.625rem /*26px*/;
+    --pa_size_module_title:1.125rem /*18px*/;
+    --pa_size_text_xxs:0.438rem /*7px*/;
+    --pa_size_text_xs:0.563rem /*9px*/;
+    --pa_size_text_s:0.625rem /*10px*/;
+    --pa_size_text_s_2:0.688rem /*11px*/;
+    --pa_size_text_md:0.75rem /*12px*/;
+    --pa_size_text_md:0.813rem /*13px*/;
+    --pa_size_text_lg:0.875rem /*14px*/;
+    --pa_size_text_xl:1rem /*16px*/;
+    --pa_size_text_xxl:1.125 /*18px*/;
+    --pa_size_task_title:1.75rem /*28px*/;
+    --pa_size_vacant_title:1.5rem /*24px*/;
+    --pa_size_no_detail:2.375rem /*38px*/;
+    --pa_size_no_detail_info:1.313rem /*21px*/;
+
+
+    /*BORDER RADIUS*/
+
+    --pa_border_radius_body:0.625rem /*10px*/;
+    --pa_border_radius_module:0.5rem /*8px*/;
+    --pa_border_radius_action_button:0.5rem /*8px*/;
+    --pa_border_radius_profile_pic:0.5rem /*8px*/;
+    --pa_border_radius_vacant_item:0.375rem /*6px*/;
+    --pa_border_radius_team_item:0.25rem /*4px*/;
+    --pa_border_radius_post_flair:0.125rem /*2px*/;
+    --pa_border_radius_post:0.625rem /*10px*/;
+    --pa_border_radius_post_photo:0.5rem /*8px*/;
+    --pa_border_radius_calendar_border:0.25rem /*4px*/;
+    --pa_border_radius_calendar_event_card:0.25rem /*4px*/;
+    --pa_border_radius_calendar_button:0.25rem /*4px*/;
+    --pa_border_radius_calendar_day:0.125rem /*2px*/;
 
 
 }
@@ -415,6 +479,7 @@ a:hover
     background-color: var(--color_delete) !important;
     border-color: var(--color_delete) !important;
     border-radius: var(--border_radius_btn) !important;
+    color: var(--color_light) !important;
     font-weight: 700;
 }
 
@@ -503,6 +568,13 @@ a:hover
     text-decoration: underline;
     text-underline-offset: 0.25rem;
     margin: 0;
+    background: none !important;
+    border: none !important;
+}
+.btn_link_def_1:hover
+{
+    background: none !important;
+    border: none !important;
 }
 
 .nav_btn_standar {
@@ -1231,6 +1303,15 @@ div .form-control:focus {
     overflow: unset !important;
     background: var(--color_panel_back);
     padding: 1rem;
+    border-radius: 0px 0px var(--border_radius_standar_max) var(--border_radius_standar_max) !important;    
+}
+
+.sdk_modal_autogestion>.rz-dialog-content
+{
+    overflow: unset !important;
+    background: var(--color_panel_back);
+    padding: 1rem;
+    height: 100% !important;
 }
 
 .rz-dialog-wrapper {
@@ -1627,8 +1708,9 @@ color: var(--color_text);
     
 
     .rz-dialog {
-        min-width: 100% !important;
-        max-width: 100%;
+        min-width: calc(100% - 2rem)  !important;
+        max-width: calc(100% - 2rem);
+        margin-top: 1rem;
     }
 }
 
@@ -1662,6 +1744,25 @@ color: var(--color_text);
         text-overflow: unset !important;
         opacity: 1 !important;
         transition: .2s !important;
+    }
+}
+
+@media (max-width: 375px) {
+    .whcm_logo_compania{
+        max-width: 60px !important;
+    }
+    .header_circles_box_1, .header_circles_box_2, .header_circles_box_3, .header_circles_box_4 {
+        transform: rotate(45deg) translateY(-48px) translateX(-38px) !important;
+    }
+    .dxbl-dropdown{
+        max-width: 260px !important;
+    }
+    .whcm_select_list.sdk-dropdown-menu {
+    	width: 260px !important;    	
+    }
+    .rz-notification {
+        max-width: calc(100% - 2rem) !important;
+        min-width: calc(100% - 2rem) !important;
     }
 }
 
@@ -1857,7 +1958,7 @@ color: var(--color_text);
 
 .rz-card {
     margin: 0px !important;
-    padding: 0px !important;
+    padding: 1rem !important;
     background-color: var(--color_panel_back) !important;
     box-shadow: var(--shadow_standar) !important;
     border: var(--color_border) !important;
@@ -2489,6 +2590,7 @@ border-color: var(--color_border) !important;
     border-color: var(--color_border) !important;
 } */
 
+
 .dx-checkbox-icon
 {
     border: 2px solid var(--color_border) !important;
@@ -2606,6 +2708,33 @@ opacity:40%
     background-color: var(--color_primary) !important;
     color: var(--color_light_text)!important;
 }
+
+.dxbl-btn-info, .btn_secondary_link, .dxbl-btn-success, .dxbl-btn-warning, .dxbl-btn-light, .dxbl-btn-text-success, .dxbl-btn{
+    border-radius: var(--border_radius_btn) !important;
+}
+.region_tooltip .dxbl-row
+ {
+   margin:0 -15px !important;
+ }
+
+ .dxbl-text-edit.dxbl-readonly
+{
+  background-color: var(--color_input_back_disabled) !important;
+  border-color: var(--color_form_border) !important; 
+}
+.dxbl-text-edit.dxbl-readonly .dxbl-text-edit-input
+{
+  background-color: var(--color_input_back_disabled) !important;
+  border-color: var(--color_form_border) !important; 
+}
+.dxbl-text-edit.dxbl-readonly textarea
+{
+  background-color: var(--color_input_back_disabled) !important;
+  border-color: var(--color_form_border) !important; 
+}
+
+
+
 
 
        

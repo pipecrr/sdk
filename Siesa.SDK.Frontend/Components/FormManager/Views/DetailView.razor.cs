@@ -67,8 +67,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool IsTableA { get; set; }
         [Parameter]
         public long RowidCompany { get; set; }
+
+        [Parameter]
+        public bool HideRelationshipContainer { get; set; }
         /// <summary>
-        /// Gets or sets a value indicating whether the business object is a document.
+        /// Gets or sets a value indicating whether the business object is a document
         /// </summary>
         public bool IsDocument { get; set; }
 

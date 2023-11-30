@@ -14,6 +14,7 @@
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   		<DisableGclm>true</DisableGclm>
 		<VersionSuffix>dev</VersionSuffix>
+		<Version>1.0.0-dev</Version>
 		<NoWarn>8632,8669,1591</NoWarn>
 	</PropertyGroup>
 	<PropertyGroup>
@@ -45,6 +46,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Blazored.Toast" Version="4.1.0" />
+		<PackageReference Include="DevExpress.Drawing.Skia" Version="23.1.4" />
 		<Reference Include="System.Reflection.Emit" />
 		<PackageReference Include="blazor-dragdrop" Version="2.4.0" />
 		<PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />

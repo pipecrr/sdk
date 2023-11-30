@@ -9,7 +9,7 @@ using Siesa.SDK.Frontend.Components;
 
 namespace Siesa.SDK.Frontend.Components.Visualization.Charts;
 
-public partial class SDKChartAreaSeries<TData, TArgument, TValue> : SDKComponent
+public partial class SDKChartStackedAreaSeries<TData, TArgument, TValue> : SDKComponent
 {
     [Parameter]
     public IEnumerable<TData> Data { get; set; }

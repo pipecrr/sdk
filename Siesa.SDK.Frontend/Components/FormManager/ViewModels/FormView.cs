@@ -924,7 +924,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     }else
                     {
                         StackTrace.Add(error.Message);
-                        ErrorList.Add("Custom.Generic.Message.Error");
+                        ErrorList.Add(error.Message);
                     }
                 }
 

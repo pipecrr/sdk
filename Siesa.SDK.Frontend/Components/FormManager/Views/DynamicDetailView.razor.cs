@@ -161,6 +161,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             parameters.Add("IsSubpanel", IsSubpanel);
             parameters.Add("ShowTitle", ShowTitle);
             parameters.Add("ShowButtons", ShowButtons);
+            parameters.Add("HideRelationshipContainer", HideRelationshipContainer);
 
             if(!AllowDelete && IsSubpanel)
             {
