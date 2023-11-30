@@ -5,31 +5,33 @@
 @using Siesa.SDK.Frontend.Components.FormManager.ViewModels
 @inherits SDKComponent
 
-<div class="border rounded" >
-    <div class="row px-2 py-3">
-        <div class=@($"col-3 {Showborder}")>
-            <p class="col-form-label-sm font-weight-bold"> <ResourceViewer ResourceTag=@IdResourceTagSwitch/> </p>
+<div class="border rounded col-12" >
+    <div class="row pl-3 py-3 d-flex flex-nowrap">
+        <div class=@($"{Showborder} d-flex pr-3 flex-column aling-items-start justify-content-start w-100 width_card_min")> 
+            <p class="col-form-label-sm font-weight-bold pb-0"> <ResourceViewer ResourceTag=@IdResourceTagSwitch/> </p>
             @if(SelectBar){
-                <SDKSelectBar Value=@SwitchValue ValueChanged=@SwitchValueChanged />
+                <SDKSelectBar Value=@SwitchValue ValueChanged=@SwitchValueChanged Disabled="@Disabled" />
             }else{
                 <SDKSwitch Value=@SwitchValue ValueChanged="@SwitchValueChanged" Disabled="@Disabled" />
             }
         </div>
         @if(ChildContent != null || BusinessName != null){
-            <div class="col-9">
-                @if(ChildContent != null){
-                    <CascadingValue Value="@SwitchValue">
-                        @ChildContent
-                    </CascadingValue>
-                }else if(BusinessName != null){
-                    <FreeForm  
-                        BusinessObj=@BusinessObj
-                        Viewdef=@Viewdef
-                        SetTopBar=false
-                        BusinessName=@BusinessName
-                        ViewContext=@ViewContext
-                    />
-                }
+            <div class="d-flex flex-row w-100">
+                <div class="col-12">
+                    @if(ChildContent != null){
+                        <CascadingValue Value="@SwitchValue">
+                            @ChildContent
+                        </CascadingValue>
+                    }else if(BusinessName != null){
+                        <FreeForm  
+                            BusinessObj=@BusinessObj
+                            Viewdef=@Viewdef
+                            SetTopBar=false
+                            BusinessName=@BusinessName
+                            ViewContext=@ViewContext
+                        />
+                    }
+                </div>
             </div>
         }
     </div>
@@ -62,9 +64,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if(ChildContent != null || BusinessName != null){
-            Showborder = "border-right";
-        }
+        Showborder = (ChildContent != null || BusinessName != null) ? "border-right": "";
+
         await base.OnInitializedAsync();
     }
 

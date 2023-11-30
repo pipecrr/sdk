@@ -9,6 +9,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
     {
         [Parameter]
         public bool SetTopBar { get; set; } = true;
+        
+        private DynamicViewType _viewContext { get; set; } = DynamicViewType.Edit;
         protected override async Task OnInitializedAsync()
         {
             DefaultViewdefName = String.IsNullOrEmpty(DefaultViewdefName) ? "edit" : DefaultViewdefName;

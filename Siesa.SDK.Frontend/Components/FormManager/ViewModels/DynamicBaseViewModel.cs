@@ -42,6 +42,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Parameter] 
         public bool IsSubpanel { get; set; }
 
+        [Parameter]
+        public bool HideRelationshipContainer { get; set; }
+
         [Inject]
         public IServiceProvider ServiceProvider { get; set; }
 

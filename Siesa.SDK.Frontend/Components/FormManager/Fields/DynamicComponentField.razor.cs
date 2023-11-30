@@ -10,11 +10,14 @@ using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.SDK.Frontend.Components.Fields;
+using Siesa.SDK.Frontend.Components.FormManager.Model;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Fields
 {
     public partial class DynamicComponentField<TItem> : ComponentBase
     {   
+        [Inject] 
+        private UtilsManager UtilManager {get; set;}
         [Parameter] public TItem Context { get; set; }
         [Parameter] public string Property { get; set; }
         [Parameter] public bool IsEditable { get; set; }
@@ -22,6 +25,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
         [Parameter] public string RelatedBusiness { get; set; }
         private RenderFragment? _editableField;
         private SDKEntityField _entityReference;
+        private dynamic _valueColumn;
+
+        protected override async Task OnInitializedAsync()
+        {
+            await GetValueColumn().ConfigureAwait(true);
+            await base.OnInitializedAsync().ConfigureAwait(true);
+        }
         
         private void InitField()
         {
@@ -146,45 +156,58 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
                     };
                     break;
                 default:
-                    _editableField = builder =>
+                    var bannedTypes = new List<Type>() { typeof(string), typeof(byte[]) };
+                    if (type.IsClass && !type.IsPrimitive && !type.IsEnum && !bannedTypes.Contains(type) && !string.IsNullOrEmpty(RelatedBusiness))
                     {
-                        builder.OpenComponent(0, typeof(SDKCharField));
-                        builder.AddAttribute(1, "ValueExpression", lambda);
-                        builder.AddAttribute(2, "Value", (string)Context.GetType().GetProperty(Property)?.GetValue(Context));
-                        builder.AddAttribute(3, "ValueChanged", new Action<string>(value => OnChange(value)));
-                        builder.CloseComponent();
-                    };
+                        _editableField = builder =>
+                        {
+                            builder.OpenComponent(0, typeof(SDKEntityField));
+                            builder.AddAttribute(1, "RelatedBusiness", RelatedBusiness);
+                            builder.AddAttribute(2, "BaseObj", Context);
+                            builder.AddAttribute(3, "FieldName", Property);
+                            builder.AddAttribute(4, "OnChange", new Action(() => OnChangeEntity()));
+                            builder.AddComponentReferenceCapture(5, (element) => _entityReference = (SDKEntityField)element);
+                            builder.CloseComponent();
+                        };
+                    }else if (type.IsEnum)
+                    {
+                        Type actionType = typeof(Action<>).MakeGenericType(type);
+                        _editableField = builder =>
+                        {
+                            var action = Delegate.CreateDelegate(actionType, this, "OnChangeEnum");
+                            builder.OpenComponent(0, typeof(SDKSelectField<>).MakeGenericType(type));
+                            builder.AddAttribute(1, "ValueExpression", lambda);
+                            builder.AddAttribute(2, "Value", Context.GetType().GetProperty(Property)?.GetValue(Context));
+                            builder.AddAttribute(3, "ValueChanged", action);
+                            builder.CloseComponent();
+                        };
+                    }
+                    else
+                    {
+                        _editableField = builder =>
+                        {
+                            builder.OpenComponent(0, typeof(SDKCharField));
+                            builder.AddAttribute(1, "ValueExpression", lambda);
+                            builder.AddAttribute(2, "Value", (string)Context.GetType().GetProperty(Property)?.GetValue(Context));
+                            builder.AddAttribute(3, "ValueChanged", new Action<string>(value => OnChange(value)));
+                            builder.CloseComponent();
+                        };
+                    }
                     break;
-            }
-            var bannedTypes = new List<Type>() { typeof(string), typeof(byte[]) };
-            if (type.IsClass && !type.IsPrimitive && !type.IsEnum && !bannedTypes.Contains(type) && !string.IsNullOrEmpty(RelatedBusiness))
-            {
-                _editableField = builder =>
-                {
-                    builder.OpenComponent(0, typeof(SDKEntityField));
-                    builder.AddAttribute(1, "RelatedBusiness", RelatedBusiness);
-                    builder.AddAttribute(2, "BaseObj", Context);
-                    builder.AddAttribute(3, "FieldName", Property);
-                    builder.AddAttribute(4, "OnChange", new Action(() => OnChangeEntity()));
-                    builder.AddComponentReferenceCapture(5, (element) => _entityReference = (SDKEntityField)element);
-                    builder.CloseComponent();
-                };
-            }
-
-            if (type.IsEnum)
-            {
-                _editableField = builder =>
-                {
-                    builder.OpenComponent(0, typeof(SDKSelectField<>).MakeGenericType(type));
-                    builder.AddAttribute(1, "ValueExpression", lambda);
-                    builder.AddAttribute(2, "Value", Context.GetType().GetProperty(Property)?.GetValue(Context));
-                    builder.AddAttribute(3, "ValueChanged", new Action<object>(value => OnChange(value)));
-                    builder.CloseComponent();
-                };
             }
         }
         
-        private void OnChange(object value)
+        private void OnChange(dynamic value)
+        {
+            if(OnChangeColumn != null)
+            {
+                OnChangeColumn(Context, value);
+            }
+            Context.GetType().GetProperty(Property)?.SetValue(Context, value);
+            StateHasChanged();
+        }
+        
+        private void OnChangeEnum(int value)
         {
             if(OnChangeColumn != null)
             {
@@ -205,7 +228,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
             string rowidProp = "Rowid"+Property;
             Context.GetType().GetProperty(rowidProp)?.SetValue(Context, value?.Rowid);
         }
-        
+                
         protected override async Task OnParametersSetAsync()
         {
             if (IsEditable){
@@ -214,13 +237,26 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
             await base.OnParametersSetAsync().ConfigureAwait(true);
         }
 
-        private dynamic GetValueColumn()
+        private async Task GetValueColumn()
         {
-            object val = Context.GetType().GetProperty(Property)?.GetValue(Context);
-            if(val == null){
-                return "";
+            var property = Context.GetType().GetProperty(Property);
+            if(property != null)
+            {
+                object val = property.GetValue(Context);
+                if(property.PropertyType.IsEnum)
+                {
+                    string enumTag = $"Enum.{property.PropertyType.Name}.{val}";
+                    val = await UtilManager.GetResource(enumTag).ConfigureAwait(true);
+                }
+                if(val == null)
+                {
+                    _valueColumn = "";
+                }
+                else
+                {
+                    _valueColumn = val;
+                }
             }
-            return val;
         }
     }
 }

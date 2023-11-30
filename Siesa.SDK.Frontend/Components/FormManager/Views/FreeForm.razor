@@ -27,7 +27,7 @@ else if (BusinessObj != null)
                             <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag" @key="@panel.PanelId">
                                 <CascadingValue Value="@EditFormContext">
                                     <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef"
-                                DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" IsSearch="@IsSearch"/>
                                 </CascadingValue>
                             </SDKFormLayoutTabPage>
                         }
@@ -40,7 +40,7 @@ else if (BusinessObj != null)
                 {
                     <CascadingValue Value="@EditFormContext">
                         <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef"
-                        DefaultColSize="@Panels[0].ColSize" ModelObj="@BusinessObj" />
+                        DefaultColSize="@Panels[0].ColSize" ModelObj="@BusinessObj" IsSearch="@IsSearch"/>
                     </CascadingValue>
 
                 }
@@ -61,7 +61,7 @@ else if (BusinessObj != null)
                             {
                                 <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag" @key="@panel.PanelId">
                                 |   <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef"
-                                    DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" ValidateForm="false" />
+                                    DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" ValidateForm="false" IsSearch="@IsSearch"/>
                                 </SDKFormLayoutTabPage>
                             }
 
@@ -72,7 +72,7 @@ else if (BusinessObj != null)
                     else
                     {
                         <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef"
-                            DefaultColSize="@Panels[0].ColSize" ModelObj="@BusinessObj" ValidateForm="false" />
+                            DefaultColSize="@Panels[0].ColSize" ModelObj="@BusinessObj" ValidateForm="false" IsSearch="@IsSearch"/>
 
                     }
                 </DxFormLayout>
