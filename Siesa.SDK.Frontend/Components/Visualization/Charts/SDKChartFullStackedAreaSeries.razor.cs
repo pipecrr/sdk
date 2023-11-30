@@ -44,7 +44,7 @@ public partial class SDKChartFullStackedAreaSeries<TData, TArgument, TValue> : S
     /// Hover mode for the series.
     /// </summary>
     [Parameter]
-    public ChartContinuousSeriesHoverMode HoverMode { get; set; }
+    public SDKChartContinuousSeriesHoverMode HoverMode { get; set; }
 
     /// <summary>
     /// Opacity of the series. Default is 0.5.
@@ -56,7 +56,7 @@ public partial class SDKChartFullStackedAreaSeries<TData, TArgument, TValue> : S
     /// Selection mode for the series.
     /// </summary>
     [Parameter]
-    public ChartContinuousSeriesSelectionMode SelectionMode { get; set; }
+    public SDKChartContinuousSeriesSelectionMode SelectionMode { get; set; }
 
     /// <summary>
     /// Whether to break on empty points.
