@@ -243,8 +243,7 @@ public partial class SDKInputFile : SDKComponent
                     return "fa-file-lines";
             }
         }
-        return "";
-
+        return "fa-file-lines";
     }
 
     private async Task GetPreviewFile()
