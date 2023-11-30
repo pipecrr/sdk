@@ -260,7 +260,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if(BusinessName.Equals("BLDemoDummy")){
+        if(BusinessName.Equals("BLDemoDummy") || BusinessName.Equals("BLDemoMaster")){
             FlexRowId = 7;
         }
         filters.Add("Feature.BusinessName", BusinessName);
@@ -444,6 +444,8 @@
         if(Type == MimeTypes.ExcelDocument03) return DocumentFormat.Xls;
         
         if(Type == MimeTypes.ExcelDocument) return DocumentFormat.Xlsx;
+
+        if(Type == "application/wps-office.xlsx") return DocumentFormat.Xlsx;
 
         ErrorList.Add("Custom.SDK.Integration.Msg.ErrorFileType");
         return null;

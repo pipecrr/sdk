@@ -12,7 +12,7 @@
                 CssClass="@GetCssClass()"
                 ColSpanXs="@ColSizeXs">
     <Template>
-        <div class="@GetInternalCssClass()" style="@GetInternalStyle()">
+        <div >
         @ChildContent
         </div>
     </Template>
@@ -96,7 +96,7 @@
         var result = GetAutomationId();
         if(IsGroup)
         {
-            result = $"{result} whcm_row sdk-formlayout-group";
+            result = $"{result}  sdk-formlayout-group";
             if(GroupTopBorder)
             {
                 result = $"{result} sdk-formlayout-group-border-top";
@@ -117,23 +117,7 @@
         return result;
     }
 
-    private string GetInternalCssClass()
-    {
-        if(IsGroup)
-        {
-            return "whcm_row";
-        }
-        return "";
-    }
-
-    private string GetInternalStyle()
-    {
-        if(IsGroup)
-        {
-            return $"min-height: {GroupMinHeight}px;";
-        }
-        return "";
-    }
+   
 
     
 }

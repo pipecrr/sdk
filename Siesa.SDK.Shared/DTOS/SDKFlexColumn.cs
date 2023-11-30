@@ -22,5 +22,6 @@ namespace Siesa.SDK.Shared.DTOS
         public string aggregate { get; set; }
         public bool hide { get; set; }
         public bool is_sensitive_data { get; set; }
+        public SDKSelectFieldParams selectfield_params { get; set; }
     }
 }

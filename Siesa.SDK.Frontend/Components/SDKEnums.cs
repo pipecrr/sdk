@@ -134,6 +134,96 @@ namespace Siesa.SDK.Frontend.Components
                 SDKChartOrientation.Vertical => DevExpress.Blazor.Orientation.Vertical
             };
         }
+
+        public static DevExpress.Blazor.ChartLegendHoverMode Get(this SDKChartLegendHoverMode hoverMode)
+        {
+            return hoverMode switch
+            {
+                SDKChartLegendHoverMode.LegendMarkerAndSeriesWithPoints => DevExpress.Blazor.ChartLegendHoverMode.LegendMarkerAndSeriesWithPoints,
+                SDKChartLegendHoverMode.LegendMarkerAndSeries => DevExpress.Blazor.ChartLegendHoverMode.LegendMarkerAndSeries,
+                SDKChartLegendHoverMode.None => DevExpress.Blazor.ChartLegendHoverMode.None
+            };
+        }
+
+        public static FlexWrap Get(this SDKFlexWrap flexWrap)
+        {
+            return flexWrap switch
+            {
+                SDKFlexWrap.NoWrap => FlexWrap.NoWrap,
+                SDKFlexWrap.Wrap => FlexWrap.Wrap,
+                SDKFlexWrap.WrapReverse => FlexWrap.WrapReverse
+            };
+        }
+
+        public static Radzen.Orientation Get(this SDKOrientation orientation)
+        {
+            return orientation switch
+            {
+                SDKOrientation.Vertical => Radzen.Orientation.Vertical,
+                SDKOrientation.Horizontal => Radzen.Orientation.Horizontal
+            };
+        }
+
+        public static Radzen.AlignItems Get(this SDKAlignItems alignItems)
+        {
+            return alignItems switch
+            {
+                SDKAlignItems.Center => Radzen.AlignItems.Center,
+                SDKAlignItems.End => Radzen.AlignItems.End,
+                SDKAlignItems.Normal => Radzen.AlignItems.Normal,
+                SDKAlignItems.Start => Radzen.AlignItems.Start,
+                SDKAlignItems.Stretch => Radzen.AlignItems.Stretch
+            };
+        }
+
+        public static Radzen.JustifyContent Get(this SDKJustifyContent justifyContent)
+        {
+            return justifyContent switch
+            {
+                SDKJustifyContent.Center => Radzen.JustifyContent.Center,
+                SDKJustifyContent.End => Radzen.JustifyContent.End,
+                SDKJustifyContent.Left => Radzen.JustifyContent.Left,
+                SDKJustifyContent.Normal => Radzen.JustifyContent.Normal,
+                SDKJustifyContent.Right => Radzen.JustifyContent.Right,
+                SDKJustifyContent.SpaceAround => Radzen.JustifyContent.SpaceAround,
+                SDKJustifyContent.SpaceBetween => Radzen.JustifyContent.SpaceBetween,
+                SDKJustifyContent.SpaceEvenly => Radzen.JustifyContent.SpaceEvenly,
+                SDKJustifyContent.Start => Radzen.JustifyContent.Start,
+                SDKJustifyContent.Stretch => Radzen.JustifyContent.Stretch
+            };
+        }
+        public static Radzen.HtmlEditorMode Get(this SDKHtmlEditorMode htmlEditorMode)
+        {
+            return htmlEditorMode switch
+            {
+                SDKHtmlEditorMode.Design => Radzen.HtmlEditorMode.Design,
+                SDKHtmlEditorMode.Source => Radzen.HtmlEditorMode.Source,
+                _ => Radzen.HtmlEditorMode.Design
+            };
+        }
+
+        public static ChartContinuousSeriesHoverMode Get(this SDKChartContinuousSeriesHoverMode hoverMode)
+        {
+            return hoverMode switch
+            {
+                SDKChartContinuousSeriesHoverMode.NearestPoint => ChartContinuousSeriesHoverMode.NearestPoint,
+                SDKChartContinuousSeriesHoverMode.SeriesAndAllPoints => ChartContinuousSeriesHoverMode.SeriesAndAllPoints,
+                SDKChartContinuousSeriesHoverMode.Series => ChartContinuousSeriesHoverMode.Series,
+                SDKChartContinuousSeriesHoverMode.None => ChartContinuousSeriesHoverMode.None,
+                _ => ChartContinuousSeriesHoverMode.NearestPoint
+            };
+        }
+
+        public static ChartContinuousSeriesSelectionMode Get(this SDKChartContinuousSeriesSelectionMode selectionMode)
+        {
+            return selectionMode switch
+            {
+                SDKChartContinuousSeriesSelectionMode.Series => ChartContinuousSeriesSelectionMode.Series,
+                SDKChartContinuousSeriesSelectionMode.SeriesAndAllPoints => ChartContinuousSeriesSelectionMode.SeriesAndAllPoints,
+                SDKChartContinuousSeriesSelectionMode.None => ChartContinuousSeriesSelectionMode.None,
+                _ => ChartContinuousSeriesSelectionMode.Series
+            };
+        }
     }
 
     public enum SDKClearButtonDisplayMode
@@ -215,6 +305,13 @@ namespace Siesa.SDK.Frontend.Components
         Vertical = DevExpress.Blazor.Orientation.Vertical
     }
 
+    public enum SDKChartLegendHoverMode 
+    {
+        LegendMarkerAndSeriesWithPoints = DevExpress.Blazor.ChartLegendHoverMode.LegendMarkerAndSeriesWithPoints,
+        LegendMarkerAndSeries = DevExpress.Blazor.ChartLegendHoverMode.LegendMarkerAndSeries,
+        None = DevExpress.Blazor.ChartLegendHoverMode.None
+    }
+
     public enum SDKModalWidth {
         Undefined = 0,
         Small = 1,
@@ -239,5 +336,62 @@ namespace Siesa.SDK.Frontend.Components
     {
         Determinate = ProgressBarMode.Determinate,
         Indeterminate = ProgressBarMode.Indeterminate
+    }
+    public enum SDKChartContinuousSeriesHoverMode 
+    {
+        NearestPoint = 0,
+        SeriesAndAllPoints = 1,
+        Series = 2,
+        None = 3
+
+    }
+
+    public enum SDKChartContinuousSeriesSelectionMode
+    {
+        Series = 0,
+        SeriesAndAllPoints = 1,
+        None = 2
+    }
+
+    public enum SDKFlexWrap
+    {
+        NoWrap = FlexWrap.NoWrap,
+        Wrap = FlexWrap.Wrap,
+        WrapReverse = FlexWrap.WrapReverse
+    }
+
+    public enum SDKOrientation
+    {
+        Vertical = Radzen.Orientation.Vertical,
+        Horizontal = Radzen.Orientation.Horizontal
+    }
+
+    public enum SDKAlignItems
+    {
+        Center = Radzen.AlignItems.Center,
+        End = Radzen.AlignItems.End,
+        Normal = Radzen.AlignItems.Normal,
+        Start = Radzen.AlignItems.Start,
+        Stretch = Radzen.AlignItems.Stretch
+    }
+
+    public enum SDKJustifyContent
+    {
+        Center = Radzen.JustifyContent.Center,
+        End = Radzen.JustifyContent.End,
+        Left = Radzen.JustifyContent.Left,
+        Normal = Radzen.JustifyContent.Normal,
+        Right = Radzen.JustifyContent.Right,
+        SpaceAround = Radzen.JustifyContent.SpaceAround,
+        SpaceBetween = Radzen.JustifyContent.SpaceBetween,
+        SpaceEvenly = Radzen.JustifyContent.SpaceEvenly,
+        Start = Radzen.JustifyContent.Start,
+        Stretch = Radzen.JustifyContent.Stretch
+    }
+
+    public enum SDKHtmlEditorMode
+    {
+        Design = HtmlEditorMode.Design,
+        Source = HtmlEditorMode.Source  
     }
 }

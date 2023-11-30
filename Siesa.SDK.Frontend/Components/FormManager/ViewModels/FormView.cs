@@ -19,6 +19,7 @@ using Siesa.SDK.Shared.DTOS;
 using Siesa.SDK.Frontend.Components.FormManager.Fields;
 using Siesa.SDK.Frontend.Extension;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Siesa.Global.Enums;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
@@ -47,7 +48,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Inject] public SDKNotificationService NotificationService { get; set; }
         [Inject] public IConfiguration configuration { get; set; }
         private bool UseRoslynToEval { get; set; }
-
+        [Inject]
+        public IServiceProvider ServiceProvider { get; set; }
         [Inject] protected IAuthenticationService AuthenticationService { get; set; }
 
         [Inject] public SDKGlobalLoaderService GlobalLoaderService { get; set; }
@@ -107,9 +109,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         
         public int CountUnicErrors = 0;
 
+        public IEnumerable<object> FielsdUniqueIndex { get; set; }
+
+        public string FieldUniqueIndex { get; set; } = "";
+
         private string _viewdefName = "";
 
-        public List<string> StackTrace = new ();
+        public List<string> StackTrace { get; set; } = new ();
 
         public bool ContainAttachments = false;
 
@@ -157,6 +163,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         /// Gets or sets the reference grid.
         /// </summary>
         public dynamic RefGrid { get; set; }
+
         protected virtual async Task CheckPermissions()
         {
             if (FeaturePermissionService != null && !String.IsNullOrEmpty(BusinessName))
@@ -386,12 +393,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             if (BusinessObjAType != null && businessObj == null)
             {
-                BusinessObj = Activator.CreateInstance(BusinessObjAType, AuthenticationService);
-                if (BusinessObj != null)
+                BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, BusinessObjAType);
+                await GenerateBaseObj().ConfigureAwait(true);
+                long rowid;
+                try
                 {
-                    await GenerateBaseObj().ConfigureAwait(true);
+                    rowid = Convert.ToInt64(BusinessObj.BaseObj.Rowid);
                 }
-                
+                catch (System.Exception)
+                {
+                    rowid = 0;
+                }
+                BusinessObj.OnReady(ViewContext, rowid);
+                BusinessObj.BusinessNameParent = BusinessNameParent;
                 ParentForm.FormViewsTablesA.Add(this);
             }else
             {
@@ -590,9 +604,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         private void EditContext_OnFieldChanged(object sender, FieldChangedEventArgs e)
         {
+            CleanErrors();
             _messageStore.Clear(e.FieldIdentifier);
             EvaluateDynamicAttributes(e);
             EvaluateButtonAttributes();
+        }
+        
+        private void CleanErrors()
+        {
+            ErrorMsg = "";
+            ErrorList.Clear();
+            StackTrace.Clear();
+            StateHasChanged();
         }
 
         private void EvaluateDynamicAttributes(FieldChangedEventArgs e)
@@ -754,8 +777,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }catch(Exception ex){
                 //TODO: pdte por revision 
                 SavingFile = false;
-                return 0;
                 StackTrace.Add(ex.Message);
+                return 0;
             }
             var horaInicio = DateTime.Now.Minute;
             while(SavingFile){
@@ -770,8 +793,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     return result;
                 }catch(Exception ex){
                     SavingFile = false;
-                    return rowid;
                     StackTrace.Add(ex.Message);
+                    return rowid;
                 }
             }
             return 0;
@@ -786,16 +809,31 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 			SavingFile = false;
         }
         private async Task SaveBusiness()
-        {
+        {   
             Saving = true;
-            if(CountUnicErrors>0){
+            if(CountUnicErrors>0)
+            {
                 GlobalLoaderService.Hide();
                 Saving = false;
-                var existeUniqueIndexValidation = NotificationService.Messages.Where(x => x.Summary == "Custom.Generic.UniqueIndexValidation").Any();
-                if(!existeUniqueIndexValidation){
-                    NotificationService.ShowError("Custom.Generic.UniqueIndexValidation");
-                    ErrorList.Add("Custom.Generic.UniqueIndexValidation");
+
+                if(FielsdUniqueIndex.Any())
+                {
+                    string fields = "";
+                    foreach (var compoundIndex in FielsdUniqueIndex)
+                    {
+                        foreach (var item in (List<string>)compoundIndex)
+                        {
+                            fields += $"{BusinessObj.BaseObj.GetType().Name}.{item},";
+                        }
+                    }
+                    
+                    ErrorList.Add($"Custom.Generic.UniqueIndexValidation.Compound//{fields}");
+
+                }else
+                {
+                    ErrorList.Add($"Custom.Generic.UniqueIndexValidation//{FieldUniqueIndex}");
                 }
+                
                 return;
             }
             GlobalLoaderService.Show();
@@ -826,7 +864,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                             GlobalLoaderService.Hide();
                             Saving = false;
                             ErrorMsg = ex.Message;
-                            ErrorList.Add("Exception: " + ex.Message);
+                            ErrorList.Add("Custom.Generic.Message.Error");
+                            StackTrace.Add(ErrorMsg);
                             return;
                         }
                     }
@@ -882,15 +921,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     if(fieldInContext)
                     {
                         _messageStore.Add(fieldIdentifier, (string)error.Message);
-                    }else{
+                    }else
+                    {
                         StackTrace.Add(error.Message);
-                        ErrorList.Add("Custom.Generic.Message.Error");
+                        ErrorList.Add(error.Message);
                     }
                 }
-                //ErrorMsg += "</ul>";
+
                 EditFormContext.NotifyValidationStateChanged();
-
-
+                
                 return;
             }
             var id = result.Rowid;
@@ -949,7 +988,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             FormHasErrors = false;
             ErrorMsg = "";
             ErrorList.Clear();
-            await SaveBusiness();
+            StackTrace.Clear();
+            await SaveBusiness().ConfigureAwait(true);
             ClickInSave = true;
         }
         protected void HandleInvalidSubmit()
@@ -962,6 +1002,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 ErrorList.Add("Custom.Generic.UniqueIndexValidation");
             }else{
                 ErrorList.Clear();
+                StackTrace.Clear();
             }
             ClickInSave = true;
         }

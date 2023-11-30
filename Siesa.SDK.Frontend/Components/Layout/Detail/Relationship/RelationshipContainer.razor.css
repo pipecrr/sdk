@@ -120,6 +120,17 @@
     max-height: calc(100vh - 17rem);
     overflow: auto;
 }
+
+.panel_icon_information
+{
+    color: var(--color_primary_dark);
+    font-size: 2rem;
+}
+.panel_text_information
+{
+    color: var(--color_primary_dark);
+}
+
 .whcm_data_related_box_crud > .whcm_data_open_box{
     background: var(--color_panel_back);
     box-shadow: var(--shadow_standar);
