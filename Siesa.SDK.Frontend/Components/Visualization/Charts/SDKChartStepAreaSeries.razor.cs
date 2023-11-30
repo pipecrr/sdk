@@ -45,7 +45,7 @@ public partial class SDKChartStepAreaSeries<TData, TArgument, TValue> : SDKCompo
     /// Mouse hover mode for the chart series.
     /// </summary>
     [Parameter]
-    public ChartContinuousSeriesHoverMode HoverMode { get; set; }
+    public SDKChartContinuousSeriesHoverMode HoverMode { get; set; }
 
     /// <summary>
     /// Opacity of the chart series.
@@ -57,7 +57,7 @@ public partial class SDKChartStepAreaSeries<TData, TArgument, TValue> : SDKCompo
     /// Selection mode for the chart series.
     /// </summary>
     [Parameter]
-    public ChartContinuousSeriesSelectionMode SelectionMode { get; set; }
+    public SDKChartContinuousSeriesSelectionMode SelectionMode { get; set; }
 
     /// <summary>
     /// Determines if it should break on empty points.
