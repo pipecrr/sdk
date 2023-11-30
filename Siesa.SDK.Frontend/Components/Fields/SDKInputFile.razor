@@ -38,7 +38,8 @@
                 <div class="@_breakpoints pl-1 pr-1 pb-1">
                     <div class="whcm_panel d-flex justify-content-start align-items-center position-relative h-100">
                         <div class="h-100 w-100">
-                            @if(_ExtensionsImage.Contains(url.File?.ContentType.Split("/")[1]))
+                            @if(!string.IsNullOrEmpty(url.File?.ContentType)  
+                                && _ExtensionsImage.Contains(url.File?.ContentType.Split("/")[1]))
                                 {
                                     @if(!ShowPreview)
                                     {

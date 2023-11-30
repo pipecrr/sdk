@@ -121,8 +121,10 @@
     private void ShowModalStackTrace(string stackTrace)
     {
         if (string.IsNullOrEmpty(stackTrace))
+        {
             _notificationService.ShowInfo("Custom.ErrorsWindow.NoStackTrace");
             return;
+        }
         _ = _sdkDialogService.ShowCustomDialog(ds => @<SDKTextField Value="@stackTrace" CssClass="modal_stacktrace"/>, standardWidth: SDKModalWidth.Medium, title: "Custom.ErrorsWindow.StackTrace", height: "600px");
     }
 }
