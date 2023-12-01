@@ -129,7 +129,7 @@
 
     private bool isMaximized = false;
 
-    private List<ModelMessagesDTO> GeneralErrors = new ();
+    private List<ModelMessagesDTO> GeneralErrors = new ();    
     private bool _showExtendedLayout = true;
     public async Task ToogleMaximize()
     {
@@ -150,12 +150,13 @@
 
     private void GetExceptionError(Exception ex)
     {
-        if(ex != null)
+        string stringError = $"{ex.Message} {ex.StackTrace}";
+        if(!GeneralErrors.Any(x => x.StackTrace.Equals(stringError)))
         {
             GeneralErrors.Add(new ModelMessagesDTO() 
             { 
                 Message = "Custom.Generic.Message.Error",
-                StackTrace = ex.StackTrace
+                StackTrace = stringError
             });
         }
     }

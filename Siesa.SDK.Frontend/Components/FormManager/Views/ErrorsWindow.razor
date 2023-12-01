@@ -1,5 +1,7 @@
 @using Siesa.SDK.Frontend.Components.Fields;
 @using Siesa.SDK.Components.Visualization;
+@using System;
+@using Microsoft.Extensions.Hosting
 
 @if(_errorCount > 0 )
 {
@@ -92,11 +94,13 @@
                                                 {
                                                     <li>
                                                         <ResourceViewer ResourceTag= "@item.Message"/>
-                                                        <SDKButton  RenderStyle="SDKButtonRenderStyle.None"
+                                                        @if(_environment == Environments.Development){
+                                                            <SDKButton  RenderStyle="SDKButtonRenderStyle.None"
                                                         Click="@(()=> ShowModalStackTrace(item.StackTrace))" CssClass="ml-2"
                                                         >
-                                                            <SDKIcon Name="fa-info-circle" Style="color: #E00052;"/>
-                                                        </SDKButton>
+                                                                <SDKIcon Name="fa-info-circle" Style="color: #E00052;"/>
+                                                            </SDKButton>
+                                                        }
                                                     </li>
                                                 }
                                             }
