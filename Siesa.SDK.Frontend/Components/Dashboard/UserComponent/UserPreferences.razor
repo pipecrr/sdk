@@ -453,11 +453,13 @@
             }
             catch (Exception ex)
             {
+                string stringError = $"{ex.Message} {ex.StackTrace}";
                 ErrorList.Add(new ModelMessagesDTO() 
                 { 
                     Message = "Custom.Generic.Message.Error",
-                    StackTrace = ex.StackTrace
+                    StackTrace = stringError
                 });
+                
                 StateHasChanged();
                 return;
             }

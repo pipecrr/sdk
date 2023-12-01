@@ -24,11 +24,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             catch (System.Exception e)
             {
-                Console.WriteLine("Error EditViewModel", e.ToString());
+                string stringError = $"{e.Message} {e.StackTrace}";
                 ErrorList.Add(new ModelMessagesDTO()
                 {
                     Message = "Custom.Generic.Message.Error",
-                    StackTrace = e.StackTrace,
+                    StackTrace = stringError,
                 });
                 ErrorMsg = e.ToString();
             }
