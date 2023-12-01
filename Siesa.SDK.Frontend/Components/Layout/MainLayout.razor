@@ -151,14 +151,12 @@
     private void GetExceptionError(Exception ex)
     {
         string stringError = $"{ex.Message} {ex.StackTrace}";
-        if(!GeneralErrors.Any(x => x.StackTrace.Equals(stringError)))
-        {
-            GeneralErrors.Add(new ModelMessagesDTO() 
-            { 
-                Message = "Custom.Generic.Message.Error",
-                StackTrace = stringError
-            });
-        }
+        GeneralErrors.Add(new ModelMessagesDTO() 
+        { 
+            Message = "Custom.Generic.Message.Error",
+            StackTrace = stringError
+        });
+        
     }
 
     public bool IsMaximized()

@@ -93,12 +93,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     _extraFields = _extraFields.Union(extraFieldsTmp).ToList();
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
+                string stringError = $"{ex.Message} {ex.StackTrace}";
                 ErrorList.Add(new Shared.DTOS.ModelMessagesDTO()
                 {
                     Message = "Custom.Generic.Message.Error",
-                    StackTrace = e.StackTrace
+                    StackTrace = stringError
                 });
             }
         }
@@ -148,14 +149,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 await BusinessObj.InitializeBusiness(businessObjId,_extraFields);
             }
-            catch (System.Exception e)
+            catch (System.Exception ex)
             {
-                Console.WriteLine("Error DetailViewModel", e.ToString());
-                ErrorMsg = e.ToString();
+                Console.WriteLine("Error DetailViewModel", ex.ToString());
+                ErrorMsg = ex.ToString();
+                string stringError = $"{ex.Message} {ex.StackTrace}";
                 ErrorList.Add(new ModelMessagesDTO()
                 {
                     Message = "Custom.Generic.Message.Error",
-                    StackTrace = e.StackTrace
+                    StackTrace = stringError
                 });
             }
         }

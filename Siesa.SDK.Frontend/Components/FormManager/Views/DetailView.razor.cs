@@ -262,10 +262,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                     catch (System.Exception ex)
                     {
+                        string stringError = $"{ex.Message} {ex.StackTrace}";
                         ErrorList.Add(new ModelMessagesDTO()
                         {
                             Message = "Custom.Generic.Message.Error",
-                            StackTrace = ex.StackTrace
+                            StackTrace = stringError
                         });
                     }
                 }
@@ -566,11 +567,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 result = await BusinessObj.DeleteAsync();
             }catch(Exception ex)
             {
-
+                string stringError = $"{ex.Message} {ex.StackTrace}";
                 ErrorList.Add(new ModelMessagesDTO()
                 {
                     Message = "Custom.Generic.Message.Error",
-                    StackTrace = ex.StackTrace
+                    StackTrace = stringError
                 });
             }
 
@@ -704,10 +705,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             catch (System.Exception ex)
             {
+                string stringError = $"{ex.Message} {ex.StackTrace}";
                 ErrorList.Add(new ModelMessagesDTO()
                 {
                     Message = "Custom.Generic.Message.Error",
-                    StackTrace = ex.StackTrace
+                    StackTrace = stringError
                 });
             }
         }

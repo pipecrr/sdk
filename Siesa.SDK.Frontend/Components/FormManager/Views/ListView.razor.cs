@@ -302,10 +302,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     {
                         ShowList = true;
                         FieldsHidden = new List<FieldOptions>();
+                        string stringError = $"{ex.Message} {ex.StackTrace}";
                         ErrorList.Add(new ModelMessagesDTO()
                         {
                             Message = "Custom.Generic.Message.Error",
-                            StackTrace = ex.StackTrace
+                            StackTrace = stringError
                         });
                     }
 
@@ -315,10 +316,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                     catch (System.Exception ex)
                     {
+                        string stringError = $"{ex.Message} {ex.StackTrace}";
                         ErrorList.Add(new ModelMessagesDTO()
                         {
                             Message = "Custom.Generic.Message.Error",
-                            StackTrace = ex.StackTrace
+                            StackTrace = stringError
                         });
 
                     }
@@ -490,10 +492,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     showButton = FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
                 }catch(System.Exception ex)
                 {
+                    string stringError = $"{ex.Message} {ex.StackTrace}";
                     ErrorList.Add(new ModelMessagesDTO()
                     {
                         Message = "Custom.Generic.Message.Error",
-                        StackTrace = ex.StackTrace
+                        StackTrace = stringError
                     });
 
                 }
@@ -517,10 +520,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                     catch (System.Exception ex)
                     {
+                        string stringError = $"{ex.Message} {ex.StackTrace}";
                         ErrorList.Add(new ModelMessagesDTO()
                         {
                             Message = "Custom.Generic.Message.Error",
-                            StackTrace = ex.StackTrace
+                            StackTrace = stringError
                         });
                     }
                }else
@@ -537,10 +541,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                     catch (System.Exception ex)
                     {
+                        string stringError = $"{ex.Message} {ex.StackTrace}";
                         ErrorList.Add(new ModelMessagesDTO()
                         {
                             Message = "Custom.Generic.Message.Error",
-                            StackTrace = ex.StackTrace
+                            StackTrace = stringError
                         });
                     }
                }
@@ -706,10 +711,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         }                        
                     }catch (Exception ex)
                     {
+                        string stringError = $"{ex.Message} {ex.StackTrace}";
                         ErrorList.Add(new ModelMessagesDTO()
                         {
                             Message = "Custom.Generic.Message.Error",
-                            StackTrace = ex.StackTrace
+                            StackTrace = stringError
                         });
                     }
                 }
@@ -820,10 +826,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             catch (System.Exception ex)
             {
+                string stringError = $"{ex.Message} {ex.StackTrace}";
                 ErrorList.Add(new ModelMessagesDTO()
                 {
                     Message = "Custom.Generic.Message.Error",
-                    StackTrace = ex.StackTrace
+                    StackTrace = stringError
                 });
             }
             if (ConstantFilters != null)
@@ -877,10 +884,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             catch (System.Exception ex)
             {
+                string stringError = $"{ex.Message} {ex.StackTrace}";
                 ErrorList.Add(new ModelMessagesDTO()
                 {
                     Message = "Custom.Generic.Message.Error",
-                    StackTrace = ex.StackTrace
+                    StackTrace = stringError
                 });
             }
 
@@ -1362,10 +1370,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                          }
                          catch (Exception ex)
                          {
+                            string stringError = $"{ex.Message} {ex.StackTrace}";
                             ErrorList.Add(new ModelMessagesDTO()
                             {
                                 Message = "Custom.Generic.Message.Error",
-                                StackTrace = ex.StackTrace
+                                StackTrace = stringError
                             });
                          }
                          
@@ -1452,10 +1461,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             catch (System.Exception ex)
             {
                 _ = InvokeAsync(() => StateHasChanged());
+                string stringError = $"{ex.Message} {ex.StackTrace}";
                 ErrorList.Add(new ModelMessagesDTO()
                 {
                     Message = "Custom.Generic.Message.Error",
-                    StackTrace = ex.StackTrace
+                    StackTrace = stringError
                 });
             }
         }
@@ -1539,10 +1549,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                 }
                                 catch (Exception ex)
                                 {
+                                    string stringError = $"{ex.Message} {ex.StackTrace}";
                                     ErrorList.Add(new ModelMessagesDTO()
                                     {
                                         Message = "Custom.Generic.Message.Error",
-                                        StackTrace = ex.StackTrace
+                                        StackTrace = stringError
                                     });
                                 }
                             }
@@ -1555,10 +1566,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                 }
                                 catch (Exception ex)
                                 {
+                                    string stringError = $"{ex.Message} {ex.StackTrace}";
                                     ErrorList.Add(new ModelMessagesDTO()
                                     {
                                         Message = "Custom.Generic.Message.Error",
-                                        StackTrace = ex.StackTrace
+                                        StackTrace = stringError
                                     });
                                 }
                             }
@@ -1620,10 +1632,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                     }
                                     catch (System.Exception ex)
                                     {
+                                        string stringError = $"{ex.Message} {ex.StackTrace}";
                                         ErrorList.Add(new ModelMessagesDTO()
                                         {
                                             Message = "Custom.Generic.Message.Error",
-                                            StackTrace = ex.StackTrace
+                                            StackTrace = stringError
                                         });
                                     }
                                     if(field.Hidden){

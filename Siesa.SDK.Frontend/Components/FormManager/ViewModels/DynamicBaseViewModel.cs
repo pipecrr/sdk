@@ -128,16 +128,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     BusinessModel = businessModel;
                     BusinessObj.BusinessName = bName;
                 }
-                catch (System.Exception e)
+                catch (System.Exception ex)
                 {
-                    Console.WriteLine("Error BaseViewModel" + e.ToString());
-                    ErrorMsg = e.ToString();
+                    string stringError = $"{ex.Message} {ex.StackTrace}";
+                    ErrorMsg = ex.ToString();
 
                     ErrorList.Add(new ModelMessagesDTO()
                     {
                         Message = "Custom.Generic.Message.Error",
-                        StackTrace = e.StackTrace
+                        StackTrace = stringError
                     });
+                    
                 }
             }
             else
@@ -155,10 +156,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         {
             if(!string.IsNullOrEmpty(BusinessName)) //TODO: Check if this is necessary
             {
-                await CheckAccessPermission();
+                await CheckAccessPermission().ConfigureAwait(true);
             } 
             
-            await base.OnInitializedAsync();
+            await base.OnInitializedAsync().ConfigureAwait(true);
 
             SetParameters(BusinessObj, BusinessName);
             if(BusinessObj != null){
@@ -213,13 +214,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                ErrorList.Add(new ModelMessagesDTO()
+                string stringError = $"{ex.Message} {ex.StackTrace}";
+                if(!ErrorList.Any(x => x.StackTrace.Equals(stringError, StringComparison.Ordinal)))
                 {
-                    Message = "Custom.Generic.FrontendBusinessNotFound",
-                    StackTrace = e.StackTrace
-                });
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        Message = "Custom.Generic.FrontendBusinessNotFound",
+                        StackTrace = stringError
+                    });
+                }
             }
             await base.SetParametersAsync(parameters).ConfigureAwait(true);
         }

@@ -1,7 +1,8 @@
 @using Siesa.SDK.Frontend.Components.Fields;
 @using Siesa.SDK.Components.Visualization;
 @using System;
-@using Microsoft.Extensions.Hosting
+@using Microsoft.Extensions.Hosting;
+@using Siesa.SDK.Frontend.Components;
 
 @if(_errorCount > 0 )
 {
@@ -94,10 +95,11 @@
                                                 {
                                                     <li>
                                                         <ResourceViewer ResourceTag= "@item.Message"/>
-                                                        @if(_environment == Environments.Development){
+                                                        @if(_environment == Environments.Development)
+                                                        {
                                                             <SDKButton  RenderStyle="SDKButtonRenderStyle.None"
-                                                        Click="@(()=> ShowModalStackTrace(item.StackTrace))" CssClass="ml-2"
-                                                        >
+                                                            Click="@(()=> ShowModalStackTrace(item.StackTrace))" CssClass="ml-2"
+                                                            >
                                                                 <SDKIcon Name="fa-info-circle" Style="color: #E00052;"/>
                                                             </SDKButton>
                                                         }
@@ -126,9 +128,9 @@
     {
         if (string.IsNullOrEmpty(stackTrace))
         {
-            _notificationService.ShowInfo("Custom.ErrorsWindow.NoStackTrace");
+            _ = _notificationService.ShowInfo("Custom.ErrorsWindow.NoStackTrace");
             return;
         }
-        _ = _sdkDialogService.ShowCustomDialog(ds => @<SDKTextField Value="@stackTrace" CssClass="modal_stacktrace"/>, standardWidth: SDKModalWidth.Medium, title: "Custom.ErrorsWindow.StackTrace", height: "600px");
+        _ = _sdkDialogService.ShowCustomDialog(ds => @<SDKTextField ClearButtonDisplayMode="SDKClearButtonDisplayMode.Never" ReadOnly="true" Value="@stackTrace" CssClass="modal_stacktrace"/>, standardWidth: SDKModalWidth.Medium, title: "Custom.ErrorsWindow.StackTrace", height: "600px");
     }
 }
