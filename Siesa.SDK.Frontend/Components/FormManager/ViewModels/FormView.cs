@@ -212,7 +212,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 ErrorList.Add(new ModelMessagesDTO()
                 {
                     Message = "Custom.Generic.Message.Error",
-                    StackTrace = ex.StackTrace,
+                    StackTrace = stringError,
                 });
             }
         }
