@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
 		<VersionSuffix>dev</VersionSuffix>
+		<Version>1.0.0-dev</Version>
 		<NoWarn>8632,1591</NoWarn>
 		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
 	</PropertyGroup>

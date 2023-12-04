@@ -11,6 +11,7 @@ using Siesa.Global.Enums;
 using System.Reflection;
 using Siesa.SDK.Shared.DataAnnotations;
 using System.Linq;
+using Siesa.SDK.Shared.DTOS;
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
     public abstract class DynamicBaseViewModel: ComponentBase
@@ -38,6 +39,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         [Parameter]
         public Action OnCancel {get; set;} = null;
+        
+        [Parameter] 
+        public bool IsSubpanel { get; set; }
+
+        [Parameter]
+        public bool HideRelationshipContainer { get; set; }
 
         [Inject]
         public IServiceProvider ServiceProvider { get; set; }
@@ -56,7 +63,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         public string ErrorMsg { get; set; }
 
-        public List<string> ErrorList { get; set; }
+        public List<ModelMessagesDTO> ErrorList { get; set; } = new();
 
         public Type businessType;
 
@@ -66,13 +73,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         protected IDictionary<string, object> parameters = new Dictionary<string, object>();
 
-        [Parameter] 
-        public bool IsSubpanel { get; set; }
 
         public DynamicViewType ViewType { get; set; }
 
         protected bool CanAccess { get; set; }
-
 
         protected virtual async Task CheckAccessPermission(bool disableAccessValidation = false)
         {
@@ -87,7 +91,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             if(!disableAccessValidation && !CanAccess)
             {
                 this.ErrorMsg = "Custom.Generic.Unauthorized";
-                ErrorList.Add("Custom.Generic.Unauthorized");
+                
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Unauthorized"
+                });
             }
 
             StateHasChanged();
@@ -109,7 +117,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     if (businessType is null)
                     {
                         ErrorMsg = $"Business not found in Front: {bName}";
-                        ErrorList.Add("Custom.Generic.FrontendBusinessNotFound");
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            Message = "Custom.Generic.FrontendBusinessNotFound"
+                        });
                         return;
                     }
                     
@@ -117,17 +128,26 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     BusinessModel = businessModel;
                     BusinessObj.BusinessName = bName;
                 }
-                catch (System.Exception e)
+                catch (System.Exception ex)
                 {
-                    Console.WriteLine("Error BaseViewModel" + e.ToString());
-                    ErrorMsg = e.ToString();
-                    ErrorList.Add("Exception: "+e.ToString());
+                    string stringError = $"{ex.Message} {ex.StackTrace}";
+                    ErrorMsg = ex.ToString();
+
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        Message = "Custom.Generic.Message.Error",
+                        StackTrace = stringError
+                    });
+                    
                 }
             }
             else
             {
                 this.ErrorMsg = "404 Not Found.";
-                ErrorList.Add("Custom.Generic.BackendBusinessNotFound");
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.BackendBusinessNotFound"
+                });
             }
             StateHasChanged();
         }
@@ -136,10 +156,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         {
             if(!string.IsNullOrEmpty(BusinessName)) //TODO: Check if this is necessary
             {
-                await CheckAccessPermission();
+                await CheckAccessPermission().ConfigureAwait(true);
             } 
             
-            await base.OnInitializedAsync();
+            await base.OnInitializedAsync().ConfigureAwait(true);
 
             SetParameters(BusinessObj, BusinessName);
             if(BusinessObj != null){
@@ -185,7 +205,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                         businessType = null;
                         BusinessModel = null;
                         ErrorMsg = "";
-                        ErrorList = new List<string>();
+                        ErrorList = new ();
 
                         //await base.SetParametersAsync(parameters);
 
@@ -194,12 +214,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-
+                string stringError = $"{ex.Message} {ex.StackTrace}";
+                if(!ErrorList.Any(x => x.StackTrace.Equals(stringError, StringComparison.Ordinal)))
+                {
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        Message = "Custom.Generic.FrontendBusinessNotFound",
+                        StackTrace = stringError
+                    });
+                }
             }
-
-            await base.SetParametersAsync(parameters);
+            await base.SetParametersAsync(parameters).ConfigureAwait(true);
         }
     }
 }

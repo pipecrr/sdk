@@ -73,7 +73,6 @@ namespace Siesa.SDK.Backend.Access
             this.query = query;
             this._provider = provider;
             //Check if the entity is a BaseSDK
-
             Type entytyType = typeof(TEntity);
             //Check if the entity has a dataannotation named "SDKAuthorization"
             var dataAnnotation = entytyType.GetCustomAttributes(typeof(SDKAuthorization), false);
@@ -132,46 +131,19 @@ namespace Siesa.SDK.Backend.Access
                     query = newQuery.Cast<TEntity>();
                 }
             }
-
             if (Utilities.IsAssignableToGenericType
             (typeof(TEntity), typeof(BaseCompanyGroup<>)))
             {
-                Type rowidType = typeof(TEntity).GetProperty("Rowid").GetType();
-
-                switch (rowidType.Name)
-                {
-                    case "Int64":
-                        this.query = this.FilterGroupCompany<long>(query);
-                        break;
-                    case "Int16":
-                        this.query = this.FilterGroupCompany<short>(query);
-                        break;
-                    case "Int32":
-                    default:
-                        this.query = this.FilterGroupCompany<int>(query);
-                        break;
-                }
+                this.query = this.FilterGroupCompany(query);
             }  else if (Utilities.IsAssignableToGenericType
             (typeof(TEntity), typeof(BaseCompany<>)))
             {
-                Type rowidType = typeof(TEntity).GetProperty("Rowid").GetType();
-
-                switch (rowidType.Name)
-                {
-                    case "Int64":
-                        this.query = this.FilterCompany<long>(query);
-                        break;
-                    case "Int16":
-                        this.query = this.FilterCompany<short>(query);
-                        break;
-                    case "Int32":
-                    default:
-                        this.query = this.FilterCompany<int>(query);
-                        break;
-                }
-            }else if(typeof(TEntity) == typeof(E00201_Company)){
+                this.query = this.FilterCompany(query);
+            }else if(typeof(TEntity) == typeof(E00201_Company))
+            {
                 this.query = this.FilterCompanyEntity(query);
-            }else{
+            }else
+            {
                 this.query = query;
             }
         }
@@ -397,27 +369,25 @@ namespace Siesa.SDK.Backend.Access
 
             return false;
         }
-        private IQueryable<TEntity> FilterGroupCompany<T>(IQueryable<TEntity> query)
+        private IQueryable<TEntity> FilterGroupCompany(IQueryable<TEntity> query)
         {
             if(AuthenticationService?.User == null)
             {
                  return query; //TODO: Validar si devolver todo o nada
             }
             var group_company_session = AuthenticationService.User.RowidCompanyGroup;
-            var sdk_query = (IQueryable<BaseCompanyGroup<T>>)query;
-            sdk_query = sdk_query.Where(x => x.RowidCompanyGroup == group_company_session);
+            var sdk_query = query.Include("CompanyGroup").Where("CompanyGroup.Rowid == @0", group_company_session);
             return sdk_query.Cast<TEntity>();
         }
 
-        private IQueryable<TEntity> FilterCompany<T>(IQueryable<TEntity> query)
+        private IQueryable<TEntity> FilterCompany(IQueryable<TEntity> query)
         {
             if(AuthenticationService?.User == null)
             {
                  return query; //TODO: Validar si devolver todo o nada
             }
             var group_company_session = AuthenticationService.User.RowidCompanyGroup;
-            var sdk_query = (IQueryable<BaseCompany<T>>)query;
-            sdk_query = sdk_query.Include("Company").Where(x => x.Company.RowidCompanyGroup == group_company_session);
+            var sdk_query = query.Include("Company").Where("Company.RowidCompanyGroup == @0", group_company_session);
             return sdk_query.Cast<TEntity>();
         }
 
@@ -428,8 +398,7 @@ namespace Siesa.SDK.Backend.Access
                  return query; //TODO: Validar si devolver todo o nada
             }
             var group_company_session = AuthenticationService.User.RowidCompanyGroup;
-            var sdk_query = (IQueryable<E00201_Company>)query;
-            sdk_query = sdk_query.Where(x => x.RowidCompanyGroup == group_company_session);
+            var sdk_query = query.Where("RowidCompanyGroup == @0", group_company_session);
             return sdk_query.Cast<TEntity>();
         }
 
@@ -457,24 +426,40 @@ namespace Siesa.SDK.Backend.Access
 
         IAsyncEnumerator<TEntity> IAsyncEnumerable<TEntity>.GetAsyncEnumerator(CancellationToken cancellationToken)
         {
-            return set.GetAsyncEnumerator(cancellationToken);
+            return query.AsAsyncEnumerable().GetAsyncEnumerator(cancellationToken);
         }
 
         public override TEntity? Find(params object?[]? keyValues)
         {
+            if (FirstOrDefault(keyValues, out var tEntity)) return tEntity;
             return set.Find(keyValues);
         }
 
-
         public override ValueTask<TEntity?> FindAsync(params object?[]? keyValues)
         {
+            if(FirstOrDefault(keyValues, out var tEntity)) return new ValueTask<TEntity?>(tEntity);
             return set.FindAsync(keyValues);
         }
 
 
         public override ValueTask<TEntity?> FindAsync(object?[]? keyValues, CancellationToken cancellationToken)
         {
+            if(FirstOrDefault(keyValues, out var tEntity)) return new ValueTask<TEntity?>(tEntity);
             return set.FindAsync(keyValues, cancellationToken);
+        }
+        
+        private bool FirstOrDefault(object[] keyValues, out TEntity tEntity)
+        {
+            if (keyValues != null && keyValues.Length == 1 && keyValues[0] != null)
+            {
+                {
+                    tEntity = query.Where("Rowid == @0", keyValues[0]).FirstOrDefault();
+                    return true;
+                }
+            }
+
+            tEntity = null;
+            return false;
         }
 
         public override LocalView<TEntity> Local => set.Local;

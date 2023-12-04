@@ -21,31 +21,41 @@
 else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
 {
     @* <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" /> *@
-    <ErrorsWindow GeneralErrors="@ErrorList"/>
+    <ErrorsWindow MessagesDTO="@ErrorList"/>
 }
 else if (ModelLoaded == true)
 {
     if(!string.IsNullOrEmpty(ErrorMsg) || ErrorList.Count > 0){
-        <ErrorsWindow GeneralErrors="@ErrorList"/>
+        <ErrorsWindow MessagesDTO="@ErrorList" />
     }
         @if(IsSubpanel && ShowTitle){
             <h5 class="d-flex justify-content-center">@BusinessObj</h5>
             <hr />
         }
-    @if(ContainAttachments){
-        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
-                               Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
-                               BusinessObj="@BusinessObj" BusinessName="@BusinessName"/>
-    }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
+    @if(!HideRelationshipContainer)
     {
-        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" 
-                               BusinessName="@BusinessName"/>
+        @if(ContainAttachments && !IsTableA){
+            <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
+                                Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
+                                BusinessObj="@BusinessObj" BusinessName="@BusinessName" IsDetail="true"/>
+        }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
+        {
+            <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" 
+                                BusinessName="@BusinessName" IsDetail="true"/>
+        }
     }
     <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
         @if(Panels?.Count > 0){
-            <SDKCrudHeader ResourceTag="@Panels[0].ResourceTag" IconClass="@Panels[0].IconClass" ViewType="DynamicViewType.Detail">
+            if (!IsTableA)
+            {
+                <SDKCrudHeader ResourceTag="@Panels[0].ResourceTag" IconClass="@Panels[0].IconClass" ViewType="DynamicViewType.Detail">
+                    <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@Panels[0].ColSize"/>
+                </SDKCrudHeader>
+            }
+            else
+            {
                 <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@Panels[0].ColSize"/>
-            </SDKCrudHeader>
+            }
         }
         @if (Panels?.Count > 1)
         {
@@ -53,20 +63,25 @@ else if (ModelLoaded == true)
             {
                 @foreach (var panel in Panels.Skip(1))
                 {
-                    <div class="row pt-3">
-                        <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                    <div class="col-12">
+                        <div class="row">
+                            <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                        </div>
                     </div>
+
                 }
                 
             }else
             {
-                <div class="pt-2">
+                <div class="col-12 pt-2">
                     <SDKTabs>
                         @foreach (var panel in Panels.Skip(1))
                         {
                             <SDKTab IconCssClass="@panel.IconClass" TitleResourceTag="@panel.ResourceTag">
-                                <div class="row pt-3">
-                                    <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                <div class="col-12 px-0">
+                                    <div class="row">
+                                        <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                    </div>
                                 </div>
                             </SDKTab>
                         }
@@ -75,7 +90,7 @@ else if (ModelLoaded == true)
             }
         }
         @if(PanelsCollapsable?.Count>0){
-            <div class="w-100">
+            <div class="col-12">
                 <SDKCollapse>
                     <Items>
                         @foreach (var panel in PanelsCollapsable)
@@ -96,9 +111,23 @@ else if (ModelLoaded == true)
             <SDKGridDocument BusinessObj="@BusinessObj" DetailConfig="@DetailConfig" IsDetail="true"/>
         </CascadingValue>
     }
+    
+    @if (HasTableA && !IsTableA)
+    {
+        <SDKCollapse>
+            <Items>
+                @foreach (var company in Companies)
+                {
+                    <SDKCollapseItem Text="@company.Name">
+                        <DetailView BusinessName="@BusinessNameA" BusinessNameParent="@BusinessName" BusinessObjAType="@InternalBusinessObjAType" RowidCompany="@company.Rowid" IsTableA="true" IsSubpanel="true" ShowTitle="false" ShowButtons="false" ParentDetail="@this" ></DetailView>
+                    </SDKCollapseItem>
+                }
+            </Items>
+        </SDKCollapse>
+    }
         
     @if(IsSubpanel && ShowButtons){
-        <div class="buttons-container">
+        <div class="buttons-container pt-3">
             @foreach (var btn in FormViewModel.Buttons)
             {
                 <SDKButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
@@ -111,7 +140,7 @@ else if (ModelLoaded == true)
             }
         </div>
     }
-    @if(SetTopBar)
+    @if(SetTopBar && !IsSubpanel)
     {
         <PageTitle>@BusinessObj | <ResourceViewer ResourceTag="Custom.Project.Name" /></PageTitle>
         <SetTopBar HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Any(x => string.IsNullOrEmpty(x.Id)) ? true: false)" BusinessObj="@BusinessObj" DisableCompanies="true">

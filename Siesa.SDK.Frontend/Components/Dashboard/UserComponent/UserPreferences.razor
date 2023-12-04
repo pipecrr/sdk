@@ -26,7 +26,7 @@
 
 @if (ErrorList.Count > 0)
 {
-    <ErrorsWindow GeneralErrors="@ErrorList" />
+    <ErrorsWindow MessagesDTO="@ErrorList" />
 }
 
 
@@ -313,7 +313,7 @@
     private IJSObjectReference _jsModule;
     private string ProfileImageData { get; set; }
     private bool HasFile { get; set; } = false;
-    private List<string> ErrorList { get; set; } = new List<string>();
+    private List<ModelMessagesDTO> ErrorList { get; set; } = new List<ModelMessagesDTO>();
     private bool _IsEdit = false;
     public DynamicViewType DynamicViewType { get; set; } = DynamicViewType.Detail;
     public dynamic BLUser { get; set; }
@@ -454,7 +454,13 @@
             }
             catch (Exception ex)
             {
-                ErrorList.Add(ex.Message);
+                string stringError = $"{ex.Message} {ex.StackTrace}";
+                ErrorList.Add(new ModelMessagesDTO() 
+                { 
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = stringError
+                });
+                
                 StateHasChanged();
                 return;
             }
@@ -642,7 +648,9 @@
         var ms = new MemoryStream();
         if (browserFile.Size > 3000000)
         {
-            ErrorList.Add("La imagen no puede superar los 3MB");
+            ErrorList.Add(new ModelMessagesDTO() 
+                    { Message = "Custom.MaxSizeImage" }
+                );
             return;
         }
 

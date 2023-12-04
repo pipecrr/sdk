@@ -17,35 +17,51 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool SetTopBar { get; set; } = true;
         [Parameter]
         public string BLNameParentAttatchment { get; set; }
+        
+        private DynamicViewType _viewContext { get; set; } = DynamicViewType.Create;
 
         protected override async Task OnInitializedAsync()
         {
             DefaultViewdefName = String.IsNullOrEmpty(DefaultViewdefName) ? "create" : DefaultViewdefName;
+            if (IsTableA)
+            {
+                await InitViewTableA().ConfigureAwait(true);
+            }
             await BusinessObj.InstanceDynamicEntities(BusinessName);
             
-            await base.OnInitializedAsync();
+            await base.OnInitializedAsync().ConfigureAwait(true);
         }
 
         protected override async Task CheckPermissions()
         {
-            if(IsSubpanel && BusinessName.Equals("BLAttachmentDetail"))
+            if(IsSubpanel && BusinessName.Equals("BLAttachmentDetail", StringComparison.Ordinal))
             {
                 try
                 {
-                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.UploadAttachment, AuthenticationService);
+                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.UploadAttachment, AuthenticationService).ConfigureAwait(true);
                 }
-                catch (System.Exception)
+                catch (System.Exception ex)
                 {
+                    string stringError = $"{ex.Message} {ex.StackTrace}";
+                    ErrorList.Add(new Shared.DTOS.ModelMessagesDTO()
+                    {
+                        Message = "Custom.Generic.Message.Error",
+                        StackTrace = stringError
+                    });
                 }
             }else
             {
-                await base.CheckPermissions();
+                await base.CheckPermissions().ConfigureAwait(true);
             }
             if(!CanCreate)
             {
-                NotificationService.ShowError("Custom.Generic.Unauthorized");
+                _ = NotificationService.ShowError("Custom.Generic.Unauthorized");
                 ErrorMsg = "Custom.Generic.Unauthorized";
-                ErrorList.Add("Custom.Generic.Unauthorized");
+                ErrorList.Add(new Shared.DTOS.ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Unauthorized"
+                });
+                
                 if(!IsSubpanel){
                     // NavigationService.NavigateTo("/", replace:true);
                 }

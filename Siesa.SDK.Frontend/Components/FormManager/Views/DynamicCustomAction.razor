@@ -9,9 +9,9 @@
 @inject IAuthenticationService AuthenticationService
 @attribute [Authorize, SDKExternalView]
 
-@if (ErrorMsg != null && ErrorMsg != "")
+@if (!string.IsNullOrEmpty(ErrorMsg) || ErrorList.Any())
 {
-     <ErrorsWindow GeneralErrors="@ErrorList" />
+    <ErrorsWindow MessagesDTO="@ErrorList"/>
 }
 else if (BusinessObj != null)
 {

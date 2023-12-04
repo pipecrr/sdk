@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 using Siesa.SDK.Business;
 using Siesa.SDK.Frontend.Components.FormManager.Model;
+using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.SDK.Frontend.Extension;
 using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Shared.Services;
+using Siesa.SDK.Shared.DTOS;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {   
@@ -32,25 +34,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private FormViewModel FormViewModel { get; set; } = new FormViewModel();
 
         private List<string> _extraFields = new List<string>();
+        public string DefaultViewdefName { get; set; } = "detail";
         private void GetExtraFields(string bName = null)
         {
             try
             {
-                string viewdefName = "detail";
+                string viewdefName = DefaultViewdefName;
 
                 if (IsSubpanel)
                 {
                     viewdefName = "related_detail";
                 }
 
-                var metadata = BackendRouterService.GetViewdef(bName, viewdefName);
-                if (IsSubpanel && String.IsNullOrEmpty(metadata)){
-                    metadata = BackendRouterService.GetViewdef(bName, "related_default");
-                }
-                if(String.IsNullOrEmpty(metadata))
-                {
-                    metadata = BackendRouterService.GetViewdef(bName, "default");
-                }
+                var metadata = GetMetadata(bName, viewdefName);
 
                 try
                 {
@@ -63,19 +59,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     FormViewModel.Panels = panels;
                 }
 
-                var defaultFields = FormViewModel.Panels.SelectMany(panel => panel.Fields)
-                                    .Where(f=> f.CustomComponent == null && f.Name.StartsWith("BaseObj."))
+                var defaultFields = FormViewModel.Panels.SelectMany(panel =>
+                    {
+                        return GetAllNestedFields(panel.Fields);
+                    }).Where(f=> f.CustomComponent == null && f.Name.StartsWith("BaseObj.", StringComparison.Ordinal))
                                     .Select(field => field.Name)
-                                    .ToList(); 
+                                    .ToList();
 
                 if (FormViewModel.ExtraFields.Count > 0){
                     _extraFields =  FormViewModel.ExtraFields.Select(f => f)
                     .Union(defaultFields)
                     .ToList();
 
-                    _extraFields = _extraFields.Select(field => field.Replace("BaseObj.", "")).ToList();
+                    _extraFields = _extraFields.Select(field => field.Replace("BaseObj.", "",StringComparison.Ordinal)).ToList();
                 }else{
-                    _extraFields = defaultFields.Select(field => field.Replace("BaseObj.", "")).ToList();
+                    _extraFields = defaultFields.Select(field => field.Replace("BaseObj.", "",StringComparison.Ordinal)).ToList();
                 }
                 
                 var baseObj = BusinessObj.BaseObj;
@@ -95,10 +93,53 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     _extraFields = _extraFields.Union(extraFieldsTmp).ToList();
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                ErrorList.Add("Exception: "+e.ToString());
+                string stringError = $"{ex.Message} {ex.StackTrace}";
+                ErrorList.Add(new Shared.DTOS.ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = stringError
+                });
             }
+        }
+
+        private string GetMetadata(string bName, string viewdefName)
+        {
+            var metadata = BackendRouterService.GetViewdef(bName, viewdefName);
+            if (IsSubpanel && String.IsNullOrEmpty(metadata))
+            {
+                metadata = BackendRouterService.GetViewdef(bName, "related_default");
+            }
+
+            if (String.IsNullOrEmpty(metadata) && viewdefName != DefaultViewdefName)
+            {
+                metadata = BackendRouterService.GetViewdef(bName, DefaultViewdefName);
+            }
+
+            if (String.IsNullOrEmpty(metadata))
+            {
+                metadata = BackendRouterService.GetViewdef(bName, "default");
+            }
+
+            return metadata;
+        }
+
+        private List<FieldOptions> GetAllNestedFields(List<FieldOptions> panelFields)
+        {
+            List<FieldOptions> nestedFields = new List<FieldOptions>();
+            foreach (var field in panelFields)
+            {
+                if (field.Fields != null && field.Fields.Count > 0)
+                {
+                    nestedFields.AddRange(GetAllNestedFields(field.Fields));
+                }
+                else
+                {
+                    nestedFields.Add(field);
+                }
+            }
+            return nestedFields;
         }
 
         private async Task InitDetail(Int64 businessObjId)
@@ -108,11 +149,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 await BusinessObj.InitializeBusiness(businessObjId,_extraFields);
             }
-            catch (System.Exception e)
+            catch (System.Exception ex)
             {
-                Console.WriteLine("Error DetailViewModel", e.ToString());
-                ErrorMsg = e.ToString();
-                ErrorList.Add("Exception: "+e.ToString());
+                Console.WriteLine("Error DetailViewModel", ex.ToString());
+                ErrorMsg = ex.ToString();
+                string stringError = $"{ex.Message} {ex.StackTrace}";
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = stringError
+                });
             }
         }
 
@@ -126,6 +172,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             parameters.Add("IsSubpanel", IsSubpanel);
             parameters.Add("ShowTitle", ShowTitle);
             parameters.Add("ShowButtons", ShowButtons);
+            parameters.Add("HideRelationshipContainer", HideRelationshipContainer);
 
             if(!AllowDelete && IsSubpanel)
             {

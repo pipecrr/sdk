@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Siesa.SDK.Business;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.SDK.Frontend.Extension;
+using Siesa.SDK.Shared.DTOS;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -23,7 +24,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             catch (System.Exception e)
             {
-                Console.WriteLine("Error EditViewModel", e.ToString());
+                string stringError = $"{e.Message} {e.StackTrace}";
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = stringError,
+                });
                 ErrorMsg = e.ToString();
             }
         }

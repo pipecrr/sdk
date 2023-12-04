@@ -79,7 +79,6 @@ namespace Siesa.Global.Enums
 		User = 1,
 		Team = 2
 	}
-
 	public enum EnumPermissionAuthTypes
 	{
 		Query = 1,

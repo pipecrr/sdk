@@ -18,7 +18,11 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Microsoft.Extensions.DependencyInjection;
+using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.SDK.Shared.Utilities;
+using Siesa.SDK.Shared.DTOS;
+using Siesa.SDK.Protos;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -35,6 +39,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Parameter]
         public bool IsSubpanel { get; set; }
+        [Parameter]
+        public Type BusinessObjAType { get; set; }
 
         [Parameter]
         public bool ShowTitle { get; set; } = true;
@@ -51,8 +57,23 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Parameter]
         public string BLNameParentAttatchment { get; set; }
+        [Parameter]
+        public string BusinessNameParent { get; set; }
+        
+        [Parameter]
+        public DetailView ParentDetail { get; set; }
+        
+        [Parameter]
+        public List<string> ParentBaseObj { get; set; }
+        [Parameter]
+        public bool IsTableA { get; set; }
+        [Parameter]
+        public long RowidCompany { get; set; }
+
+        [Parameter]
+        public bool HideRelationshipContainer { get; set; }
         /// <summary>
-        /// Gets or sets a value indicating whether the business object is a document.
+        /// Gets or sets a value indicating whether the business object is a document
         /// </summary>
         public bool IsDocument { get; set; }
 
@@ -67,7 +88,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Inject] public IFeaturePermissionService FeaturePermissionService { get; set; }
         [Inject] public IAuthenticationService AuthenticationService { get; set; }
-
+        [Inject] public IServiceProvider ServiceProvider { get; set; }
         [Inject] public SDKNotificationService NotificationService { get; set; }        
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
         /// <summary>
@@ -78,7 +99,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public List<Panel> PanelsCollapsable = new List<Panel>();
         public Boolean ModelLoaded = false;
         public String ErrorMsg = "";
-        public List<string> ErrorList = new List<string>();
+        public List<ModelMessagesDTO> ErrorList = new ();
         protected bool CanCreate;
         protected bool CanEdit;
         protected bool CanDelete;
@@ -100,6 +121,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private Button ListButton { get; set; }
         private Button DeleteButton { get; set; }
         private string _viewdefName;
+        
+        internal bool HasTableA;
+        internal Type InternalBusinessObjAType;
+        internal string BusinessNameA { get; set; }
+        public List<DetailView> DetailViewsTablesA { get; set; } = new List<DetailView>();
+        internal List<E00201_Company> Companies { get; set; } = new List<E00201_Company>();
 
         private void setViewContextField(FieldOptions field)
         {
@@ -235,7 +262,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                     catch (System.Exception ex)
                     {
-                        Console.WriteLine($"Error: {ex.Message}");
+                        string stringError = $"{ex.Message} {ex.StackTrace}";
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            Message = "Custom.Generic.Message.Error",
+                            StackTrace = stringError
+                        });
                     }
                 }
 
@@ -259,6 +291,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 bName = BusinessName;
             }
+            
+            if (!IsTableA)
+            {
+                await VerifyTableA().ConfigureAwait(true);
+            }
+            
             await CheckPermissions().ConfigureAwait(true);
             await CreateRelationshipAttachment().ConfigureAwait(true);
 
@@ -268,7 +306,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 //ErrorMsg = "No hay definición para la vista de detalle";
                 ErrorMsg = "Custom.Generic.ViewdefNotFound";
-                ErrorList.Add(ErrorMsg);
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.ViewdefNotFound"
+                });
             }
             else
             {
@@ -476,14 +517,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 Loading = false;
                 this.ModelLoaded = false;
                 ErrorMsg = "";
-                ErrorList = new List<string>();
-                await InitView(BusinessName);
+                ErrorList = new ();
+                await InitView(BusinessName).ConfigureAwait(true);
             }
         }
 
         protected override async Task OnInitializedAsync()
         {
-            await base.OnInitializedAsync();
+            if (IsTableA)
+            {
+                await InitViewTableA().ConfigureAwait(true);
+            }
+            await base.OnInitializedAsync().ConfigureAwait(true);
             //InitView();
         }
 
@@ -517,19 +562,40 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private async Task DeleteBusiness()
         {
-            dynamic result = null;
+            DeleteBusinessObjResponse result = null;
             try{
                 result = await BusinessObj.DeleteAsync();
-            }catch(Exception ex){
-                ErrorMsg = ex.Message;
-                ErrorList.Add(ErrorMsg);
+            }catch(Exception ex)
+            {
+                string stringError = $"{ex.Message} {ex.StackTrace}";
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = stringError
+                });
             }
 
             if (result != null && result.Errors.Count > 0)
             {
-                foreach(var error in result.Errors){
-                    NotificationService.ShowError(error.Message);
-                    ErrorList.Add(error.Message);
+                foreach (var error in result.Errors)
+                {
+                    _ = NotificationService.ShowError("Custom.Generic.Message.Error");
+                    if (error.Format != null && error.Format.Any())
+                    {
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            MessageFormat = new Dictionary<string, List<string>>()
+                            {
+                                { error.Message, error.Format.ToList() }
+                            },
+                        });
+                    }else
+                    {
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            Message = error.Message
+                        });
+                    }
                 }
                 // ErrorMsg = "<ul>";
                 // foreach (var error in result.Errors)
@@ -591,45 +657,63 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             if (FeaturePermissionService != null && !string.IsNullOrEmpty(BusinessName))
             {
-                if(IsSubpanel && BusinessName.Equals("BLAttachmentDetail"))
+                if(IsSubpanel && BusinessName.Equals("BLAttachmentDetail", StringComparison.Ordinal))
                 {
-                    try
-                    {
-                        CanAcess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService);
-                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.UploadAttachment, AuthenticationService);
-                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DeleteAttachment, AuthenticationService);
-                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DownloadAttachment, AuthenticationService);
-                    }
-                    catch (System.Exception)
-                    {
-                    }
+                    await CheckPermissionsByBussinessName(BusinessName).ConfigureAwait(true);
                 }else
                 {
-                    try
+                    string businessName = BusinessName;
+                    if (IsTableA)
                     {
-                        CanAcess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
-                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Create, AuthenticationService);
-                        CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Edit, AuthenticationService);
-                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService);
-                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
+                        businessName = BusinessNameParent;
                     }
-                    catch (System.Exception)
-                    {
-                    }
+                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Edit, AuthenticationService).ConfigureAwait(true);
+                    await CheckPermissionsByBussinessName(businessName).ConfigureAwait(true);
                 }
 
                 if (!CanDetail)
                 {
                     ErrorMsg = "Custom.Generic.Unauthorized";
-                    NotificationService.ShowError("Custom.Generic.Unauthorized");
-                    ErrorList.Add("Custom.Generic.Unauthorized");
-                    if(!IsSubpanel){
+
+                    _ = NotificationService.ShowError("Custom.Generic.Unauthorized");
+
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        Message = "Custom.Generic.Unauthorized"
+                    });
+
+                    if(!IsSubpanel)
+                    {
                         // NavigationService.NavigateTo("/", replace: true);
                     }
                 }
             }
         }
-        
+
+        private async Task CheckPermissionsByBussinessName(string businessName)
+        {
+            try
+            {
+                CanAcess = await FeaturePermissionService.CheckUserActionPermission(businessName,
+                    enumSDKActions.AccessAttachment, AuthenticationService).ConfigureAwait(true);
+                CanCreate = await FeaturePermissionService.CheckUserActionPermission(businessName,
+                    enumSDKActions.UploadAttachment, AuthenticationService).ConfigureAwait(true);
+                CanDelete = await FeaturePermissionService.CheckUserActionPermission(businessName,
+                    enumSDKActions.DeleteAttachment, AuthenticationService).ConfigureAwait(true);
+                CanDetail = await FeaturePermissionService.CheckUserActionPermission(businessName,
+                    enumSDKActions.DownloadAttachment, AuthenticationService).ConfigureAwait(true);
+            }
+            catch (System.Exception ex)
+            {
+                string stringError = $"{ex.Message} {ex.StackTrace}";
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = stringError
+                });
+            }
+        }
+
         /// <summary>
         /// Executes a specified action using an evaluator and method information extracted from the provided object. 
         /// This method can handle asynchronous methods and optionally returns a value based on the 'hasReturn' parameter.
@@ -667,6 +751,78 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 return eject;
             }
             return obj;
+        }
+        
+        private async Task VerifyTableA()
+        {
+            BusinessNameA = BusinessObj.GetType().Name.Replace("BL", "BLA");
+            InternalBusinessObjAType = Utilities.SearchType(BusinessObj.GetType().Namespace + "." + BusinessNameA);
+            if (InternalBusinessObjAType != null)
+            {
+                HasTableA = true;
+                var bL = BackendRouterService.GetSDKBusinessModel("BLSDKCompany",AuthenticationService);
+                int rowidCompanyGroup = AuthenticationService.GetRowidCompanyGroup();
+                var dataCompany = await bL.GetData(null, null, $"RowidCompanyGroup == {rowidCompanyGroup}").ConfigureAwait(true);
+                Companies = dataCompany.Data.Select(x => JsonConvert.DeserializeObject<E00201_Company>(x)).ToList();
+            }
+        }
+        
+        internal async Task InitViewTableA()
+        {
+            dynamic businessObj = null;
+            if (ParentDetail.DetailViewsTablesA.Any())
+            {
+                foreach (var formview in ParentDetail.DetailViewsTablesA)
+                {
+                    if(formview.RowidCompany == RowidCompany)
+                    {
+                        businessObj = formview.BusinessObj;
+                        break;
+                    }
+                }
+            }
+            if (BusinessObjAType != null && businessObj == null)
+            {
+                BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, BusinessObjAType);
+                await GenerateBaseObj().ConfigureAwait(true);
+                long rowid;
+                try
+                {
+                    rowid = Convert.ToInt64(BusinessObj.BaseObj.Rowid);
+                }
+                catch (System.Exception)
+                {
+                    rowid = 0;
+                }
+                BusinessObj.OnReady(DynamicViewType.Detail, rowid);
+                ParentDetail.DetailViewsTablesA.Add(this);
+            }else
+            {
+                BusinessObj = businessObj;
+            }
+        }
+
+        private async Task GenerateBaseObj()
+        {
+            Int16? rowidCompany = (Int16?)(RowidCompany);
+            dynamic baseObj = Activator.CreateInstance(BusinessObj.BaseObj.GetType());
+            if (ParentDetail.BusinessObj.BaseObj.Rowid > 0)
+            {
+                string where = $"RowidCompany == {RowidCompany} && RowidRecord == {ParentDetail.BusinessObj.BaseObj.Rowid}";
+                var response = await BusinessObj.GetDataAsync(null, null, where, "");
+                var totalCount = response.TotalCount;
+                if (totalCount > 0)
+                {
+                    dynamic data = response.Data[0];
+                    baseObj = data;
+                }
+            }
+            else
+            {
+                baseObj.RowidCompany = rowidCompany;
+            }
+
+            BusinessObj.BaseObj = baseObj;
         }
     }
 }

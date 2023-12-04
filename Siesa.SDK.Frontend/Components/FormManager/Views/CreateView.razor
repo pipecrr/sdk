@@ -26,7 +26,9 @@
 else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
 {
     @* <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" /> *@
-    <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList" VerifyContext="@ClickInSave"/>
+    <ErrorsWindow EditFormContext="@EditFormContext" 
+    MessagesDTO="@ErrorList" VerifyContext="@ClickInSave" />
+
 } else if (BusinessObj.BaseObj != null)
 {
     @if(IsSubpanel && ShowTitle){        
@@ -34,16 +36,16 @@ else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
             ResourceTag="@($"{BusinessName}.Singular")" /></h5>
         <hr />
     }
-    @if(ContainAttachments){
+    @if(ContainAttachments && !IsTableA){
         <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
             Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
-            BusinessObj="@BusinessObj" isCreateView="true" ShowAditionalFields="@ShowAditionalFields"/>
+            BusinessObj="@BusinessObj" IsCreateView="true" ShowAditionalFields="@ShowAditionalFields"/>
     }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
     {
         <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" isCreateView="true" ShowAditionalFields="@ShowAditionalFields"/>
     }
     <CascadingValue Value="@this">
-       <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList" VerifyContext="@ClickInSave"/>
+       <ErrorsWindow EditFormContext="@EditFormContext" MessagesDTO="@ErrorList" VerifyContext="@ClickInSave" />
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
@@ -52,9 +54,16 @@ else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
         <SDKFormLayout CaptionPosition="SDKCaptionPosition.Vertical">
             <CascadingValue Value="@EditFormContext">
                 @if(Panels?.Count > 0){
-                    <SDKCrudHeader ResourceTag="@Panels[0].ResourceTag" IconClass="@Panels[0].IconClass" ViewType="DynamicViewType.Create">
+                    if (!IsTableA)
+                    {
+                        <SDKCrudHeader ResourceTag="@Panels[0].ResourceTag" IconClass="@Panels[0].IconClass" ViewType="DynamicViewType.Create">
+                            <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" DefaultColSize="@Panels[0].ColSize" ModelObj="@BusinessObj" />
+                        </SDKCrudHeader>
+                    }
+                    else
+                    {
                         <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" DefaultColSize="@Panels[0].ColSize" ModelObj="@BusinessObj" />
-                    </SDKCrudHeader>
+                    }
                 }
             </CascadingValue>
             @if (Panels?.Count > 1)
@@ -64,23 +73,27 @@ else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
                     @foreach (var panel in Panels.Skip(1))
                     {    
                         <CascadingValue Value="@EditFormContext">
-                            <div class="row pt-3">
-                                <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                            <div class="col-12">
+                                <div class="row">
+                                    <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                </div>
                             </div>
                         </CascadingValue>
                     }
                     
                 }else
                 {
-                    <div class="pt-2">
+                    <div class="col-12 pt-2">
                         <SDKTabs>
                             @foreach (var panel in Panels.Skip(1))
                             {
                                 <SDKTab IconCssClass="@panel.IconClass" TitleResourceTag="@panel.ResourceTag">
 
                                     <CascadingValue Value="@EditFormContext">
-                                        <div class="row pt-3">
-                                            <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                        <div class="col-12 px-0">
+                                            <div class="row">
+                                                <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                            </div>
                                         </div>
                                     </CascadingValue>
 
@@ -91,7 +104,7 @@ else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
                 }
             }
             @if(PanelsCollapsable?.Count>0){
-                <div class="w-100">
+                <div class="col-12">
                     <SDKCollapse>
                         <Items>
                             @foreach (var panel in PanelsCollapsable)
@@ -102,7 +115,7 @@ else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
                                             <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
                                         </CascadingValue>
                                     </div>
-                                        <div class="buttons-aditional-fiels mb-2">
+                                        <div class="buttons-aditional-fiels mt-3">
                                             <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" ResourceTag="Borrar" Click="@(()=>ConfirmDelete(panel.RowidGroupDynamicEntity))"/>
                                             <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Custom.Panel.AditionalFields.Button.EditFields" Click="@(()=>ClickInEdit(panel.RowidGroupDynamicEntity))"/>
                                             <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Custom.Panel.AditionalFields.Button.AddFields" Click="@(()=>ClickInAdd(panel.RowidGroupDynamicEntity))"/>
@@ -121,10 +134,23 @@ else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
                 </CascadingValue>
             </CascadingValue>
         }
+        @if (HasTableA && !IsTableA)
+        {
+            <SDKCollapse>
+                <Items>
+                    @foreach (var company in Companies)
+                    {
+                        <SDKCollapseItem Text="@company.Name">
+                            <CreateView BusinessName="@BusinessNameA" BusinessNameParent="@BusinessName" BusinessObjAType="@InternalBusinessObjAType" RowidCompany="@company.Rowid" IsTableA="true" IsSubpanel="true" ShowTitle="false" ShowButtons="false" ParentForm="@this" ViewContext="@_viewContext"></CreateView>
+                        </SDKCollapseItem>
+                    }
+                </Items>
+            </SDKCollapse>
+        }
     </EditForm>
     </CascadingValue>
     @if(IsSubpanel && ShowButtons){
-        <div clidColumnass="buttons-container">
+        <div class="buttons-container pt-3">
             @foreach (var btn in FormViewModel.Buttons)
             {
                 <SDKButton RenderStyle="@btn.RenderStyle"  Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />

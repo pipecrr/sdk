@@ -57,6 +57,12 @@
     font-weight: bold;
     border-radius: var(--border_radius_standar) var(--border_radius_standar) 0 0;
 }
+
+
+.sdk_error_log_box_head ::deep button i{
+    color:var(--color_light_text) !important;
+}
+
 .sdk_error_log_box_body{
     border: 1px solid var(--color_error_log);
     max-height: 190px;
@@ -153,3 +159,4 @@
     border-radius: 4px;
     letter-spacing: 0.02rem;
 }
+

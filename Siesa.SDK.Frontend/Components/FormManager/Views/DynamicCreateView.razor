@@ -3,9 +3,9 @@
 @attribute [Authorize]
 @using Microsoft.AspNetCore.Authorization
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
-@if (ErrorMsg != null && ErrorMsg != "")
+@if (!string.IsNullOrEmpty(ErrorMsg) || ErrorList.Any())
 {
-    <ErrorsWindow GeneralErrors="@ErrorList" />
+    <ErrorsWindow MessagesDTO="@ErrorList"  />
 }
 else if (BusinessObj == null)
 {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
@@ -7,24 +8,23 @@ using Siesa.SDK.Frontend.Components.FormManager.Model;
 using Microsoft.JSInterop;
 using Siesa.SDK.Business;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
-using Microsoft.CodeAnalysis.Scripting;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using DevExpress.DataAccess.Native.Web;
 using Siesa.SDK.Frontend.Utils;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
-using Siesa.SDK.Frontend.Application;
-using Siesa.SDK.Frontend.Components.Fields;
 using Siesa.SDK.Shared.DTOS;
 using Siesa.SDK.Frontend.Components.FormManager.Fields;
 using Siesa.SDK.Frontend.Extension;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Siesa.Global.Enums;
+using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
-using Siesa.SDK.Frontend.Components.FormManager.Views;
 using Siesa.SDK.Shared.Utilities;
+using Siesa.SDK.Shared.DTOS;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
@@ -33,19 +33,24 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Parameter]
         public string BusinessName { get; set; }
         [Parameter]
+        public string BusinessNameParent { get; set; }
+        [Parameter]
+        public FormView ParentForm { get; set; }
+        [Parameter]
         public dynamic BusinessObj { get; set; }
-
         [Parameter] 
         public bool IsSubpanel { get; set; }
+        [Parameter]
+        public Type BusinessObjAType { get; set; }
         [Inject] public  Radzen.DialogService dialogService { get; set; }
-
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
         [Inject] public NavigationService NavigationService { get; set; }
         [Inject] public SDKNotificationService NotificationService { get; set; }
         [Inject] public IConfiguration configuration { get; set; }
         private bool UseRoslynToEval { get; set; }
-
+        [Inject]
+        public IServiceProvider ServiceProvider { get; set; }
         [Inject] protected IAuthenticationService AuthenticationService { get; set; }
 
         [Inject] public SDKGlobalLoaderService GlobalLoaderService { get; set; }
@@ -64,7 +69,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public bool Saving = false;
         public bool SavingFile { get; set; } = false;
         public String ErrorMsg = "";
-        public List<string> ErrorList = new List<string>();
+        public List<ModelMessagesDTO> ErrorList = new ();
         [Parameter]
         public string FormID { get; set; } = Guid.NewGuid().ToString();
         protected ValidationMessageStore _messageStore;
@@ -94,12 +99,20 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         [Parameter]
         public List<string> ParentBaseObj { get; set; }
+        [Parameter]
+        public bool IsTableA { get; set; }
+        [Parameter]
+        public long RowidCompany { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether the business object is a document.
         /// </summary>
         public bool IsDocument { get; set; }
         
         public int CountUnicErrors = 0;
+
+        public IEnumerable<object> FielsdUniqueIndex { get; set; }
+
+        public string FieldUniqueIndex { get; set; } = "";
 
         private string _viewdefName = "";
 
@@ -130,6 +143,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public List<Button> ExtraButtons { get; set; }
         public Button SaveButton { get; set; }
         public bool isOnePanel { get; set; }
+        internal bool HasTableA;
+        internal Type InternalBusinessObjAType;
+        internal string BusinessNameA { get; set; }
+        public dynamic BaseObjA { get; set; }
+        public dynamic BusinessObjA { get; set; }
+        public List<FormView> FormViewsTablesA { get; set; } = new List<FormView>();
+        internal List<E00201_Company> Companies { get; set; } = new List<E00201_Company>();
         /// <summary>
         /// Gets or sets the delete button config. 
         /// </summary>
@@ -142,20 +162,34 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         /// Gets or sets the reference grid.
         /// </summary>
         public dynamic RefGrid { get; set; }
+
         protected virtual async Task CheckPermissions()
         {
             if (FeaturePermissionService != null && !String.IsNullOrEmpty(BusinessName))
             {
                 try
                 {
-                    CanAcess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
-                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Create, AuthenticationService);
-                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Edit, AuthenticationService);
-                    CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService);
-                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
+                    string businessName = BusinessName;
+                    if (IsTableA)
+                    {
+                        businessName = BusinessNameParent;
+                    }
+                    CanAcess = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Detail, AuthenticationService).ConfigureAwait(true);
+                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Create, AuthenticationService).ConfigureAwait(true);
+                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Edit, AuthenticationService).ConfigureAwait(true);
+                    CanDelete = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Delete, AuthenticationService).ConfigureAwait(true);
+                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Detail, AuthenticationService).ConfigureAwait(true);
                 }
-                catch (System.Exception)
+                catch (System.Exception ex)
                 {
+                    string stringError = $"{ex.Message} {ex.StackTrace}";
+                
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        Message = "Custom.Generic.Message.Error",
+                        StackTrace = stringError
+                    });
+                    
                 }
             }
         }
@@ -169,9 +203,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 }
                 ContainAttachments = true;
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
                 ContainAttachments = false;
+
+                string stringError = $"{ex.Message} {ex.StackTrace}";
+                    
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = stringError,
+                });
             }
         }
         private string GetViewdef(string businessName)
@@ -198,7 +240,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             return data;
         }
 
-        private void setViewContext(List<Panel> panels, DynamicViewType viewType)
+        private void SetViewContext(List<Panel> panels, DynamicViewType viewType)
         {
             for (int i = 0; i < panels.Count; i++)
             {
@@ -214,16 +256,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 
                 for (int j = 0; j < panels[i].Fields.Count; j++)
                 {
-                    setViewContextField(panels[i].Fields[j], viewType);
+                    SetViewContextField(panels[i].Fields[j], viewType);
                 }
                 if (panels[i].SubViewdef != null && panels[i].SubViewdef.Panels.Count > 0)
                 {
-                    setViewContext(panels[i].SubViewdef.Panels, viewType);
+                    SetViewContext(panels[i].SubViewdef.Panels, viewType);
                 }                
             }
         }
 
-        private void setViewContextField(FieldOptions field, DynamicViewType viewType){
+        private void SetViewContextField(FieldOptions field, DynamicViewType viewType){
             if(viewType == DynamicViewType.Detail && String.IsNullOrEmpty(field.ViewContext)){
                 field.ViewContext = "DetailView";
             }
@@ -233,7 +275,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
             foreach (var item in field.Fields.Select((value, i) => (value, i)))
             {
-                setViewContextField(item.value, viewType);
+                SetViewContextField(item.value, viewType);
             }
         }
 
@@ -244,8 +286,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 StateHasChanged();
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
+                string stringError = $"{ex.Message} {ex.StackTrace}";
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = stringError
+                });
                 _ = InvokeAsync(() => StateHasChanged());
             }
         }
@@ -258,40 +306,39 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 bName = BusinessName;
             }
-            await CheckPermissions();
-            var metadata = GetViewdef(bName);
-            if (metadata == null || metadata == "")
+
+            if (!IsTableA)
             {
-                //string ErrorTag = await ResourceManager.GetResource("Custom.Formview.NotDefinition", AuthenticationService.GetRowidCulture());
+                await VerifyTableA().ConfigureAwait(true);
+            }
+            
+            await CheckPermissions().ConfigureAwait(true);
+            var metadata = GetViewdef(bName);
+            if (String.IsNullOrEmpty(metadata))
+            {
                 ErrorMsg = $"Custom.Generic.ViewdefNotFound";
-                ErrorList.Add($"Custom.Generic.ViewdefNotFound");
+
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = ErrorMsg,
+                });
             }
             else
             {
-                try
-                {
-                    FormViewModel = JsonConvert.DeserializeObject<FormViewModel>(metadata);
-                }
-                catch (System.Exception)
-                {
-                    //Soporte a viewdefs anteriores
-                    var panels = JsonConvert.DeserializeObject<List<Panel>>(metadata);
-                    FormViewModel.Panels = panels;
-                }
-                if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null ){
-                    ShowAditionalFields = true;
-                    if(BusinessObj.DynamicEntities.Count > 0){
-                        AddPanels(PanelsCollapsable);
-                    }
-                }
+                CreateFormViewModel(metadata);
             }
             try
             {
-                setViewContext(FormViewModel.Panels, ViewContext);
+                SetViewContext(FormViewModel.Panels, ViewContext);
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
-                Console.WriteLine("Error");
+                string stringError = $"{ex.Message} {ex.StackTrace}";
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = stringError,
+                });
             }
             if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
             {
@@ -314,14 +361,138 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 await BusinessObj.InitializeChilds().ConfigureAwait(true);
             }
             Loading = false;
-            EditFormContext = new EditContext(BusinessObj);
+            if(EditFormContext == null)
+            {
+                EditFormContext = new EditContext(BusinessObj);
+            }
             EditFormContext.OnFieldChanged += EditContext_OnFieldChanged;
             _messageStore = new ValidationMessageStore(EditFormContext);
-            EditFormContext.OnValidationRequested += (s, e) => _messageStore.Clear();
+            EditFormContext.OnValidationRequested += EditFormContext_OnValidationRequested;
             EvaluateDynamicAttributes(null);
-            EvaluateButtonAttributes();
+            await EvaluateButtonAttributes().ConfigureAwait(true);
             BusinessObj.ParentComponent = this;
             StateHasChanged();
+        }
+        private void CreateFormViewModel(string metadata)
+        {
+            try
+            {
+                FormViewModel = JsonConvert.DeserializeObject<FormViewModel>(metadata);
+            }
+            catch (System.Exception)
+            {
+                //Soporte a viewdefs anteriores
+                var panels = JsonConvert.DeserializeObject<List<Panel>>(metadata);
+                FormViewModel.Panels = panels;
+            }
+            if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null ){
+                ShowAditionalFields = true;
+                if(BusinessObj.DynamicEntities.Count > 0){
+                    AddPanels(PanelsCollapsable);
+                }
+            }
+        }
+
+        private void EditFormContext_OnValidationRequested(object sender, ValidationRequestedEventArgs e)
+        {
+            _messageStore.Clear();
+            if(FormViewsTablesA != null && FormViewsTablesA.Any()){
+                FormViewsTablesA.Select(formView => formView.EditFormContext).ToList().ForEach(editContext => {
+                    _messageStore.Clear();
+                    editContext.Validate();
+                    if(editContext.GetValidationMessages().Any())
+                    {
+                        foreach (var item in editContext.GetValidationMessages().Distinct())
+                        {
+                            _messageStore.Add(editContext.Field(item), item);
+                        }
+                    }
+                });
+            }
+        }
+        internal async Task InitViewTableA()
+        {
+            dynamic businessObj = null;
+            EditContext editFormContext = null;
+            if (ParentForm.FormViewsTablesA.Any())
+            {
+                businessObj = GetFormViewInfo(ref editFormContext);
+            }
+            if (BusinessObjAType != null && businessObj == null)
+            {
+                BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, BusinessObjAType);
+                await GenerateBaseObj().ConfigureAwait(true);
+                long rowid;
+                try
+                {
+                    rowid = Convert.ToInt64(BusinessObj.BaseObj.Rowid);
+                }
+                catch (System.Exception)
+                {
+                    rowid = 0;
+                }
+                BusinessObj.OnReady(ViewContext, rowid);
+                BusinessObj.BusinessNameParent = BusinessNameParent;
+                ParentForm.FormViewsTablesA.Add(this);
+            }else
+            {
+                BusinessObj = businessObj;
+            }
+            if (editFormContext != null){
+                EditFormContext = editFormContext;
+            }
+        }
+
+        private async Task GenerateBaseObj()
+        {
+            Int16? rowidCompany = (Int16?)(RowidCompany);
+            dynamic baseObj = Activator.CreateInstance(BusinessObj.BaseObj.GetType());
+            if (ParentForm.BusinessObj.BaseObj.Rowid > 0)
+            {
+                string where = $"RowidCompany == {RowidCompany} && RowidRecord == {ParentForm.BusinessObj.BaseObj.Rowid}";
+                var response = await BusinessObj.GetDataAsync(null, null, where, "");
+                var totalCount = response.TotalCount;
+                if (totalCount > 0)
+                {
+                    dynamic data = response.Data[0];
+                    baseObj = data;
+                }
+
+                baseObj.RowidRecord = ParentForm.BusinessObj.BaseObj.Rowid;
+            }
+
+            baseObj.RowidCompany = rowidCompany;
+            BusinessObj.BaseObj = baseObj;
+        }
+
+        private dynamic GetFormViewInfo(ref EditContext editFormContext)
+        {
+            dynamic businessObj = null;
+            foreach (var formview in ParentForm.FormViewsTablesA)
+            {
+                if (formview.RowidCompany == RowidCompany)
+                {
+                    businessObj = formview.BusinessObj;
+                    editFormContext = formview.EditFormContext;
+                    break;
+                }
+            }
+
+            return businessObj;
+        }
+
+        private async Task VerifyTableA()
+        {
+            BusinessNameA = BusinessObj.GetType().Name.Replace("BL", "BLA");
+            InternalBusinessObjAType = Utilities.SearchType(BusinessObj.GetType().Namespace + "." + BusinessNameA);
+            if (InternalBusinessObjAType != null)
+            {
+                HasTableA = true;
+                var bL = BackendRouterService.GetSDKBusinessModel("BLSDKCompany",AuthenticationService);
+                int rowidCompanyGroup = AuthenticationService.GetRowidCompanyGroup();
+                var dataCompany = await bL.GetData(null, null, $"RowidCompanyGroup == {rowidCompanyGroup}").ConfigureAwait(true);
+                Companies = dataCompany.Data.Select(x => JsonConvert.DeserializeObject<E00201_Company>(x)).ToList();
+            }
         }
 
         private void AddOnChangeCell()
@@ -460,9 +631,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         private void EditContext_OnFieldChanged(object sender, FieldChangedEventArgs e)
         {
+            CleanErrors();
             _messageStore.Clear(e.FieldIdentifier);
             EvaluateDynamicAttributes(e);
             EvaluateButtonAttributes();
+        }
+        
+        private void CleanErrors()
+        {
+            ErrorMsg = "";
+            ErrorList.Clear();
+            StateHasChanged();
         }
 
         private void EvaluateDynamicAttributes(FieldChangedEventArgs e)
@@ -529,7 +708,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 }
                 catch (System.Exception ex)
                 {
-                    Console.WriteLine($"Error: {ex.Message}");
+                    string stringError = $"{ex.Message} {ex.StackTrace}";
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        Message = "Custom.Generic.Message.Error",
+                        StackTrace = stringError,
+                    });
                 }
             }
             return shouldUpdate;
@@ -593,10 +777,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             catch (System.Exception ex)
             {
+                string stringError = $"{ex.Message} {ex.StackTrace}";
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = stringError,
+                });
             }
             //await InitView();
         }
-
         public override async Task SetParametersAsync(ParameterView parameters)
         {
             bool changeViewContext = parameters.DidParameterChange(nameof(ViewContext), ViewContext);
@@ -608,7 +797,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 Loading = false;
                 ErrorMsg = "";
-                ErrorList = new List<string>();
+                ErrorList = new();
                 await InitView();
             }
         }
@@ -621,9 +810,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             SavingFile = true;
             try{
                 await fileField.Upload();
-            }catch(Exception ex){
+            }catch(Exception ex)
+            {
                 //TODO: pdte por revision 
                 SavingFile = false;
+                string stringError = $"{ex.Message} {ex.StackTrace}";
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = stringError,
+                });
                 return 0;
             }
             var horaInicio = DateTime.Now.Minute;
@@ -639,6 +835,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     return result;
                 }catch(Exception ex){
                     SavingFile = false;
+                    string stringError = $"{ex.Message} {ex.StackTrace}";
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        Message = "Custom.Generic.Message.Error",
+                        StackTrace = stringError,
+                    });
                     return rowid;
                 }
             }
@@ -654,17 +856,44 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 			SavingFile = false;
         }
         private async Task SaveBusiness()
-        {
+        {   
             Saving = true;
-            //var id = await BusinessObj.SaveAsync();
-            if(CountUnicErrors>0){
+            var existeUniqueIndexValidation = NotificationService.Messages.Where(x => x.Summary == "Custom.Generic.UniqueIndexValidation").Any();
+            if(existeUniqueIndexValidation)
+            {
                 GlobalLoaderService.Hide();
                 Saving = false;
-                var existeUniqueIndexValidation = NotificationService.Messages.Where(x => x.Summary == "Custom.Generic.UniqueIndexValidation").Any();
-                if(!existeUniqueIndexValidation){
-                    NotificationService.ShowError("Custom.Generic.UniqueIndexValidation");
-                    ErrorList.Add("Custom.Generic.UniqueIndexValidation");
+
+                if(FielsdUniqueIndex.Any())
+                {
+                    List<string> fields = new();
+                    foreach (var compoundIndex in FielsdUniqueIndex)
+                    {
+                        foreach (var item in (List<string>)compoundIndex)
+                        {
+                            fields.Add($"{BusinessObj.BaseObj.GetType().Name}.{item}");
+                        }
+                    }
+
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        MessageFormat = new Dictionary<string, List<string>>()
+                        {
+                            { "Custom.Generic.UniqueIndexValidation.Compound", fields }
+                        },
+                    });
+
+                }else
+                {
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        MessageFormat = new Dictionary<string, List<string>>()
+                        {
+                            { "Custom.Generic.UniqueIndexValidation", new List<string>() { FieldUniqueIndex } }
+                        },
+                    });
                 }
+                
                 return;
             }
             GlobalLoaderService.Show();
@@ -675,11 +904,48 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             dynamic result = null;
             try{
                 result = await BusinessObj.ValidateAndSaveAsync();
-            }catch(Exception ex){
+                if (FormViewsTablesA.Any())
+                {
+                    foreach (var formView in FormViewsTablesA)
+                    {
+                        dynamic resultA = null;
+                        try
+                        {
+                            dynamic baseObj = formView.BusinessObj.BaseObj;
+                            Type typeRowidRecord = baseObj.GetType().GetProperty("RowidRecord").PropertyType; 
+                            dynamic rowidRecord = Convert.ChangeType(result.Rowid, typeRowidRecord);
+                            baseObj.RowidRecord = rowidRecord;
+                            formView.BusinessObj.BaseObj = baseObj;
+                            resultA = await formView.BusinessObj.ValidateAndSaveAsync();
+                            result.Errors.AddRange(resultA.Errors);
+                        }
+                        catch(System.Exception ex)
+                        {
+                            GlobalLoaderService.Hide();
+                            Saving = false;
+                            ErrorMsg = ex.Message;
+                            string stringError = $"{ex.Message} {ex.StackTrace}";
+                            ErrorList.Add(new ModelMessagesDTO()
+                            {
+                                Message = "Custom.Generic.Message.Error",
+                                StackTrace = stringError,
+                            });
+                    
+                            return;
+                        }
+                    }
+                }
+            }catch(Exception ex)
+            {
                 GlobalLoaderService.Hide();
                 Saving = false;
                 ErrorMsg = ex.Message;
-                ErrorList.Add("Exception: "+ex.Message);
+                string stringError = $"{ex.Message} {ex.StackTrace}";
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = stringError,
+                });
                 return;
             }
 
@@ -725,14 +991,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     if(fieldInContext)
                     {
                         _messageStore.Add(fieldIdentifier, (string)error.Message);
-                    }else{
-                        ErrorList.Add("Exception: "+error.Message);
+                    }else
+                    {
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            Message = (string)error.Message,
+                        });
                     }
                 }
-                //ErrorMsg += "</ul>";
+
                 EditFormContext.NotifyValidationStateChanged();
-
-
+                
                 return;
             }
             var id = result.Rowid;
@@ -791,7 +1060,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             FormHasErrors = false;
             ErrorMsg = "";
             ErrorList.Clear();
-            await SaveBusiness();
+            await SaveBusiness().ConfigureAwait(true);
             ClickInSave = true;
         }
         protected void HandleInvalidSubmit()
@@ -800,9 +1069,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             FormHasErrors = true;
             NotificationService.ShowError("Custom.Generic.FormError");
             var existeUniqueIndexValidation = NotificationService.Messages.Where(x => x.Summary == "Custom.Generic.UniqueIndexValidation").Any();
-            if(existeUniqueIndexValidation){
-                ErrorList.Add("Custom.Generic.UniqueIndexValidation");
-            }else{
+            if(existeUniqueIndexValidation)
+            {
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.UniqueIndexValidation",
+                });
+                //ErrorList.Add("Custom.Generic.UniqueIndexValidation");
+
+            }else
+            {
                 ErrorList.Clear();
             }
             ClickInSave = true;

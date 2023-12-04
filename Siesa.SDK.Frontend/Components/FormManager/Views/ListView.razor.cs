@@ -28,10 +28,12 @@ using System.Collections;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using Newtonsoft.Json.Linq;
 using System.Runtime.CompilerServices;
 using Siesa.SDK.Frontend.Components.Flex;
 using Siesa.SDK.Protos;
+using Siesa.SDK.Shared.DTOS;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -75,7 +77,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool ShowLinkTo {get; set;} = false;
         [Parameter]
         public bool FromEntityField {get; set;} = false;
-
+        /// <summary>
+        /// Gets or sets of parameters to pass to the Detail View.
+        /// </summary>
+        [Parameter]
+        public bool RedirectDetail { get; set; } = true;
+        /// <summary>
+        /// Gets or sets of parameters to pass to the Create View.
+        /// </summary>
+        [Parameter]
+        public bool RedirectCreate { get; set; }
         [Parameter]
         public string BLNameParentAttatchment { get; set; }
         [Parameter]
@@ -119,7 +130,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool _isSearchOpen = false;
         private bool _showActions = true;
         public String ErrorMsg = "";
-        public List<String> ErrorList = new List<string>();
+        public List<ModelMessagesDTO> ErrorList = new();
         private IList<dynamic> SelectedObjects { get; set; } = new List<dynamic>();
         /// <summary>
         /// Gets or sets the selected items.
@@ -154,7 +165,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Parameter]
         public bool IsMultiple { get; set; } = false;
-
+        [Parameter]
+        public string ResourceTag { get; set; }
         private IEnumerable<object> data;
 
         private bool HasCustomActions { get; set; } = false;
@@ -191,8 +203,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool CanAccess;
         private bool CanImport;
         private bool CanExport;
-        private string defaultStyleSearchForm = "search_back position-relative";
-        private string StyleSearchForm { get; set; } = "search_back position-relative";
+        private string defaultStyleSearchForm = "search_back position-relative px-3";
+        private string StyleSearchForm { get; set; } = "search_back position-relative px-3";
         private Radzen.DataGridSelectionMode SelectionMode { get; set; } = Radzen.DataGridSelectionMode.Single;
         Guid needUpdate;
         private string _base_filter = "";
@@ -238,13 +250,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 bName = BusinessName;
             }
+
+            if (ResourceTag == null)
+            {
+                ResourceTag = $"{BusinessName}.Plural";
+            }
             await CheckPermissions();
             var metadata = GetViewdef(bName);
             if (metadata == null || metadata == "")
             {
                 //ErrorMsg = "No hay definición para la vista de lista";
                 ErrorMsg = "Custom.Generic.ViewdefNotFound";
-                ErrorList.Add("Custom.Generic.ViewdefNotFound");
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.ViewdefNotFound"
+                });
             }
             else
             {
@@ -256,37 +276,53 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         HasSearchViewdef = !String.IsNullOrEmpty(searchMetadata);
                         ShowList = !HasSearchViewdef;
 
-                        var searchForm = JsonConvert.DeserializeObject<FormViewModel>(searchMetadata);
-                        if (searchForm != null)
+                        if (!string.IsNullOrEmpty(searchMetadata))
                         {
-                            foreach (var panel in searchForm.Panels)
+                            var searchForm = JsonConvert.DeserializeObject<FormViewModel>(searchMetadata);
+                            if (searchForm != null)
                             {
-                                foreach (var field in panel.Fields)
+                                foreach (var panel in searchForm.Panels)
                                 {
-                                    field.GetFieldObj(BusinessObj);
+                                    foreach (var field in panel.Fields)
+                                    {
+                                        field.GetFieldObj(BusinessObj);
+                                    }
                                 }
-                            }
 
-                            FieldsHidden = searchForm.Panels.SelectMany(x => x.Fields).Where(x => x.Hidden).ToList();
+                                FieldsHidden = searchForm.Panels.SelectMany(x => x.Fields).Where(x => x.Hidden).ToList();
+                            }
+                            else
+                            {
+                                FieldsHidden = new List<FieldOptions>();
+                            }
+                            _isSearchOpen = true;
                         }
-                        else
-                        {
-                            FieldsHidden = new List<FieldOptions>();
-                        }
-                        _isSearchOpen = true;
                     }
-                    catch (System.Exception)
+                    catch (System.Exception ex)
                     {
                         ShowList = true;
                         FieldsHidden = new List<FieldOptions>();
+                        string stringError = $"{ex.Message} {ex.StackTrace}";
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            Message = "Custom.Generic.Message.Error",
+                            StackTrace = stringError
+                        });
                     }
 
                     try
                     {
-                        SavedHiddenFields = await localStorageService.GetItemAsync<List<FieldOptions>>($"{BusinessName}.Search.HiddenFields");
+                        SavedHiddenFields = await localStorageService.GetItemAsync<List<FieldOptions>>($"{BusinessName}.Search.HiddenFields").ConfigureAwait(true);
                     }
-                    catch (System.Exception)
+                    catch (System.Exception ex)
                     {
+                        string stringError = $"{ex.Message} {ex.StackTrace}";
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            Message = "Custom.Generic.Message.Error",
+                            StackTrace = stringError
+                        });
+
                     }
 
                 }
@@ -371,6 +407,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 if(ListViewModel.AllowExport != null){
                     AllowExport = ListViewModel.AllowExport.Value;
                 }
+                if(ListViewModel.ResourceTag != null){
+                    ResourceTag = ListViewModel.ResourceTag;
+                }
+                if(ListViewModel.RedirectDetail != null){
+                    RedirectDetail = ListViewModel.RedirectDetail.Value;
+                }
+                if(ListViewModel.RedirectCreate != null){
+                    RedirectCreate = ListViewModel.RedirectCreate.Value;
+                }
                 //TODO: quitar cuando se pueda usar flex en los custom components
                 var fieldsCustomComponent = ListViewModel.Fields.Where(x => x.CustomComponent != null).ToList();
                 if(fieldsCustomComponent.Count > 0){
@@ -445,7 +490,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if(FeaturePermissionService != null){
                 try{
                     showButton = FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
-                }catch(System.Exception){
+                }catch(System.Exception ex)
+                {
+                    string stringError = $"{ex.Message} {ex.StackTrace}";
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        Message = "Custom.Generic.Message.Error",
+                        StackTrace = stringError
+                    });
 
                 }
             }
@@ -466,8 +518,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         CanDelete = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DeleteAttachment, AuthenticationService).ConfigureAwait(true);
                         CanDetail = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DownloadAttachment, AuthenticationService).ConfigureAwait(true);
                     }
-                    catch (System.Exception)
+                    catch (System.Exception ex)
                     {
+                        string stringError = $"{ex.Message} {ex.StackTrace}";
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            Message = "Custom.Generic.Message.Error",
+                            StackTrace = stringError
+                        });
                     }
                }else
                {
@@ -481,16 +539,25 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         CanImport = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Import, AuthenticationService).ConfigureAwait(true);
                         CanExport = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Export, AuthenticationService).ConfigureAwait(true);
                     }
-                    catch (System.Exception)
+                    catch (System.Exception ex)
                     {
+                        string stringError = $"{ex.Message} {ex.StackTrace}";
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            Message = "Custom.Generic.Message.Error",
+                            StackTrace = stringError
+                        });
                     }
                }
 
                 if (!CanAccess && !FromEntityField)
                 {
                     ErrorMsg = "Custom.Generic.Unauthorized";
-                    ErrorList.Add("Custom.Generic.Unauthorized");
-                    NotificationService.ShowError("Custom.Generic.Unauthorized");
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        Message = "Custom.Generic.Unauthorized"
+                    });
+                    _ = NotificationService.ShowError("Custom.Generic.Unauthorized");
                     if(!IsSubpanel){
                         // NavigationService.NavigateTo("/", replace: true);
                     }
@@ -642,7 +709,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         if(result){                            
                             break;
                         }                        
-                    }catch (Exception e){}
+                    }catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
             }
             return result;
@@ -695,7 +765,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             guidListView = Guid.NewGuid().ToString().Replace("-", "", StringComparison.Ordinal);
             Loading = false;
             ErrorMsg = "";
-            ErrorList = new List<string>();
+            ErrorList = new();
             _extraFields = new List<string>();
             InitView();
             if(ShowSearchForm && HasSearchViewdef){
@@ -749,9 +819,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                 }
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
-
+                string stringError = $"{ex.Message} {ex.StackTrace}";
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = stringError
+                });
             }
             if (ConstantFilters != null)
             {
@@ -773,96 +848,23 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     foreach (var field in searchFields)
                     {
                         var tmpFilter = "";
-
-                        var fieldObj = field.GetFieldObj(BusinessObjNullable);
-                        if (fieldObj != null)
+                        if (field.FiltersCustom != null && field.FiltersCustom.Count > 0)
                         {
-                            dynamic searchValue = fieldObj.ModelObj.GetType().GetProperty(fieldObj.Name).GetValue(fieldObj.ModelObj, null);
-                            if (searchValue == null)
+                            foreach (string filterName in field.FiltersCustom)
                             {
-                                continue;
+                                FieldOptions fieldOptions = new FieldOptions()
+                                {
+                                    Name = filterName,
+                                    PropertyName = filterName.Replace("BaseObj.", "", StringComparison.Ordinal)
+                                };
+                                FieldObj fieldFilter = fieldOptions.GetFieldObj(BusinessObjNullable);
+                                SetTmpFilter(fieldFilter, fieldOptions, ref tmpFilter);
                             }
-                            //check if searchValue is an empty string
-                            if (searchValue is string && string.IsNullOrEmpty(searchValue))
-                            {
-                                continue;
-                            }                            
-                            switch (fieldObj.FieldType)
-                            {
-                                case FieldTypes.CharField:
-                                case FieldTypes.TextField:
-                                    tmpFilter = $"({fieldObj.Name} == null ? \"\" : {fieldObj.Name}).ToLower().Contains(\"{searchValue}\".ToLower())";
-                                    break;
-                                case FieldTypes.IntegerField:
-                                case FieldTypes.DecimalField:
-                                case FieldTypes.SmallIntegerField:
-                                case FieldTypes.BigIntegerField:
-                                case FieldTypes.ByteField:
-                                    if (!fieldObj.IsNullable)
-                                    {
-                                        tmpFilter = $"{fieldObj.Name} == {searchValue}";
-                                    }
-                                    else
-                                    {
-                                        tmpFilter = $"({fieldObj.Name} == null ? 0 : {fieldObj.Name}) == {searchValue}";
-                                    }
-                                    break;
-                                case FieldTypes.BooleanField:
-                                    if (!searchValue)
-                                    {
-                                        break;
-                                    }
-
-                                    if (!fieldObj.IsNullable)
-                                    {
-                                        tmpFilter = $"{fieldObj.Name} == {searchValue}";
-                                    }
-                                    else
-                                    {
-                                        tmpFilter = $"({fieldObj.Name} == null ? false : {fieldObj.Name}) == {searchValue}";
-                                    }
-                                    break;
-                                case FieldTypes.DateField:
-                                case FieldTypes.DateTimeField:
-                                    if (!fieldObj.IsNullable)
-                                    {
-                                        tmpFilter = $"{fieldObj.Name} == DateTime.Parse(\"{searchValue}\")";
-                                    }
-                                    else
-                                    {
-                                        tmpFilter = $"({fieldObj.Name} == null ? DateTime.MinValue : {fieldObj.Name}) == DateTime.Parse(\"{searchValue}\")";
-                                    }
-                                    break;
-
-                                case FieldTypes.EntityField:
-                                    if (!fieldObj.IsNullable)
-                                    {
-                                        tmpFilter = $"Rowid{fieldObj.Name} == {searchValue.Rowid}";
-                                    }
-                                    else
-                                    {
-                                        tmpFilter = $"({fieldObj.Name} == null ? 0 : {fieldObj.Name}.Rowid) == {searchValue.Rowid}";
-                                    }
-                                    break;
-                                
-                                case FieldTypes.Custom:
-                                case FieldTypes.SelectField:
-                                    if (field.CustomType == "SelectBarField" || field.FieldType == FieldTypes.SelectField)
-                                    {
-                                        Type enumType = searchValue.GetType();
-                                        var EnumValues = Enum.GetValues(enumType);
-                                        var LastValue = EnumValues.GetValue(EnumValues.Length - 1);
-                                        
-                                        if (Convert.ToInt32(LastValue)+1 != Convert.ToInt32(searchValue))
-                                        { 
-                                            tmpFilter = $"{fieldObj.Name} == {Convert.ToInt32(searchValue)}";
-                                        }
-                                    }
-
-                                    break;
-                                default:
-                                    break;
-                            }
+                        }
+                        else
+                        {
+                            var fieldObj = field.GetFieldObj(BusinessObjNullable);
+                            SetTmpFilter(fieldObj, field, ref tmpFilter);
                         }
                         if (!string.IsNullOrEmpty(tmpFilter))
                         {
@@ -875,13 +877,127 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                 }
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
+                string stringError = $"{ex.Message} {ex.StackTrace}";
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = stringError
+                });
             }
 
             return filters;
         }
-        
+
+        private static void SetTmpFilter(dynamic fieldObj, FieldOptions field, ref string tmpFilter)
+        {
+            if (fieldObj != null)
+            {
+                string fieldName = field.Name.Replace("BaseObj.", "", StringComparison.Ordinal);
+                dynamic searchValue = GetSearchValue(fieldObj);
+                if (searchValue == null)
+                {
+                    return;
+                }
+
+                //check if searchValue is string and an empty string
+                if (searchValue is string && string.IsNullOrEmpty(searchValue))
+                {
+                    return;
+                }
+
+                switch (fieldObj.FieldType)
+                {
+                    case FieldTypes.CharField:
+                    case FieldTypes.TextField:
+                        tmpFilter =
+                            $"({fieldName} == null ? \"\" : {fieldName}).ToLower().Contains(\"{searchValue}\".ToLower())";
+                        break;
+                    case FieldTypes.IntegerField:
+                    case FieldTypes.DecimalField:
+                    case FieldTypes.SmallIntegerField:
+                    case FieldTypes.BigIntegerField:
+                    case FieldTypes.ByteField:
+                        if (!fieldObj.IsNullable)
+                        {
+                            tmpFilter = $"{fieldName} == {searchValue}";
+                        }
+                        else
+                        {
+                            tmpFilter = $"({fieldName} == null ? 0 : {fieldName}) == {searchValue}";
+                        }
+
+                        break;
+                    case FieldTypes.BooleanField:
+                        if (!searchValue)
+                        {
+                            break;
+                        }
+
+                        if (!fieldObj.IsNullable)
+                        {
+                            tmpFilter = $"{fieldName} == {searchValue}";
+                        }
+                        else
+                        {
+                            tmpFilter = $"({fieldName} == null ? false : {fieldName}) == {searchValue}";
+                        }
+
+                        break;
+                    case FieldTypes.DateField:
+                    case FieldTypes.DateTimeField:
+                        if (!fieldObj.IsNullable)
+                        {
+                            tmpFilter = $"{fieldName} == DateTime.Parse(\"{searchValue}\")";
+                        }
+                        else
+                        {
+                            tmpFilter =
+                                $"({fieldName} == null ? DateTime.MinValue : {fieldName}) == DateTime.Parse(\"{searchValue}\")";
+                        }
+
+                        break;
+
+                    case FieldTypes.EntityField:
+                        if (!fieldObj.IsNullable)
+                        {
+                            if (searchValue.Rowid != 0)
+                            {
+                                tmpFilter = $"({fieldName}.Rowid) == {searchValue.Rowid}";
+                            }
+                        }
+                        else
+                        {
+                            tmpFilter = $"({fieldName} == null ? 0 : {fieldName}.Rowid) == {searchValue.Rowid}";
+                        }
+
+                        break;
+
+                    case FieldTypes.Custom:
+                    case FieldTypes.SelectField:
+                        if (field.CustomType == "SelectBarField" || field.FieldType == FieldTypes.SelectField)
+                        {
+                            Type enumType = searchValue.GetType();
+                            var EnumValues = Enum.GetValues(enumType);
+                            var LastValue = EnumValues.GetValue(EnumValues.Length - 1);
+
+                            if (Convert.ToInt32(LastValue, CultureInfo.InvariantCulture) + 1 != Convert.ToInt32(searchValue))
+                            {
+                                tmpFilter = $"{fieldName} == {Convert.ToInt32(searchValue)}";
+                            }
+                        }
+
+                        break;
+                }
+            }
+        }
+
+        private static dynamic GetSearchValue(dynamic fieldObj)
+        {
+            return fieldObj.ModelObj.GetType().GetProperty(fieldObj.Name)?.GetValue(fieldObj.ModelObj, null);
+        }
+
         async Task LoadData(LoadDataArgs args)
         {
             if (Data != null)
@@ -913,9 +1029,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if(!UseFlex){
                 includeCount = true;
             }
-            var dbData = await BusinessObj.GetDataAsync(args.Skip, args.Top, filters, args.OrderBy, includeCount, _extraFields);
-            if(dbData.Errors != null && dbData.Errors.Count > 0){
-                ErrorList = dbData.Errors;
+        var dbData = await BusinessObj.GetDataAsync(args.Skip, args.Top, filters, args.OrderBy, includeCount, _extraFields);
+            if(dbData.Errors != null && dbData.Errors.Count > 0)
+            {
+                foreach (var error in dbData.Errors)
+                {
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        Message = error
+                    });
+                }
             }
             data = dbData.Data;
             count = dbData.TotalCount;
@@ -953,7 +1076,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         
         private async Task GoToExport()
         {
-            string resourceTag = $"{BusinessName}.Plural";
+            string resourceTag = ResourceTag;
             string resourceName = await UtilsManager.GetResource(resourceTag).ConfigureAwait(true);
             await JSRuntime.InvokeAsync<object>("oreports_app_table_flexdebug_"+guidListView+".exportToExcel", resourceName);
         }
@@ -997,10 +1120,31 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     SDKGlobalLoaderService.Hide();
                     if (result != null && result.Errors.Count == 0){
                         return true;
-                    }else{
-                        ErrorList.AddRange(result.Errors.Select(x => x.Message));
+                    }else
+                    {
+                        _ = NotificationService.ShowError("Custom.Generic.Message.Error");
+                        foreach (var error in result.Errors)
+                        {
+                            if (error.Format != null && error.Format.Any())
+                            {
+                               
+                                ErrorList.Add(new ModelMessagesDTO()
+                                {
+                                     MessageFormat = new Dictionary<string, List<string>>()
+                                    {
+                                        { error.Message, error.Format.ToList() }
+                                    },
+                                });
+                            }else
+                            {
+                                ErrorList.Add(new ModelMessagesDTO()
+                                {
+                                    Message = error.Message
+                                });
+                            }
+                        }
                         ErroInAction = true;
-                        NotificationService.ShowError("Custom.Generic.Message.DeleteError");
+                        _ = NotificationService.ShowError("Custom.Generic.Message.DeleteError");
                         StateHasChanged();                        
                     }
                 }
@@ -1203,7 +1347,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             var filters = GetFilters(_base_filter);
             if(ServerPaginationFlex && UseFlex){
                 Data = await BusinessObj.GetDataWithTop(filters);
-                 if (Data != null && Data.Count() == 1){
+                 if (Data != null && Data.Count() == 1 && RedirectDetail){
                      if (!FromEntityField)
                      { 
                          GoToDetail((dynamic)Data.First());
@@ -1219,9 +1363,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                              OnSelectionChanged(objects);
                              return;
                          }
-                         catch (Exception e)
+                         catch (Exception ex)
                          {
-                             Console.WriteLine(e);
+                            string stringError = $"{ex.Message} {ex.StackTrace}";
+                            ErrorList.Add(new ModelMessagesDTO()
+                            {
+                                Message = "Custom.Generic.Message.Error",
+                                StackTrace = stringError
+                            });
                          }
                          
                      }
@@ -1247,12 +1396,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                 }
                 var dbData = await BusinessObj.GetDataAsync(skip, take, filters, "", includeCount, _extraFields);
-                if(dbData.Errors != null && dbData.Errors.Count > 0){
-                    ErrorList = dbData.Errors;
+                if(dbData.Errors != null && dbData.Errors.Count > 0)
+                {
+                    foreach (var error in dbData.Errors)
+                    {
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            Message = error
+                        });
+                    }
                 }
                 count = dbData.TotalCount;
                 data = dbData.Data;
-                if (count == 1){
+                if (count == 1 && RedirectDetail){
                     if(!FromEntityField){
                         GoToDetail(((dynamic)data.First()).Rowid);
                     }else{
@@ -1297,9 +1453,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 StateHasChanged();
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
                 _ = InvokeAsync(() => StateHasChanged());
+                string stringError = $"{ex.Message} {ex.StackTrace}";
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = stringError
+                });
             }
         }
 
@@ -1380,9 +1542,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                     code += @$"
                                     try {{ ListViewFields[{i}].Hidden = ({(string)CustomAttr.Value}); }} catch (Exception ex) {{ throw;}}";
                                 }
-                                catch (Exception e)
+                                catch (Exception ex)
                                 {
-                                    throw;
+                                    string stringError = $"{ex.Message} {ex.StackTrace}";
+                                    ErrorList.Add(new ModelMessagesDTO()
+                                    {
+                                        Message = "Custom.Generic.Message.Error",
+                                        StackTrace = stringError
+                                    });
                                 }
                             }
                             if (CustomAttr.Key == "sdk-show")
@@ -1392,9 +1559,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                     code += @$"
                                     try {{ ListViewFields[{i}].Hidden = !({(string)CustomAttr.Value}); }} catch (Exception ex) {{ throw;}}";
                                 }
-                                catch (Exception e)
+                                catch (Exception ex)
                                 {
-                                    throw;
+                                    string stringError = $"{ex.Message} {ex.StackTrace}";
+                                    ErrorList.Add(new ModelMessagesDTO()
+                                    {
+                                        Message = "Custom.Generic.Message.Error",
+                                        StackTrace = stringError
+                                    });
                                 }
                             }
                         }
@@ -1455,7 +1627,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                     }
                                     catch (System.Exception ex)
                                     {
-                                        Console.WriteLine($"Error: {ex.Message}");
+                                        string stringError = $"{ex.Message} {ex.StackTrace}";
+                                        ErrorList.Add(new ModelMessagesDTO()
+                                        {
+                                            Message = "Custom.Generic.Message.Error",
+                                            StackTrace = stringError
+                                        });
                                     }
                                     if(field.Hidden){
                                         FieldsHiddenList.Add(field.Name.Replace("BaseObj.", "", StringComparison.InvariantCultureIgnoreCase));

@@ -1,9 +1,11 @@
 @inherits SDKComponent
 
-<RadzenSelectBarItem Text="@Text" Value="@Value" />
+<RadzenSelectBarItem 
+Text="@ResourceTag" 
+Value="@Value"
+Disabled="@Disabled"
+data-automation-id="@GetAutomationId()"
+Template="@Template"
+ >   
+ </RadzenSelectBarItem>
 
-@code
-{
-    [Parameter] public string Text {get; set;}
-    [Parameter] public bool Value {get; set;}
-}

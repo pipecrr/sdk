@@ -77,3 +77,10 @@ public static class enumMessageCategory
     /// </summary>
     public static readonly string Custom = "Custom";
 }
+
+public enum EnumModelMessageType
+{
+    Error = 1,
+    Info = 2,
+    Warning = 3,
+}

@@ -1,4 +1,4 @@
-const version = '20231013';
+const version = '20231124';
 
 function loadScript(url, in_head = false, callback = null) {
 
@@ -89,19 +89,19 @@ function preloadFlex(){
         loadScript("http://127.0.0.1:3000/static/js/1.chunk.js");
         loadScript("http://127.0.0.1:3000/static/js/main.chunk.js");
     }else{
-        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=${version}');
-        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=${version}');
+        // loadCss(`/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=${version}`);
+        loadCss(`/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=${version}`);
 
-        loadScript('/_content/Siesa.SDK.Frontend/flex/FlexComponent.js?v=${version}');
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=${version}");
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=${version}");
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=${version}");
+        loadScript(`/_content/Siesa.SDK.Frontend/flex/FlexComponent.js?v=${version}`);
+        // loadScript(`/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=${version}`);
+        loadScript(`/_content/Siesa.SDK.Frontend/flex/static/js/main.js?v=${version}`);
+        // loadScript(`/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=${version}`);
     }
     loadScript("/_content/Siesa.SDK.Frontend/vendor/dexie/dexie.js");
 }
 
 function downloadFileFromStream(fileName, bytes) {
-    var blob = new Blob([bytes], {type: "text/csv" });
+    var blob = new Blob([bytes], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
     var url = URL.createObjectURL(blob);
     var anchorElement = document.createElement('a');
     anchorElement.href = url;
@@ -119,7 +119,19 @@ function downloadFileFromStream(fileName, bytes) {
 
   function closePreviewImage (imgElem) 
   {
-    imgElem.src = '';
+    
+    if (imgElem == null) {
+        
+        var element = document.getElementById("single_file_icon");
+
+        if (element) {
+            element.parentNode.removeChild(element);
+        }
+    } else 
+    {
+        
+        imgElem.src = '';
+    }
   }
 
   function getUrlsImage (inputElem){

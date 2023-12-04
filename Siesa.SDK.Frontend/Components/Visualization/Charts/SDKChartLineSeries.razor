@@ -1,0 +1,24 @@
+@typeparam TData
+@typeparam TArgument
+@typeparam TValue
+@inherits SDKComponent
+
+<DxChartLineSeries
+
+T ="TData"
+TArgument ="TArgument"
+TValue="TValue"
+Data="@Data"
+Name="@Name"
+Filter="@Filter"
+ArgumentField="@ArgumentField"
+ValueField="@ValueField"
+DashStyle ="@DashStyle"
+HoverMode ="@HoverMode"
+SelectionMode="@SelectionMode"
+Width="@Width" >
+
+    @ChildContent
+
+
+</DxChartLineSeries>

@@ -20,7 +20,9 @@ using Amazon.S3;
 using Amazon.Extensions.NETCore.Setup;
 using Amazon.Runtime;
 using Microsoft.Extensions.Hosting;
-
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.Http.Features;
 namespace Siesa.SDK.Backend.Extensions
 {
 
@@ -29,6 +31,23 @@ namespace Siesa.SDK.Backend.Extensions
         public static void AddSDKBackend(this IServiceCollection services, ConfigurationManager configurationManager, Type ContextType)
         {
             var connectionConfig = configurationManager.GetSection("ConnectionConfig").Get<SDKConnectionConfig>();
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.MaxRequestBodySize = int.MaxValue;
+            });
+
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.Limits.MaxRequestBodySize = int.MaxValue; // if don't set default value is: 30 MB
+            });
+
+            services.Configure<FormOptions>(x =>
+            {
+                x.ValueLengthLimit = int.MaxValue;
+                x.MultipartBodyLengthLimit = int.MaxValue; // if don't set default value is: 128 MB
+                x.MultipartHeadersLengthLimit = int.MaxValue;
+            });
+
             var dbConnections = configurationManager.GetSection("DbConnections").Get<List<SDKDbConnection>>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddSingleton<MemoryService>();
@@ -70,44 +89,9 @@ namespace Siesa.SDK.Backend.Extensions
                 }
                 else if(tenant.ProviderName == EnumDBType.PostgreSQL)
                 {
-                    opts.UseNpgsql(tenant.ConnectionString);
+                    opts.UseNpgsql(tenantProvider.GetConnectionString(tenant));
                 }else { //Default to SQL Server
-                    //add Application Name= if not present
-                    if(!tenant.ConnectionString.Contains("Application Name=")){
-                        var serviceConfiguration = configurationManager.GetSection("ServiceConfiguration");
-                        ServiceConfiguration sc = serviceConfiguration.Get<ServiceConfiguration>();
-                        var currentUrl = sc?.GetCurrentUrl();
-                        if(!string.IsNullOrEmpty(currentUrl)){
-                            //delete http:// or https://
-                            currentUrl = currentUrl.Replace("http://", "");
-                            currentUrl = currentUrl.Replace("https://", "");
-                            //delete last /
-                            if(currentUrl.Last() == '/'){
-                                currentUrl = currentUrl.Substring(0, currentUrl.Length - 1);
-                            }
-                        }
-                        //get machine name
-                        var machineName = Environment.MachineName;
-                        //check if last char is ;
-                        if(tenant.ConnectionString.Last() != ';'){
-                            tenant.ConnectionString += ";";
-                        }
-                        var appName = $"{machineName}";
-
-                        if(!string.IsNullOrEmpty(currentUrl)){
-                            appName += $"-{currentUrl}";
-                        }
-                        tenant.ConnectionString += $"Application Name=SDK-{appName};";
-                    }
-                    //add Encrypt=False if not present
-                    if(!tenant.ConnectionString.Contains("Encrypt=")){
-                        if(tenant.ConnectionString.Last() != ';'){
-                            tenant.ConnectionString += ";";
-                        }
-                        tenant.ConnectionString += "Encrypt=False;";
-                    }
-                    opts.UseSqlServer(tenant.ConnectionString);
-
+                    opts.UseSqlServer(tenantProvider.GetConnectionString(tenant));
                 }
                 opts.AddInterceptors(new SDKDBInterceptor());
                 opts.ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.LazyLoadOnDisposedContextWarning));

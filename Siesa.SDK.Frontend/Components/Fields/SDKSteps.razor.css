@@ -2,6 +2,14 @@
 
 /**LO PROPUESTO POR DUQUE*/
 
+::deep .rz-steps{
+    padding-top: 1rem;
+}
+
+::deep .rz-steps .rz-menuitem-link:hover {
+    text-decoration: none;
+    color: var(--color_text_2) !important;
+}
 
 ::deep .rz-steps > ul {
     display: flex !important;
@@ -31,7 +39,7 @@
 }
 
 ::deep .rz-steps .rz-menuitem-link {
-    color: var(--color_primary) !important;
+    color: var(--color_text_2) !important;
     cursor: pointer !important;
     position: relative !important;
     display: flex !important;
@@ -41,7 +49,7 @@
 }
 
 ::deep  .rz-menuitem-link .rz-steps-number {
-    background: var(--color_primary) !important;
+    background: var(--color_text_2);
     margin: 0 !important;
     padding: 0 !important;
     color: var(--color_light) !important;
@@ -53,11 +61,17 @@
     font-size: 1.15rem !important;
     position: absolute !important;
     top: 0 !important;
+    line-height: 0;
 }
 
 ::deep  .rz-state-highlight>.rz-menuitem-link .rz-steps-number {
-    background: var(--color_primary) !important;
+    background: var(--color_primary_dark) !important;
     color: var(--color_light_text) !important;
+    border: 0.25rem solid white;
+    height: 3rem !important;
+    width: 3rem !important;
+    box-shadow: var(--shadow_standar);
+    transform: translateY(-0.25rem);
 }
 
 ::deep .rz-state-disabled>.rz-menuitem-link .rz-steps-number {
@@ -87,10 +101,9 @@
     height: 1px !important;
     margin: 0 !important;
     content: "" !important;
-    background-color: var(--color_border) !important;
-    right: calc(50% + 2rem) !important;
+    right: calc(50% + 1.5rem) !important;
     top: 1.25rem !important;
-    width: calc(50% - 2rem) !important;
+    width: calc(50% - 1.5rem) !important;
 }
 
 ::deep .rz-steps > ul li:not(:last-child)::after {
@@ -98,10 +111,28 @@
     height: 1px !important;
     margin: 0 !important;
     content: "" !important;
-    background-color: var(--color_border) !important;
-    left: calc(50% + 2rem) !important;
+    left: calc(50% + 1.5rem) !important;
     top: 1.25rem !important;
-    width: calc(50% - 2rem) !important;
+    width: calc(50% - 1.5rem) !important;
+}
+
+::deep .rz-steps > ul .rz-steps-item:nth-child(n + 2)::before{
+    background-color: var(--color_text_2) !important;
+}
+::deep .rz-steps > ul .rz-steps-item:not(:last-child)::after {
+    background-color: var(--color_text_2) !important;
+}
+::deep .rz-steps > ul .rz-state-disabled:nth-child(n + 2)::before{
+    background-color: var(--color_border) !important;
+}
+::deep .rz-steps > ul .rz-state-disabled:not(:last-child)::after {
+    background-color: var(--color_border) !important;
+}
+::deep .rz-steps > ul .rz-state-highlight:nth-child(n + 2)::before{
+    background-color: var(--color_primary) !important;
+}
+::deep .rz-steps > ul .rz-state-highlight:not(:last-child)::after {
+    background-color: var(--color_primary) !important;
 }
 
 @media (max-width: 991.98px) { 

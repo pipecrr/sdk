@@ -37,7 +37,7 @@ namespace Siesa.SDK.Business
         [JsonIgnore]
         public dynamic ParentComponent {get;set;}
         
-        public string BLParentBusinessName {get;set;}
+        public string BusinessNameParent {get;set;}
 
         public string BusinessName { get; set; }
         [JsonIgnore]
@@ -121,14 +121,20 @@ namespace Siesa.SDK.Business
         {
             return null;
         }
+
+        public ValidateAndSaveBusinessMultiObjResponse ValidateAndSave(List<BaseSDK<int>> listBaseObj, bool ignorePermissions = false)
+        {
+            return null;
+        }
     }
 
 
-    public class BLFrontendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : class, IBLBaseValidator
+    public class BLFrontendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>
     {
         [JsonIgnore]
         public dynamic ParentComponent {get;set;}
         public string BusinessName { get; set; }
+        public string BusinessNameParent {get;set;}
         [JsonIgnore]
         public SDKBusinessModel Backend {get { return BackendRouterService.Instance.GetSDKBusinessModel(BusinessName, AuthenticationService); } }
 
@@ -534,6 +540,11 @@ namespace Siesa.SDK.Business
             return ValidateAndSaveAsync().GetAwaiter().GetResult();
         }
 
+        public virtual ValidateAndSaveBusinessMultiObjResponse ValidateAndSave(List<T> listBaseObj, bool ignorePermissions = false)
+        {
+            return ValidateAndSaveAsync(listBaseObj).GetAwaiter().GetResult();
+        }
+
         public virtual void Update()
         {
             throw new NotImplementedException();
@@ -669,33 +680,57 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        private void Validate(ref ValidateAndSaveBusinessObjResponse baseOperation)
+        public async virtual Task<ValidateAndSaveBusinessMultiObjResponse> ValidateAndSaveAsync(List<T> listBaseObj)
         {
-            ValidateBussines(ref baseOperation, BaseObj.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
-
-            Type parentType = typeof(K).BaseType;
-
-            Type[] genericArguments = parentType.GetGenericArguments();
-
-            K validator = Activator.CreateInstance<K>();
-
-            if (genericArguments.Length > 0)
+            ValidateAndSaveBusinessMultiObjResponse resultValidationFront = new();
+            ValidateMulti(ref resultValidationFront, listBaseObj);
+            if (resultValidationFront.Errors.Count > 0)
             {
-                Type genericT = genericArguments[0];
+                return resultValidationFront;
+            }
+            var result = await Backend.ValidateAndSave(this, listBaseObj.Cast<object>().ToList());
+            return result;
+        }
 
-                if (genericT == typeof(T))
+        private void ValidateMulti(ref ValidateAndSaveBusinessMultiObjResponse resultValidationFront, List<T> listBaseObj)
+        {
+            throw new NotImplementedException();
+        }
+        
+        private void Validate(ref ValidateAndSaveBusinessObjResponse baseOperation, List<T> listBaseObj = null)
+        {
+            if(listBaseObj == null){
+                listBaseObj = new List<T>();
+                listBaseObj.Add(BaseObj);
+            }
+            foreach (var item in listBaseObj)
+            {
+                ValidateBussines(ref baseOperation, BaseObj.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
+
+                Type parentType = typeof(K).BaseType;
+
+                Type[] genericArguments = parentType.GetGenericArguments();
+
+                K validator = Activator.CreateInstance<K>();
+
+                if (genericArguments.Length > 0)
                 {
-                    BLBaseValidator<T> baseValidator = validator as BLBaseValidator<T>;
+                    Type genericT = genericArguments[0];
 
-                    SDKValidator.Validate<T>(BaseObj, baseValidator, ref baseOperation);
-                }
-                else if (genericT == this.GetType())
-                {
-                   
-                    MethodInfo validateMethod = typeof(SDKValidator).GetMethod("Validate").MakeGenericMethod(genericT);
+                    if (genericT == typeof(T))
+                    {
+                        BLBaseValidator<T> baseValidator = validator as BLBaseValidator<T>;
 
-                    object[] parameters = new object[] { this, validator, baseOperation };
-                    validateMethod.Invoke(null, parameters);
+                        SDKValidator.Validate<T>(BaseObj, baseValidator, ref baseOperation);
+                    }
+                    else if (genericT == this.GetType())
+                    {
+                    
+                        MethodInfo validateMethod = typeof(SDKValidator).GetMethod("Validate").MakeGenericMethod(genericT);
+
+                        object[] parameters = new object[] { this, validator, baseOperation };
+                        validateMethod.Invoke(null, parameters);
+                    }
                 }
             }
         }
@@ -756,7 +791,7 @@ namespace Siesa.SDK.Business
         }
 
         [SDKApiMethod("POST")]
-        public virtual async Task<SDKFileUploadDTO> UploadSingle(IFormFile file){
+        public virtual async Task<SDKFileUploadDTO> UploadSingle(IFormFile file, bool ignorePermissions = false){
             var result = new SDKFileUploadDTO();
             if (file == null){
                 throw new Exception("File is null");
@@ -766,7 +801,7 @@ namespace Siesa.SDK.Business
                 file.CopyTo(ms);
                 fileBytes = ms.ToArray();
             }
-            var response = await Backend.Call("SaveFile", fileBytes, file.FileName, file.ContentType, false);
+            var response = await Backend.Call("SaveFile", fileBytes, file.FileName, file.ContentType, false, ignorePermissions);
             if(response.Success){
                 result.Url = response.Data.Url;
                 result.FileType = file.ContentType;
@@ -779,7 +814,7 @@ namespace Siesa.SDK.Business
         }
 
         [SDKApiMethod("POST")]
-        public virtual async Task<SDKFileUploadDTO> UploadSingleByte(IFormFile file){
+        public virtual async Task<SDKFileUploadDTO> UploadSingleByte(IFormFile file,bool ignorePermissions = false){
             var result = new SDKFileUploadDTO();
             if (file == null){
                 throw new Exception("File is null");
@@ -789,7 +824,7 @@ namespace Siesa.SDK.Business
                 file.CopyTo(ms);
                 fileBytes = ms.ToArray();
             }
-            var response = await Backend.Call("SaveFile", fileBytes, file.FileName, file.ContentType, true);
+            var response = await Backend.Call("SaveFile", fileBytes, file.FileName, file.ContentType, true, ignorePermissions);
             if(response.Success){
                 result.Url = response.Data.Url;
                 result.FileType = file.ContentType;

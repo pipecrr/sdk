@@ -1,7 +1,8 @@
 @using Siesa.SDK.Frontend.Components
 
-<RadzenBadge BadgeStyle="@SDKEnums.GetStyleBadge(Style)" Text="@Value"  IsPill="@IsPill"/>
+<RadzenBadge BadgeStyle="@SDKEnums.GetStyleBadge(Style)" Text="@Value"  IsPill="@IsPill" ChildContent="@ChildContent" />
 
+      
 
 @code {
 
@@ -11,5 +12,7 @@
         [Parameter] public SDKBadgeStyle Style { get; set; }
 
         [Parameter] public bool IsPill  {get; set;}
+
+        [Parameter] public RenderFragment ChildContent {get; set;}
 
 }

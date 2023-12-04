@@ -27,7 +27,7 @@ namespace Siesa.SDK.Frontend.Components.Visualization
 
         protected override void OnInitialized()
         {
-            ConstantFilters = new();
+            ConstantFilters = new(){"1 = 1"};
 
             if(Utilities.IsAssignableToGenericType(Business.BaseObj.GetType(), typeof(BaseMaster<,>)))
             {
@@ -38,7 +38,8 @@ namespace Siesa.SDK.Frontend.Components.Visualization
                 });
             }
             var notInFilter = RowidRecordsRelated.Select(x => $"Rowid != {x}");
-            ConstantFilters.AddRange(notInFilter);
+            ConstantFilters.AddRange(notInFilter);            
+
             ItemsSelected = new();
             
             base.OnInitialized();

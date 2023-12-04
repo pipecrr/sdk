@@ -43,8 +43,12 @@ namespace Siesa.SDK.Shared.Services
             return Backend.SaveBusiness(Name, obj);
         }
 
-        public virtual dynamic ValidateAndSave(dynamic obj)
+        public virtual dynamic ValidateAndSave(dynamic obj, IList<dynamic> listBaseObj = null)
         {
+            if(listBaseObj != null && listBaseObj.Count > 0)
+            {
+                return Backend.ValidateAndSaveBusinessMulti(Name, obj, listBaseObj);
+            }
             return Backend.ValidateAndSaveBusiness(Name, obj);
         }
 

@@ -216,7 +216,7 @@ namespace Siesa.SDK.Frontend.Utils
                 {
                     //remove empty arguments
                     arguments = arguments.Where(arg => !string.IsNullOrEmpty(arg)).ToArray();
-                    var evalMethod = contextType.GetMethods(BindingFlags.Instance | BindingFlags.Public)
+                    var evalMethod = contextType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static)
                         .FirstOrDefault(m => m.Name == methodName && m.GetParameters().Length == arguments.Length);
 
                     if (evalMethod == null)
