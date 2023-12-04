@@ -63,12 +63,14 @@ else if (ModelLoaded == true)
             {
                 @foreach (var panel in Panels.Skip(1))
                 {
-                    <div class="col-12">
-                        <div class="row">
-                            <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                    @if (!panel.Hidden)
+                    {
+                        <div class="col-12">
+                            <div class="row">
+                                <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj"/>
+                            </div>
                         </div>
-                    </div>
-
+                    }
                 }
                 
             }else
@@ -77,13 +79,16 @@ else if (ModelLoaded == true)
                     <SDKTabs>
                         @foreach (var panel in Panels.Skip(1))
                         {
-                            <SDKTab IconCssClass="@panel.IconClass" TitleResourceTag="@panel.ResourceTag">
-                                <div class="col-12 px-0">
-                                    <div class="row">
-                                        <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                            @if (!panel.Hidden)
+                            {
+                                <SDKTab IconCssClass="@panel.IconClass" TitleResourceTag="@panel.ResourceTag">
+                                    <div class="col-12 px-0">
+                                        <div class="row">
+                                            <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj"/>
+                                        </div>
                                     </div>
-                                </div>
-                            </SDKTab>
+                                </SDKTab>
+                            }
                         }
                     </SDKTabs>
                 </div>

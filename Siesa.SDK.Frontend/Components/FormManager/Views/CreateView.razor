@@ -53,7 +53,7 @@ else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
         <ObjectGraphDataAnnotationsValidator />
         <SDKFormLayout CaptionPosition="SDKCaptionPosition.Vertical">
             <CascadingValue Value="@EditFormContext">
-                @if(Panels?.Count > 0){
+                @if(Panels?.Any() == true){
                     if (!IsTableA)
                     {
                         <SDKCrudHeader ResourceTag="@Panels[0].ResourceTag" IconClass="@Panels[0].IconClass" ViewType="DynamicViewType.Create">
@@ -72,13 +72,16 @@ else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
                 {
                     @foreach (var panel in Panels.Skip(1))
                     {    
-                        <CascadingValue Value="@EditFormContext">
-                            <div class="col-12">
-                                <div class="row">
-                                    <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                        @if (!panel.Hidden)
+                        {
+                            <CascadingValue Value="@EditFormContext">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                    </div>
                                 </div>
-                            </div>
-                        </CascadingValue>
+                            </CascadingValue>
+                        }
                     }
                     
                 }else
@@ -87,17 +90,20 @@ else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
                         <SDKTabs>
                             @foreach (var panel in Panels.Skip(1))
                             {
-                                <SDKTab IconCssClass="@panel.IconClass" TitleResourceTag="@panel.ResourceTag">
+                                @if (!panel.Hidden)
+                                {
+                                    <SDKTab IconCssClass="@panel.IconClass" TitleResourceTag="@panel.ResourceTag">
 
-                                    <CascadingValue Value="@EditFormContext">
-                                        <div class="col-12 px-0">
-                                            <div class="row">
-                                                <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                        <CascadingValue Value="@EditFormContext">
+                                            <div class="col-12 px-0">
+                                                <div class="row">
+                                                    <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                                </div>
                                             </div>
-                                        </div>
-                                    </CascadingValue>
+                                        </CascadingValue>
 
-                                </SDKTab>
+                                    </SDKTab>
+                                }
                             }
                         </SDKTabs>
                     </div>
