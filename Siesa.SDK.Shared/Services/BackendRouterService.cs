@@ -265,7 +265,7 @@ namespace Siesa.SDK.Shared.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"BADGATEWAY - {ex.Message}");
                 return null;
             }
         }
