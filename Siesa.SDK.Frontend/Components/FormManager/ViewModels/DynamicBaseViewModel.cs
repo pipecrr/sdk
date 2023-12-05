@@ -108,45 +108,34 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 bName = this.BusinessName;
             }
             businessModel = BackendRouterService.GetSDKBusinessModel(bName, AuthenticationService);
-            if (businessModel != null)
-            {   
-                try
-                {
-                    businessType = Utilities.SearchType(businessModel.Namespace + "." + businessModel.Name);
+           
+            try
+            {
+                businessType = Utilities.SearchType(businessModel.Namespace + "." + businessModel.Name);
 
-                    if (businessType is null)
-                    {
-                        ErrorMsg = $"Business not found in Front: {bName}";
-                        ErrorList.Add(new ModelMessagesDTO()
-                        {
-                            Message = "Custom.Generic.FrontendBusinessNotFound"
-                        });
-                        return;
-                    }
-                    
-                    BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, businessType);
-                    BusinessModel = businessModel;
-                    BusinessObj.BusinessName = bName;
-                }
-                catch (System.Exception ex)
+                if (businessType is null)
                 {
-                    string stringError = $"{ex.Message} {ex.StackTrace}";
-                    ErrorMsg = ex.ToString();
-
+                    ErrorMsg = $"Business not found in Front: {bName}";
                     ErrorList.Add(new ModelMessagesDTO()
                     {
-                        Message = "Custom.Generic.Message.Error",
-                        StackTrace = stringError
+                        Message = "Custom.Generic.FrontendBusinessNotFound"
                     });
-                    
+                    return;
                 }
+                
+                BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, businessType);
+                BusinessModel = businessModel;
+                BusinessObj.BusinessName = bName;
             }
-            else
+            catch (System.Exception ex)
             {
-                this.ErrorMsg = "404 Not Found.";
+                string stringError = $"{ex.Message} {ex.StackTrace}";
+                ErrorMsg = ex.ToString();
+
                 ErrorList.Add(new ModelMessagesDTO()
                 {
-                    Message = "Custom.Generic.BackendBusinessNotFound"
+                    Message = "Custom.Generic.BackendBusinessNotFound",
+                    StackTrace = stringError
                 });
             }
             StateHasChanged();
