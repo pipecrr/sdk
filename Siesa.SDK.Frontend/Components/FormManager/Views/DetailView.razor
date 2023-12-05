@@ -18,7 +18,7 @@
 {
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 }
-else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
+else if (((Panels == null || Panels.Count <= 0) && !IsDocument) || !CanDetail)
 {
     @* <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" /> *@
     <ErrorsWindow MessagesDTO="@ErrorList"/>
