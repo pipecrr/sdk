@@ -141,7 +141,10 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 ConstantFilters = AddConstantFilters(RowidRecordsRelated);
             }
             SetNotIn();
-            if (RowidRecordsRelated is null) return;
+            if (RowidRecordsRelated is null || !RowidRecordsRelated.Any()){
+                ConstantFilters = AddConstantFilters(new List<int>{0});
+            } 
+            
             var filter = string.Empty;
             LastFilter = filter;
             StateHasChanged();

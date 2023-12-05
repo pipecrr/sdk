@@ -82,14 +82,22 @@
             />
         }else
         {
-            <div class="col-12 text-center font_color_primary_dark pt-3 pb-0">
-                <SDKIcon Name="fa-circle-info" IconSize="fa-3x" />
-                <p class="mt-3 mb-0 font_size_087">
-                    <ResourceViewer
-                        ResourceTag="@EmptyResourceTag"
-                    />
-                </p>
-            </div>
+            <ListView
+                @ref="ListViewRef"
+                IsMultiple="true"
+                ViewdefName="@ViewdefName"
+                BusinessObj=@BusinessRelated
+                BusinessName="@RelatedBusiness"
+                SetTopBar="false"
+                AllowCreate="false"
+                AllowEdit="false"
+                AllowDelete="false"
+                AllowDetail="false"
+                ShowActions="false"
+                ShowSearchForm="false"
+                ConstantFilters="@ConstantFilters"
+                OnSelectedRow="@OnSelectRow"
+            />
         }
     </div>
 </div>
