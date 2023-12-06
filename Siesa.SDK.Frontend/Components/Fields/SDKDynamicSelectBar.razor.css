@@ -81,7 +81,7 @@
 
 /* Estilos nuevos para selec bar INICIO*/
 .sdk_select_button_group > .rz-selectbutton .rz-button.rz-state-active{
-    background: var(--color_light);
+    background: var(--color_panel_back);
     color: var(--color_primary);
     border: 1px solid var(--color_primary) !important;
     box-shadow: var(--shadow_standar) !important;
