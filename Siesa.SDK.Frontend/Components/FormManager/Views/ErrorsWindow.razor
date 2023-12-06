@@ -1,7 +1,6 @@
 @using Siesa.SDK.Frontend.Components.Fields;
 @using Siesa.SDK.Components.Visualization;
 @using System;
-@using Microsoft.Extensions.Hosting;
 @using Siesa.SDK.Frontend.Components;
 
 @if(_errorCount > 0 )
@@ -95,7 +94,7 @@
                                                 {
                                                     <li>
                                                         <ResourceViewer ResourceTag= "@item.Message"/>
-                                                        @if(_environment == Environments.Development)
+                                                        @if(true) //TODO: Cambiar
                                                         {
                                                             <SDKButton  RenderStyle="SDKButtonRenderStyle.None"
                                                             Click="@(()=> ShowModalStackTrace(item.StackTrace))" CssClass="ml-2"
