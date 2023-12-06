@@ -764,6 +764,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             guidListView = Guid.NewGuid().ToString().Replace("-", "", StringComparison.Ordinal);
             Loading = false;
+            ResourceTag = null;
             ErrorMsg = "";
             ErrorList = new();
             _extraFields = new List<string>();

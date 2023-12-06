@@ -21,5 +21,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
             {"XS", 12},
         };
         public int RowidGroupDynamicEntity { get; set; }
+        /// <summary>
+        /// Gets or sets the Hidden property of the panel.
+        /// </summary>
+        public bool Hidden { get; set; }
+        /// <summary>
+        /// Gets or sets the list of additional attributes to be included in the panel.
+        /// </summary>
+        public Dictionary<string, object> CustomAttributes { get; set; } = new Dictionary<string, object>();
     }
 }

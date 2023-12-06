@@ -27,7 +27,7 @@
 @using System.Diagnostics
 @using Siesa.SDK.Frontend.Utils
 @using Newtonsoft.Json.Linq
-
+@using Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 
@@ -260,6 +260,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        ViewType = DynamicViewType.Import;
         if(BusinessName.Equals("BLDemoDummy") || BusinessName.Equals("BLDemoMaster")){
             FlexRowId = 7;
         }

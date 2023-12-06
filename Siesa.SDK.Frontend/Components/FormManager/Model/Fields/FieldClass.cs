@@ -184,8 +184,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                         .Where(x => 
                         {
                             return x.GetType().GetProperty("IsUnique").GetValue(x, null).Equals(true) 
-                                && ((List<string>)x.GetType().GetProperty("PropertyNames").GetValue(x)).Count > 1
-                                && ((List<string>)x.GetType().GetProperty("PropertyNames").GetValue(x)).Contains(FieldName);
+                                && ((List<string>)x.GetType().GetProperty("PropertyNames").GetValue(x)).Count > 1 //Que las propiedades con indice unico sean mas de una
+                                && ((List<string>)x.GetType().GetProperty("PropertyNames").GetValue(x)).Contains(FieldName) //Que la propiedad actual este en el indice unico
+                                && !((List<string>)x.GetType().GetProperty("PropertyNames").GetValue(x)).Contains("RowidCompanyGroup");// Que no sea un indice unico compuesto con grupo de compania
                         })
                         .Select(x => x.GetType().GetProperty("PropertyNames").GetValue(x, null));
 
