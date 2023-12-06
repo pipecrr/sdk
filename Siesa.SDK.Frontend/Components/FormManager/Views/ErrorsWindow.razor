@@ -80,7 +80,7 @@
                             </tbody>
                         </table>
                     }
-                    @if(MessagesDTO.Any())
+                    @if(MessagesDTO.Any(x=> (x.MessageFormat != null && x.MessageFormat.Any()) || (!string.IsNullOrEmpty(x.Message) && string.IsNullOrEmpty(x.PropertyName))))
                     {
                         <table class="table table-striped sdk_table_v2">
                             <thead>
