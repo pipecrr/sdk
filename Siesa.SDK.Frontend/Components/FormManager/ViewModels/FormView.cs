@@ -972,6 +972,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 result = await BusinessObj.ValidateAndSaveAsync();
                 if (FormViewsTablesA.Any())
                 {
+                    bool errorsA = false;
                     foreach (var formView in FormViewsTablesA)
                     {
                         dynamic resultA = null;
@@ -983,7 +984,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                             baseObj.RowidRecord = rowidRecord;
                             formView.BusinessObj.BaseObj = baseObj;
                             resultA = await formView.BusinessObj.ValidateAndSaveAsync();
-                            result.Errors.AddRange(resultA.Errors);
+                            if(resultA.Errors.Count > 0){
+                                errorsA = true;                                
+                                result.Errors.AddRange(resultA.Errors);
+                            }
                         }
                         catch(System.Exception ex)
                         {
@@ -999,6 +1003,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     
                             return;
                         }
+                    }
+                    if(errorsA){
+                        BusinessObj.BaseObj = await BusinessObj.GetAsync(result.Rowid).ConfigureAwait(true);
                     }
                 }
             }catch(Exception ex)
