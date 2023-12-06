@@ -959,6 +959,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                         },
                     });
                 }
+
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "BLLogin.Demo.NewsBody",
+                    PropertyName = "E50100_DemoDummy.Name"
+                });
+
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.UniqueIndexValidation",
+                    PropertyName = "E50100_DemoDummy.Name"
+                });
                 
                 return;
             }
