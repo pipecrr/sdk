@@ -95,7 +95,7 @@
                                                 {
                                                     <li>
                                                         <ResourceViewer ResourceTag= "@item.Message"/>
-                                                        @if(_environment == Environments.Development)
+                                                        @if(_environment == Environments.Development && !string.IsNullOrEmpty(item.StackTrace))
                                                         {
                                                             <SDKButton  RenderStyle="SDKButtonRenderStyle.None"
                                                             Click="@(()=> ShowModalStackTrace(item.StackTrace))" CssClass="ml-2"
@@ -126,11 +126,6 @@
 {
     private void ShowModalStackTrace(string stackTrace)
     {
-        if (string.IsNullOrEmpty(stackTrace))
-        {
-            _ = _notificationService.ShowInfo("Custom.ErrorsWindow.NoStackTrace");
-            return;
-        }
         _ = _sdkDialogService.ShowCustomDialog(ds => @<SDKTextField ClearButtonDisplayMode="SDKClearButtonDisplayMode.Never" ReadOnly="true" Value="@stackTrace" CssClass="modal_stacktrace"/>, standardWidth: SDKModalWidth.Medium, title: "Custom.ErrorsWindow.StackTrace", height: "600px");
     }
 }
