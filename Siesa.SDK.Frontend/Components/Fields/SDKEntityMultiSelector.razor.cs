@@ -107,6 +107,8 @@ namespace Siesa.SDK.Frontend.Components.Fields
         /// </summary>
         public List<dynamic> FieldRelated {get; set;} = new();
 
+        private bool _isMultiple = true;
+
         /// <summary>
         /// Initializes the component asynchronously.
         /// </summary>
@@ -160,6 +162,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         /// </summary>
         public void RefreshListView()
         {
+            _isMultiple = !IsDetail;
             SetFilter();
             if (ListViewRef is not null)
             {
@@ -177,9 +180,11 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         private void OnSelectRow(IList<dynamic> items)
         {
-            ItemsSelected = items.Select(x => (int) x.GetType().GetProperty("Rowid").GetValue(x)).ToList();
-            ShowButtonRemove = ItemsSelected.Any();
-            StateHasChanged();
+            if(!IsDetail){
+                ItemsSelected = items.Select(x => (int) x.GetType().GetProperty("Rowid").GetValue(x)).ToList();
+                ShowButtonRemove = ItemsSelected.Any();
+                StateHasChanged();
+            }
         }
 
         private void AddItem()
