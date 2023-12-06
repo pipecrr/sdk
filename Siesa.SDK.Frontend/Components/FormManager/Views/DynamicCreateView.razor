@@ -13,7 +13,14 @@ else if (BusinessObj == null)
 }
 else if (BusinessObj != null)
 {
-    <DynamicComponent Type="@(typeof(Views.CreateView))" Parameters="@parameters" />
+    @if (!string.IsNullOrEmpty(DuplicateRowid) && Convert.ToInt64(DuplicateRowid) != 0 && 
+        !_duplicateInfoLoaded)
+    {
+        <text>Loading...</text>
+    }else 
+    {
+        <DynamicComponent Type="@(typeof(Views.CreateView))" Parameters="@parameters" />
+    }
 }
 
 @code {
@@ -22,10 +29,13 @@ else if (BusinessObj != null)
 
     public dynamic ParentBaseObj {get; set;}
 
+    private bool _duplicateInfoLoaded = false;
+
     private async Task GetDuplicateInfo(Int64 duplicateRowid){
         try
         {
             await BusinessObj.GetDuplicateInfo(duplicateRowid);
+            _duplicateInfoLoaded = true;
         }
         catch (System.Exception e)
         {

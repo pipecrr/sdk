@@ -62,7 +62,11 @@
     {
         if (FieldOpt.CustomAttributes?.Count > 0 && typeof(TItem) == typeof(bool))
         {
-            return FieldOpt.CustomAttributes.FirstOrDefault(x => x.Key == attributeName).Value?.ToString();
+            var customAttr = FieldOpt.CustomAttributes.FirstOrDefault(x => x.Key == attributeName).Value?.ToString();
+            if(customAttr != null)
+            {
+                return customAttr;
+            }
         }
         return string.Empty;
     }

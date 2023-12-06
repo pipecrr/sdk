@@ -7,6 +7,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         Edit,
         List,
         Subpanel,
-        Custom
+        Custom,
+        Import
     }
 }

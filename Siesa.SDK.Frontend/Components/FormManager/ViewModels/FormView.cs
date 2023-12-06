@@ -646,15 +646,81 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         private void EvaluateDynamicAttributes(FieldChangedEventArgs e)
         {
+            EvaluatePanels();
             foreach (var item in Panels.Select((value, i) => (value, i)))
             {
                 var panel = item.value;
-                if (panel.Fields == null)
+                if (panel.Fields == null || panel.Hidden)
                 {
                     continue;
                 }
                 EvaluateFields(panel.Fields);
             }
+        }
+
+        private void EvaluatePanels()
+        {
+            foreach (var panel in Panels)
+            {
+                if(panel.CustomAttributes == null){
+                    continue;
+                }
+                EvaluatePanel(panel);
+            }
+        }
+
+        private void EvaluatePanel(Panel panel)
+        {
+            _ = Task.Run(async () =>
+            {
+                bool shouldUpdate = await UpdateCustomAttrPanel(panel).ConfigureAwait(true);
+                if(shouldUpdate)
+                {
+                    _ = InvokeAsync(() => StateHasChanged());
+                }
+            });
+        }
+
+        private async Task<bool> UpdateCustomAttrPanel(Panel panel)
+        {
+            bool shouldUpdate = false;
+            var panelCustomAttr = panel.CustomAttributes.Where(x => x.Key.Equals("sdk-show",StringComparison.Ordinal) || x.Key.Equals("sdk-hide",StringComparison.Ordinal));
+            foreach (var attr in panelCustomAttr)
+            {
+                try
+                {
+                    switch (attr.Key)
+                    {
+                        case "sdk-show":
+                            var show = (bool)await Evaluator.EvaluateCode(attr.Value.ToString(), BusinessObj).ConfigureAwait(true);
+                            if (panel.Hidden == show)
+                            {
+                                panel.Hidden = !show;
+                                shouldUpdate = true;
+                            }
+                            break;
+                        case "sdk-hide":
+                            var hide = (bool)await Evaluator.EvaluateCode(attr.Value.ToString(), BusinessObj).ConfigureAwait(true);
+                            if (panel.Hidden != hide)
+                            {
+                                panel.Hidden = hide;
+                                shouldUpdate = true;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        Message = "Custom.Generic.Message.Error",
+                        StackTrace = ex.StackTrace,
+                    });
+                }
+            }
+            return shouldUpdate;
         }
 
         private void EvaluateFields(List<FieldOptions> panelFields)
@@ -906,6 +972,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 result = await BusinessObj.ValidateAndSaveAsync();
                 if (FormViewsTablesA.Any())
                 {
+                    bool errorsA = false;
                     foreach (var formView in FormViewsTablesA)
                     {
                         dynamic resultA = null;
@@ -917,7 +984,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                             baseObj.RowidRecord = rowidRecord;
                             formView.BusinessObj.BaseObj = baseObj;
                             resultA = await formView.BusinessObj.ValidateAndSaveAsync();
-                            result.Errors.AddRange(resultA.Errors);
+                            if(resultA.Errors.Count > 0){
+                                errorsA = true;                                
+                                result.Errors.AddRange(resultA.Errors);
+                            }
                         }
                         catch(System.Exception ex)
                         {
@@ -933,6 +1003,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     
                             return;
                         }
+                    }
+                    if(errorsA){
+                        BusinessObj.BaseObj = await BusinessObj.GetAsync(result.Rowid).ConfigureAwait(true);
                     }
                 }
             }catch(Exception ex)

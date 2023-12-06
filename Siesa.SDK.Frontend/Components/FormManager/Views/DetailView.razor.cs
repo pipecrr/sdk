@@ -167,12 +167,78 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private void EvaluateDynamicAttributes()
         {
-            foreach (var panelFields in Panels.Select(panel => panel.Fields))
+            EvaluatePanels();
+            foreach (var panelFields in Panels.Where(p => !p.Hidden).Select(panel => panel.Fields))
             {
                 EvaluateFields(panelFields);
             }
         }
-        
+
+        private void EvaluatePanels()
+        {
+            foreach (var panel in Panels)
+            {
+                if(panel.CustomAttributes == null){
+                    continue;
+                }
+                EvaluatePanel(panel);
+            }
+        }
+
+        private void EvaluatePanel(Panel panel)
+        {
+            _ = Task.Run(async () =>
+            {
+                bool shouldUpdate = await UpdateCustomAttrPanel(panel).ConfigureAwait(true);
+                if(shouldUpdate)
+                {
+                    _ = InvokeAsync(() => StateHasChanged());
+                }
+            });
+        }
+
+        private async Task<bool> UpdateCustomAttrPanel(Panel panel)
+        {
+            bool shouldUpdate = false;
+            var panelCustomAttr = panel.CustomAttributes.Where(x => x.Key.Equals("sdk-show",StringComparison.Ordinal) || x.Key.Equals("sdk-hide",StringComparison.Ordinal));
+            foreach (var attr in panelCustomAttr)
+            {
+                try
+                {
+                    switch (attr.Key)
+                    {
+                        case "sdk-show":
+                            var show = (bool)await Evaluator.EvaluateCode(attr.Value.ToString(), BusinessObj).ConfigureAwait(true);
+                            if (panel.Hidden == show)
+                            {
+                                panel.Hidden = !show;
+                                shouldUpdate = true;
+                            }
+                            break;
+                        case "sdk-hide":
+                            var hide = (bool)await Evaluator.EvaluateCode(attr.Value.ToString(), BusinessObj).ConfigureAwait(true);
+                            if (panel.Hidden != hide)
+                            {
+                                panel.Hidden = hide;
+                                shouldUpdate = true;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        Message = "Custom.Generic.Message.Error",
+                        StackTrace = ex.StackTrace,
+                    });
+                }
+            }
+            return shouldUpdate;
+        }
+
         private void EvaluateFields(List<FieldOptions> panelFields)
         {
             foreach (var field in panelFields)
@@ -659,7 +725,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 if(IsSubpanel && BusinessName.Equals("BLAttachmentDetail", StringComparison.Ordinal))
                 {
-                    await CheckPermissionsByBussinessName(BusinessName).ConfigureAwait(true);
+                    await CheckPermissionsByBussinessName(BusinessName, true).ConfigureAwait(true);
                 }else
                 {
                     string businessName = BusinessName;
@@ -690,18 +756,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
-        private async Task CheckPermissionsByBussinessName(string businessName)
+        private async Task CheckPermissionsByBussinessName(string businessName, bool checkAttachment = false)
         {
             try
             {
                 CanAcess = await FeaturePermissionService.CheckUserActionPermission(businessName,
-                    enumSDKActions.AccessAttachment, AuthenticationService).ConfigureAwait(true);
+                    checkAttachment ? enumSDKActions.AccessAttachment : enumSDKActions.Access, AuthenticationService).ConfigureAwait(true);
                 CanCreate = await FeaturePermissionService.CheckUserActionPermission(businessName,
-                    enumSDKActions.UploadAttachment, AuthenticationService).ConfigureAwait(true);
+                    checkAttachment ? enumSDKActions.UploadAttachment : enumSDKActions.Create, AuthenticationService).ConfigureAwait(true);
                 CanDelete = await FeaturePermissionService.CheckUserActionPermission(businessName,
-                    enumSDKActions.DeleteAttachment, AuthenticationService).ConfigureAwait(true);
+                    checkAttachment ? enumSDKActions.DeleteAttachment : enumSDKActions.Delete, AuthenticationService).ConfigureAwait(true);
                 CanDetail = await FeaturePermissionService.CheckUserActionPermission(businessName,
-                    enumSDKActions.DownloadAttachment, AuthenticationService).ConfigureAwait(true);
+                    checkAttachment ? enumSDKActions.DownloadAttachment: enumSDKActions.Detail, AuthenticationService).ConfigureAwait(true);
             }
             catch (System.Exception ex)
             {
