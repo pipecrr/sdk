@@ -199,34 +199,33 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
         
         private void OnChange(dynamic value)
         {
+            Context.GetType().GetProperty(Property)?.SetValue(Context, value);
             if(OnChangeColumn != null)
             {
                 OnChangeColumn(Context, value);
             }
-            Context.GetType().GetProperty(Property)?.SetValue(Context, value);
-            StateHasChanged();
         }
         
         private void OnChangeEnum(int value)
         {
+            Context.GetType().GetProperty(Property)?.SetValue(Context, value);
             if(OnChangeColumn != null)
             {
                 OnChangeColumn(Context, value);
             }
-            Context.GetType().GetProperty(Property)?.SetValue(Context, value);
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
         
         private void OnChangeEntity()
         {
             dynamic value = _entityReference.GetItemsSelected().FirstOrDefault();
+            Context.GetType().GetProperty(Property)?.SetValue(Context, value);
+            string rowidProp = "Rowid"+Property;
+            Context.GetType().GetProperty(rowidProp)?.SetValue(Context, value?.Rowid);
             if(OnChangeColumn != null)
             {
                 OnChangeColumn(Context, value);
             }
-            Context.GetType().GetProperty(Property)?.SetValue(Context, value);
-            string rowidProp = "Rowid"+Property;
-            Context.GetType().GetProperty(rowidProp)?.SetValue(Context, value?.Rowid);
         }
                 
         protected override async Task OnParametersSetAsync()
