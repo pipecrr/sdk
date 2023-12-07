@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Radzen.Blazor;
+using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Shared.DTOS;
 
 namespace Siesa.SDK.Frontend.Components.Fields;
@@ -158,9 +159,18 @@ public partial class SDKGrid<TItem> : SDKComponent
     [Parameter] public bool AllowMerge { get; set; }
     private Dictionary<string, List<SDKColumnMergeDTO>> _dicRowSpans = new Dictionary<string, List<SDKColumnMergeDTO>>();
     /// <summary>
-    /// This method is called when parameter values are set or changed.
+    /// Gets or sets the event callback for changing data.
     /// </summary>
-    
+    /// <value></value>
+    [Parameter] public EventCallback<IEnumerable<TItem>> OnChangeData { get; set; }
+    /// <summary>
+    /// Gets or sets the SDKNotificationService dependency.
+    /// </summary>
+    [Inject] public SDKNotificationService NotificationService {get; set;}
+
+    /// <summary>
+    /// This method is called when parameter values are set or changed.
+    /// </summary>    
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
@@ -172,6 +182,7 @@ public partial class SDKGrid<TItem> : SDKComponent
             Count = Data.Count();
         }
     }
+
     // Helper method to get the value of a property from an item
     private static object GetValue(TItem item, string fieldName)
     {
@@ -199,6 +210,7 @@ public partial class SDKGrid<TItem> : SDKComponent
     // Helper method to check if an item is selected and invoke the OnChangeSelect callback
     private bool Check(TItem item){
         if(Value.Count == 0){
+            //Custom.SDKGrid.ErrorImplementOnChangeData
             return false;
         }        
         if(Value[0].Equals(item)){
@@ -213,6 +225,10 @@ public partial class SDKGrid<TItem> : SDKComponent
     /// </summary>
     public async Task ClickAddRow()
     {
+        if(!OnChangeData.HasDelegate){
+            _ = NotificationService.ShowError("Custom.SDKGrid.ErrorImplementOnChangeData").ConfigureAwait(true);
+            return;
+        }
         bool result = true;
         Type dataType = typeof(TItem);
         dynamic obj = Activator.CreateInstance(dataType);
@@ -223,6 +239,8 @@ public partial class SDKGrid<TItem> : SDKComponent
         {
             Data = Data.Append((TItem)obj);
             await _grid.Reload().ConfigureAwait(true);
+            await InvokeAsync(StateHasChanged).ConfigureAwait(true);
+            await OnChangeData.InvokeAsync(Data).ConfigureAwait(true);
         }
     }
     /// <summary>
@@ -231,10 +249,14 @@ public partial class SDKGrid<TItem> : SDKComponent
     /// <param name="item">The item to be deleted.</param>
     public async Task ClickDeleteRow(TItem item)
     {
+        if(!OnChangeData.HasDelegate){
+            _ = NotificationService.ShowError("Custom.SDKGrid.ErrorImplementOnChangeData").ConfigureAwait(true);
+            return;
+        }
         bool result = true;
         int index = Data.ToList().IndexOf(item);
         if(OnDeleteRow != null){
-              result = OnDeleteRow(item);
+            result = OnDeleteRow(item);
         }
         if (result)
         {
@@ -242,6 +264,8 @@ public partial class SDKGrid<TItem> : SDKComponent
             list.RemoveAt(index);
             Data = list; 
             await _grid.Reload().ConfigureAwait(true);
+            await InvokeAsync(StateHasChanged).ConfigureAwait(true);
+            await OnChangeData.InvokeAsync(Data).ConfigureAwait(true);
         }
     }
 
