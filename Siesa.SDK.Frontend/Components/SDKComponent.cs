@@ -33,13 +33,13 @@ namespace Siesa.SDK.Frontend.Components
             if((RowidResource == null || RowidResource == 0) && ResourceTag != null){
                 if (AuthenticationService != null && AuthenticationService.GetRowidCulture() != 0)
                 {
-                    return await ResourceManager.GetResource(ResourceTag, AuthenticationService);
+                    return await ResourceManager.GetResource(ResourceTag, AuthenticationService).ConfigureAwait(true);
                 }else
                 {
-                    return await ResourceManager.GetResource(ResourceTag, RowidCulture);
+                    return await ResourceManager.GetResource(ResourceTag, RowidCulture).ConfigureAwait(true);
                 }
             }
-            return await ResourceManager.GetResource(Convert.ToInt64(RowidResource), AuthenticationService);
+            return await ResourceManager.GetResource(Convert.ToInt64(RowidResource), AuthenticationService).ConfigureAwait(true);
         }
 
 
