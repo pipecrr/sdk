@@ -253,7 +253,8 @@
 }
 
 ::-webkit-scrollbar {
-    width: 6px;
+    width: 6px !important;
+    height: 6px !important;
 }
 
 /* Track */
@@ -2607,6 +2608,16 @@ border-color: var(--color_border) !important;
     gap: 0.8rem !important;
     position: relative !important;
 }
+
+aside.sdk_dashboard_portal .rz-card {
+    padding: 0 !important;
+    border-radius: var(--pa_border_radius_module);
+    box-shadow: var(--pa_color_module_shadow) !important;
+}
+.sdk_dashboard_portal>.dxbl-gridlayout>.dxbl-gridlayout-root>.sdk_left_dashlets>.dxbl-gridlayout>.dxbl-gridlayout-root {
+    gap: 1rem !important;
+}
+
 
 .sdk_left_dashlets > .dxbl-gridlayout > .dxbl-gridlayout-root > .dxbl-gridlayout-item:first-of-type
 {
