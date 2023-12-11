@@ -238,22 +238,46 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
 
         private async Task GetValueColumn()
         {
-            var property = Context.GetType().GetProperty(Property);
-            if(property != null)
+            if (_valueColumn == null)
             {
-                object val = property.GetValue(Context);
-                if(property.PropertyType.IsEnum)
+                _valueColumn = "";
+            }
+            if(Property.Split(".").Length > 1)
+            {
+                string[] props = Property.Split(".");
+                object obj = Context;
+                foreach (string prop in props)
                 {
-                    string enumTag = $"Enum.{property.PropertyType.Name}.{val}";
-                    val = await UtilManager.GetResource(enumTag).ConfigureAwait(true);
+                    obj = obj?.GetType().GetProperty(prop)?.GetValue(obj);
                 }
-                if(val == null)
+                if (obj != null)
                 {
-                    _valueColumn = "";
+                    _valueColumn = obj;
                 }
                 else
                 {
-                    _valueColumn = val;
+                    _valueColumn = "";
+                }
+            }
+            else
+            {
+                var property = Context.GetType().GetProperty(Property);
+                if(property != null)
+                {
+                    object val = property.GetValue(Context);
+                    if(property.PropertyType.IsEnum)
+                    {
+                        string enumTag = $"Enum.{property.PropertyType.Name}.{val}";
+                        val = await UtilManager.GetResource(enumTag).ConfigureAwait(true);
+                    }
+                    if(val == null)
+                    {
+                        _valueColumn = "";
+                    }
+                    else
+                    {
+                        _valueColumn = val;
+                    }
                 }
             }
         }
