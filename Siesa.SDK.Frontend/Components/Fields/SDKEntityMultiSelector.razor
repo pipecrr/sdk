@@ -55,47 +55,29 @@
                 CssClass="mb-0"
             />
         </span>
+        <ListView
+            @ref="ListViewRef"
+            IsMultiple="@_isMultiple"
+            ViewdefName="@ViewdefName"
+            BusinessObj=@BusinessRelated
+            BusinessName="@RelatedBusiness"
+            SetTopBar="false"
+            AllowCreate="false"
+            AllowEdit="false"
+            AllowDelete="false"
+            AllowDetail="false"
+            ShowActions="false"
+            ShowSearchForm="false"
+            ConstantFilters="@ConstantFilters"
+            OnSelectedRow="@OnSelectRow"
+        />
         @if(RowidRecordsRelated?.Count > 0 && ConstantFilters?.Count > 0)
         {
-            <ListView
-                @ref="ListViewRef"
-                IsMultiple="@_isMultiple"
-                ViewdefName="@ViewdefName"
-                BusinessObj=@BusinessRelated
-                BusinessName="@RelatedBusiness"
-                SetTopBar="false"
-                AllowCreate="false"
-                AllowEdit="false"
-                AllowDelete="false"
-                AllowDetail="false"
-                ShowActions="false"
-                ShowSearchForm="false"
-                ConstantFilters="@ConstantFilters"
-                OnSelectedRow="@OnSelectRow"
-            />
             <SDKEntityMultiSelectorFixedButton
                 @ref="ComponentFixedButtonRef"
                 ResourceTag=@RemoveButtonResourceTag
                 OnCustomClick=@FixedClick
                 ShowButton="@ShowButtonRemove"
-            />
-        }else
-        {
-            <ListView
-                @ref="ListViewRef"
-                IsMultiple="true"
-                ViewdefName="@ViewdefName"
-                BusinessObj=@BusinessRelated
-                BusinessName="@RelatedBusiness"
-                SetTopBar="false"
-                AllowCreate="false"
-                AllowEdit="false"
-                AllowDelete="false"
-                AllowDetail="false"
-                ShowActions="false"
-                ShowSearchForm="false"
-                ConstantFilters="@ConstantFilters"
-                OnSelectedRow="@OnSelectRow"
             />
         }
     </div>
