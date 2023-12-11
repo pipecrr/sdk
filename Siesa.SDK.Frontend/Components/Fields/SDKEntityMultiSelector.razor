@@ -59,7 +59,7 @@
         {
             <ListView
                 @ref="ListViewRef"
-                IsMultiple="true"
+                IsMultiple="@_isMultiple"
                 ViewdefName="@ViewdefName"
                 BusinessObj=@BusinessRelated
                 BusinessName="@RelatedBusiness"
@@ -73,7 +73,6 @@
                 ConstantFilters="@ConstantFilters"
                 OnSelectedRow="@OnSelectRow"
             />
-
             <SDKEntityMultiSelectorFixedButton
                 @ref="ComponentFixedButtonRef"
                 ResourceTag=@RemoveButtonResourceTag

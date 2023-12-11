@@ -725,7 +725,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 if(IsSubpanel && BusinessName.Equals("BLAttachmentDetail", StringComparison.Ordinal))
                 {
-                    await CheckPermissionsByBussinessName(BusinessName).ConfigureAwait(true);
+                    await CheckPermissionsByBussinessName(BusinessName, true).ConfigureAwait(true);
                 }else
                 {
                     string businessName = BusinessName;
@@ -756,18 +756,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
-        private async Task CheckPermissionsByBussinessName(string businessName)
+        private async Task CheckPermissionsByBussinessName(string businessName, bool checkAttachment = false)
         {
             try
             {
                 CanAcess = await FeaturePermissionService.CheckUserActionPermission(businessName,
-                    enumSDKActions.AccessAttachment, AuthenticationService).ConfigureAwait(true);
+                    checkAttachment ? enumSDKActions.AccessAttachment : enumSDKActions.Access, AuthenticationService).ConfigureAwait(true);
                 CanCreate = await FeaturePermissionService.CheckUserActionPermission(businessName,
-                    enumSDKActions.UploadAttachment, AuthenticationService).ConfigureAwait(true);
+                    checkAttachment ? enumSDKActions.UploadAttachment : enumSDKActions.Create, AuthenticationService).ConfigureAwait(true);
                 CanDelete = await FeaturePermissionService.CheckUserActionPermission(businessName,
-                    enumSDKActions.DeleteAttachment, AuthenticationService).ConfigureAwait(true);
+                    checkAttachment ? enumSDKActions.DeleteAttachment : enumSDKActions.Delete, AuthenticationService).ConfigureAwait(true);
                 CanDetail = await FeaturePermissionService.CheckUserActionPermission(businessName,
-                    enumSDKActions.DownloadAttachment, AuthenticationService).ConfigureAwait(true);
+                    checkAttachment ? enumSDKActions.DownloadAttachment: enumSDKActions.Detail, AuthenticationService).ConfigureAwait(true);
             }
             catch (System.Exception ex)
             {

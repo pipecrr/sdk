@@ -11,6 +11,7 @@ using Siesa.SDK.Shared.GRPCServices;
 using Grpc.Core;
 using Siesa.SDK.Shared.DTOS;
 using System.IO;
+using System.Collections.Concurrent;
 
 namespace Siesa.SDK.Shared.Services
 {
@@ -54,7 +55,7 @@ namespace Siesa.SDK.Shared.Services
         /// Obtiene un diccionario de nombres de cola y listas de canales de mensajes.
         /// </summary>
         /// <returns>Diccionario de nombres de cola y listas de canales de mensajes.</returns>
-        public Dictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>> GetChannels();
+        public ConcurrentDictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>> GetChannels();
 
         /// <summary>
         /// Elimina los canales de comunicación para un nombre de cola dado.
@@ -68,12 +69,12 @@ namespace Siesa.SDK.Shared.Services
     public abstract class BackendRouterServiceBase : IBackendRouterService
     {
         private readonly IServiceConfiguration serviceConfiguration;
-        private Dictionary<string, BusinessModel> _backendBusinesses = new Dictionary<string, BusinessModel>();
+        private ConcurrentDictionary<string, BusinessModel> _backendBusinesses = new ConcurrentDictionary<string, BusinessModel>();
 
         private List<BackendInfo> _observers = new List<BackendInfo>();
         private string _masterBackendURL;
         public static BackendRouterServiceBase Instance { get; private set; }
-        private Dictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>> Channels { get; set; } = new Dictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>>();
+        private ConcurrentDictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>> Channels { get; set; } = new ConcurrentDictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>>();
 
         
         /// <summary>
@@ -85,7 +86,7 @@ namespace Siesa.SDK.Shared.Services
         {
             if (!Channels.ContainsKey(_queueName))
             {
-                Channels.Add(_queueName, new List<System.Threading.Channels.Channel<QueueMessageDTO>>());
+                Channels.TryAdd(_queueName, new List<System.Threading.Channels.Channel<QueueMessageDTO>>());
             }
 
             var queueToChannel = Channels[_queueName];
@@ -103,7 +104,7 @@ namespace Siesa.SDK.Shared.Services
         /// </summary>
         /// <returns>Diccionario de nombres de cola y listas de canales de mensajes.</returns>
 
-        public Dictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>> GetChannels()
+        public ConcurrentDictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>> GetChannels()
         {
             return Channels;
         }
@@ -143,12 +144,12 @@ namespace Siesa.SDK.Shared.Services
         public void AddBackend(string businessName, BusinessModel businessModel)
         {
             if (!_backendBusinesses.ContainsKey(businessName))
-                _backendBusinesses.Add(businessName, businessModel);
+                _backendBusinesses.TryAdd(businessName, businessModel);
         }
 
         public void SetBackendBusinesses(Dictionary<string, BusinessModel> backendBusinesses)
         {
-            _backendBusinesses = backendBusinesses;
+            _backendBusinesses = new ConcurrentDictionary<string, BusinessModel>(backendBusinesses);
         }
 
         public void AddObserver(BackendInfo observer)

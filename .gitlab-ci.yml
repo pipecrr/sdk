@@ -108,7 +108,7 @@ sonarqube-check:
       - .sonar/cache
   script: 
       - "apt-get update"
-      - "apt-get install --yes openjdk-11-jre"
+      - "apt-get install --yes openjdk-17-jre"
       - "dotnet tool install --global dotnet-sonarscanner"
       - "export PATH=\"$PATH:$HOME/.dotnet/tools\""
       - "dotnet sonarscanner begin /k:\"conversion_sdk_sdk_AYi1uSWfpjAXkz-m0Amt\" /d:sonar.login=\"$SONAR_TOKEN\" /d:\"sonar.host.url=$SONAR_HOST_URL\" "
