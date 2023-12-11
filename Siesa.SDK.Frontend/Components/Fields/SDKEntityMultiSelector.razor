@@ -55,40 +55,30 @@
                 CssClass="mb-0"
             />
         </span>
+        <ListView
+            @ref="ListViewRef"
+            IsMultiple="@_isMultiple"
+            ViewdefName="@ViewdefName"
+            BusinessObj=@BusinessRelated
+            BusinessName="@RelatedBusiness"
+            SetTopBar="false"
+            AllowCreate="false"
+            AllowEdit="false"
+            AllowDelete="false"
+            AllowDetail="false"
+            ShowActions="false"
+            ShowSearchForm="false"
+            ConstantFilters="@ConstantFilters"
+            OnSelectedRow="@OnSelectRow"
+        />
         @if(RowidRecordsRelated?.Count > 0 && ConstantFilters?.Count > 0)
         {
-            <ListView
-                @ref="ListViewRef"
-                IsMultiple="@_isMultiple"
-                ViewdefName="@ViewdefName"
-                BusinessObj=@BusinessRelated
-                BusinessName="@RelatedBusiness"
-                SetTopBar="false"
-                AllowCreate="false"
-                AllowEdit="false"
-                AllowDelete="false"
-                AllowDetail="false"
-                ShowActions="false"
-                ShowSearchForm="false"
-                ConstantFilters="@ConstantFilters"
-                OnSelectedRow="@OnSelectRow"
-            />
             <SDKEntityMultiSelectorFixedButton
                 @ref="ComponentFixedButtonRef"
                 ResourceTag=@RemoveButtonResourceTag
                 OnCustomClick=@FixedClick
                 ShowButton="@ShowButtonRemove"
             />
-        }else
-        {
-            <div class="col-12 text-center font_color_primary_dark pt-3 pb-0">
-                <SDKIcon Name="fa-circle-info" IconSize="fa-3x" />
-                <p class="mt-3 mb-0 font_size_087">
-                    <ResourceViewer
-                        ResourceTag="@EmptyResourceTag"
-                    />
-                </p>
-            </div>
         }
     </div>
 </div>
