@@ -2733,7 +2733,25 @@ opacity:40%
   border-color: var(--color_form_border) !important; 
 }
 
-
+.dxbl-checkbox-check-element::before {
+    background-color: var(--color_panel_back) !important;
+    opacity: 1 !important;
+}
+.dxbl-checkbox-unchecked .dxbl-checkbox-check-element::before{
+    border: 2px solid var(--color_border) !important;
+}
+.dxbl-checkbox .dxbl-checkbox-check-element{
+    margin: 0 !important;
+}
+.dxbl-checkbox-checked .dxbl-checkbox-check-element{
+    background-color: var(--color_primary) !important;
+}
+.dxbl-checkbox-indeterminate .dxbl-checkbox-check-element {
+    background-color: var(--color_primary) !important;
+}
+.dxbl-checkbox{
+    --dxbl-checkbox-check-element-checked-color: var(--color_light_text) !important;
+}
 
 
 .modal_stacktrace{
