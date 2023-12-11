@@ -1,11 +1,12 @@
 .sdk-dashlet-portal-title 
 {
     text-align: center;
-    font-size: 1.2rem;
-    font-weight: 600;
-    padding: 0.7rem 0.7rem 0;
-    color: #393939;    
+    color: var(--pa_color_text) !important;
+    font-size: var(--pa_size_module_title) !important;
+    font-weight: bold !important;
+    padding: 0.7rem 0.7rem 0; 
 }
+
 
 .sdk-dashlet-portal
 {
@@ -13,9 +14,17 @@
     overflow-x: hidden;
     overflow-y: visible;
     flex: 1 1 auto;
+    position: relative;
 }
 
 .sdk-dashlet-portal::-webkit-scrollbar{
     height: 0.25rem;
     width: 0.25rem;
+}
+
+.sdk-dashlet-portal div .rz-card.rz-variant-filled
+{
+    position: sticky;
+    top: 0;
+    z-index: 8;
 }

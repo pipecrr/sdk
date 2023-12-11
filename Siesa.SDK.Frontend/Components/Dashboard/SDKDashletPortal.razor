@@ -9,7 +9,7 @@
                 <p class="sdk-dashlet-portal-title"><ResourceViewer ResourceTag="@ResourceTag"/></p>
             }
             <div class="sdk-dashlet-portal">
-            @if(ComponentType != null)
+            @if(ComponentType != null) 
             {
                 <CascadingValue Value="@this">
                     <DynamicComponent Type="@ComponentType" Parameters="@GetParameters()"/>
