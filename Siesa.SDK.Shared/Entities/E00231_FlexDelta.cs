@@ -25,7 +25,7 @@ namespace Siesa.SDK.Entities
 
 		[SDKRequired]
 		[SDKStringLength(250)]
-		public string Name { get; set; }
+		public string Name { get; set; } = string.Empty;
 
 		public string? Delta { get; set; }
 
@@ -35,12 +35,18 @@ namespace Siesa.SDK.Entities
 		[ForeignKey("Feature")]
 		public int? RowidFeature { get; set; }
 
+		[ForeignKey("FlexProduct")]
+		public int? RowidFlexProduct { get; set; }
+
 
 		[SDKCheckRelationship]
-		public virtual E00230_Flex FlexParent { get; set; }
+		public virtual E00230_Flex? FlexParent { get; set; }
 
 		[SDKCheckRelationship]
-		public virtual E00040_Feature Feature { get; set; }
+		public virtual E00040_Feature? Feature { get; set; }
+
+		[SDKCheckRelationship]
+		public virtual E00232_FlexProduct? FlexProduct { get; set; }
 
 	}
 }
