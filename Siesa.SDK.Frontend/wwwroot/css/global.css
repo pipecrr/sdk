@@ -2874,5 +2874,45 @@ opacity:40%
     height: 50vh !important;
 }
 
+.rz-data-grid-data::-webkit-scrollbar-track {
+    background-color: var(--color_panel_back_border) !important;
+}
+
+.rz-data-grid-data::-webkit-scrollbar-thumb {
+    background: var(--color_scroll_handle) !important;
+    border: 1px solid var(--color_scroll_border) !important;
+    border-radius: 10px !important;
+}
+
+.rz-data-grid-data::-webkit-scrollbar-thumb:hover {
+    background: var(--color_scroll_hover) !important;
+}
+
+.rz-data-grid{
+    background-color: var(--color_panel_back)!important;
+}
+
+.rz-paginator {
+    background-color: var(--color_panel_back) !important;
+}
+
+.rz-paginator-page {
+    background-color: var(--color_back_2) !important;
+    color: var(--color_text) !important;
+}
+
+.rz-paginator-page.rz-state-active {
+    background-color: var(--color_primary)!important;
+    color: var(--color_light_text) !important;
+}
+
+.rz-dropdown {
+    background: var(--color_input_back) !important;
+    color: var(--color_text) !important;
+}
+
+td span.rz-cell-data div div i.fa-lock-keyhole-open.unlock:before {
+    color: var(--color_validacion_success);
+}
 
        
