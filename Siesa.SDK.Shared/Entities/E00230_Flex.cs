@@ -25,25 +25,13 @@ namespace Siesa.SDK.Entities
 
 		[SDKRequired]
 		[SDKStringLength(250)]
-		public string Name { get; set; }
+		public string Name { get; set; } = string.Empty;
 
 		[SDKStringLength(500)]
 		public string? Description { get; set; }
 
 		public string? Metadata { get; set; }
 
-		[ForeignKey("FlexParent")]
-		public int? RowidFlexParent { get; set; }
-
-		[ForeignKey("Feature")]
-		public int? RowidFeature { get; set; }
-
-
-		[SDKCheckRelationship]
-		public virtual E00230_Flex FlexParent { get; set; }
-
-		[SDKCheckRelationship]
-		public virtual E00040_Feature Feature { get; set; }
 
 	}
 }
