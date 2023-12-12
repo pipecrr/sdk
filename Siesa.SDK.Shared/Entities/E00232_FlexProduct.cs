@@ -39,12 +39,10 @@ namespace Siesa.SDK.Entities
 
 
 		[SDKCheckRelationship]
-		[SDKRequired]
-		public virtual E00020_Resource ResourceName { get; set; } = null!;
+		public virtual E00020_Resource? ResourceName { get; set; }
 
 		[SDKCheckRelationship]
-		[SDKRequired]
-		public virtual E00020_Resource ResourceDescription { get; set; } = null!;
+		public virtual E00020_Resource? ResourceDescription { get; set; }
 
 	}
 }
