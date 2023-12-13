@@ -1104,6 +1104,10 @@ div .form-control:focus {
     padding-bottom: calc(32px + 7rem);
 }
 
+.sdk_home_content:has(.sdk_home_content_no_padding) {
+    padding-bottom: unset;
+}
+
 .area2 {
     background: var(--color_area2_back);
     border-radius: var(--border_radius_standar_max);
