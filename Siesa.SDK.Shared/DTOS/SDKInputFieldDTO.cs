@@ -7,7 +7,5 @@ namespace Siesa.SDK.Shared.DTOS
         public int RowidAttachmentDetail { get; set; }
         public string FileName { get; set; }
         public long FileSize { get; set; }
-        
-
     }
 }
