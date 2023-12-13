@@ -26,7 +26,7 @@ namespace Siesa.SDK.Frontend.Services
         private NavigationManager _navigationManager;
         private ILocalStorageService _localStorageService;
         private IBackendRouterService _backendRouterService;
-        // private IHttpContextAccessor _contextAccesor;
+        private IHttpContextAccessor _contextAccesor;
         private IJSRuntime _jsRuntime;
         private string _secretKey;
         private int _minutesExp;
@@ -95,19 +95,20 @@ namespace Siesa.SDK.Frontend.Services
             IBackendRouterService BackendRouterService,
             IJSRuntime jsRuntime,
             ISDKJWT sdkJWT,
-            IIndexedDbFactory dbFactory
+            IIndexedDbFactory dbFactory,
+            IHttpContextAccessor ContextAccessor
         )
         {
             _navigationManager = navigationManager;
             _localStorageService = localStorageService;
             _backendRouterService = BackendRouterService;
-            // _contextAccesor = ContextAccessor;
+            _contextAccesor = ContextAccessor;
             _minutesExp = 120; //TODO: get from config
             _secretKey = "testsecretKeyabc$"; //TODO: get from config
             _jsRuntime = jsRuntime;
             _sdkJWT = sdkJWT;
             _dbFactory = dbFactory;
-            // _hostName = _contextAccesor.HttpContext?.Request.Host.Host;
+            _hostName = _contextAccesor.HttpContext?.Request.Host.Host;
         }
 
         public async Task Initialize()
@@ -134,7 +135,6 @@ namespace Siesa.SDK.Frontend.Services
             }catch (Exception)
             {
             }
-            //Console.WriteLine($"UserToken: {UserToken}");
         }
 
         public async Task<string> LoginSessionByToken(string userAccesstoken, short rowidDBConnection){
@@ -144,9 +144,9 @@ namespace Siesa.SDK.Frontend.Services
                 throw new Exception("Login session not found");
             }
 
-            string ipAddress = "";
+            string ipAddress = _contextAccesor.HttpContext.Connection.RemoteIpAddress?.ToString();
 
-            string browserName = "";
+            string browserName = _contextAccesor.HttpContext.Request.Headers["User-Agent"].ToString();
             
             var loginRequest = await BLuser.Call("SignInSessionByToken", new Dictionary<string, dynamic> {
                 {"accessToken", userAccesstoken},
@@ -183,11 +183,11 @@ namespace Siesa.SDK.Frontend.Services
 
             //Sacar la IP verdadera del Header**
 
-            string ipAddress = "";
+            string ipAddress = _contextAccesor.HttpContext?.Connection.RemoteIpAddress?.ToString();
 
-            string browserName = "";
+            string browserName = _contextAccesor.HttpContext?.Request.Headers["User-Agent"].ToString();
 
-            string sessionId = isUpdateSession ? "" : "";
+            string sessionId = isUpdateSession ? _contextAccesor.HttpContext?.Request.Cookies["sdksession"]?.ToString() : "";
 
             short lastCompanyGroupSelected = await _localStorageService.GetItemAsync<short>("rowidCompanyGroup").ConfigureAwait(true);
 
@@ -269,11 +269,11 @@ namespace Siesa.SDK.Frontend.Services
                 throw new Exception("Login Service not found");
             }
 
-            string ipAddress = "";
+            string ipAddress = _contextAccesor.HttpContext?.Connection.RemoteIpAddress?.ToString();
 
-            string browserName = "";
+            string browserName = _contextAccesor.HttpContext?.Request.Headers["User-Agent"].ToString();
 
-            string sessionId = isUpdateSession ? "" : "";
+            string sessionId = isUpdateSession ? _contextAccesor.HttpContext?.Request.Cookies["sdksession"]?.ToString() : "";
 
             short lastCompanyGroupSelected = await _localStorageService.GetItemAsync<short>("rowidCompanyGroup").ConfigureAwait(true);
 
@@ -329,9 +329,8 @@ namespace Siesa.SDK.Frontend.Services
         public async Task RenewToken()
         {
             var sessionId = "";
+            _contextAccesor.HttpContext.Request.Cookies.TryGetValue("sdksession", out sessionId);
             
-            //_contextAccesor.HttpContext.Request.Cookies.TryGetValue("sdksession", out sessionId);
-
             var BLuser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
             if (BLuser != null)
             {
@@ -596,9 +595,9 @@ namespace Siesa.SDK.Frontend.Services
 
         public async void ForgotPasswordAsync(string email, bool isPortal = false)
         {
-            // HttpContext httpContext = _contextAccesor.HttpContext;
-            // string UrlSystem = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}";
-            string UrlSystem = "";
+            HttpContext httpContext = _contextAccesor.HttpContext;
+            string UrlSystem = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}";
+            //string UrlSystem = "";
             var request = await GetBLUser().ConfigureAwait(true);
 
             await request.Call("SendEmailRecoveryPassword", email, SelectedConnection.Rowid, UrlSystem, isPortal, _hostName);
