@@ -5,7 +5,7 @@
 @using Microsoft.Extensions.DependencyInjection
 
 @if(_flexRowid != 0){
-    <FlexComponent FlexRowid="@_flexRowid" FlexFilters="@_flexFilters" ShowTable="@ShowTable" IsSdkFlex="true"></FlexComponent>
+    <FlexComponent FlexRowid="@_flexRowid" FlexFilters="@_flexFilters" ShowTable="@ShowTable" IsSdkFlex="true" @key="@Guid"></FlexComponent>
 }
 
 @code{
@@ -26,8 +26,16 @@
     public bool ShowTable { get; set; } = true;
 
     private int _flexRowid = 0;
+    private string Guid = System.Guid.NewGuid().ToString();
 
     private string _flexFilters = "";
+
+    protected override void OnParametersSet()
+    {
+        Console.WriteLine("OnParametersSet: "+ Guid);
+        base.OnParametersSet();
+    }
+
     protected override async Task OnInitializedAsync(){
         await Init();
         base.OnInitializedAsync();

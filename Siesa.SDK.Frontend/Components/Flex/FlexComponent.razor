@@ -87,7 +87,6 @@
     public int FlexRowId {get;set;} = 0;
     [Parameter]
     public bool ShowActions {get;set;} = true;
-    //private enumThemeIconStyle IconsStyles {get;set;} = enumThemeIconStyle.Solid;
     [Parameter]
     public List<string> FieldsHiddenList { get; set; } = new List<string>();
     [Parameter]
@@ -129,18 +128,18 @@
 
             Navigation.TryGetQueryString("currentView",out string SDKCurrentView);
             
-            if(string.IsNullOrEmpty(SDKCurrentView))
+            if(string.IsNullOrEmpty(SDKCurrentView) && FlexRowId == 0)
             {
                 SDKCurrentView = "create";
             }
 
-            if(SDKCurrentView != _currentView)
+            if(SDKCurrentView != _currentView && FlexRowId == 0)
             {
                 MountFlex = true;
                 _currentView = SDKCurrentView;
             }
 
-            if(_currentView == "detail")
+            if(_currentView == "detail" && FlexRowId == 0)
             {
                 if(!_isDetail)
                 {
@@ -227,6 +226,7 @@
             //updateFieldsHide
             JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.updateFieldsHide", fieldsHiddenListString);
             JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.updateFilters", FlexFilters, FilterSearch);
+            JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.changeShowTable", ShowTable);
             if(IsListView){
                 JSRuntime.InvokeVoidAsync("window.ListViewInstance", DotNetObjectReference.Create(ListView), GuidListView);
             }
@@ -341,6 +341,7 @@
     public void RefreshData()
     {
         JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.fetchPreviewData");
+        
     }
     
     public void ClearSelection()
@@ -380,7 +381,6 @@
             await Business.DeleteAsync();
             NavigationService.NavigateTo($"/{_blName}/");
         }
-        //StateHasChanged();
     }
     public void Dispose(){
         JSRuntime.InvokeAsync<object>("window.unmountOReportsReact", flexElementId);
