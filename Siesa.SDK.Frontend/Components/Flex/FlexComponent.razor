@@ -92,7 +92,10 @@
     public List<string> FieldsHiddenList { get; set; } = new List<string>();
     [Parameter]
     public bool FromEntityField { get; set; }
-
+    [Parameter]
+    public bool ShowTable { get; set; } = true;
+    [Parameter]
+    public bool IsSdkFlex { get; set; } = false;
     private string _guid ="";
     private bool _isDebug = false;
 
@@ -211,6 +214,8 @@
         NewFlexAttributes.Add("from_entity_field", FromEntityField.ToString());
         NewFlexAttributes.Add("redirect_detail", redirectDetail.ToString());
         NewFlexAttributes.Add("redirect_create", redirectCreate.ToString());
+        NewFlexAttributes.Add("show_table", ShowTable.ToString());
+        NewFlexAttributes.Add("is_sdk_flex", IsSdkFlex.ToString());
         if(_flexRowId != 0)
         {
             NewFlexAttributes.Add("base_obj_id", _flexRowId);

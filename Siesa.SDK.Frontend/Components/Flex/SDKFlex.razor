@@ -5,7 +5,7 @@
 @using Microsoft.Extensions.DependencyInjection
 
 @if(_flexRowid != 0){
-    <FlexComponent FlexRowid="@_flexRowid" FlexFilters="@_flexFilters"></FlexComponent>
+    <FlexComponent FlexRowid="@_flexRowid" FlexFilters="@_flexFilters" ShowTable="@ShowTable" IsSdkFlex="true"></FlexComponent>
 }
 
 @code{
@@ -21,7 +21,9 @@
     [Parameter]
     public int FlexRowid { get; set; }
     [Parameter]
-    public Dictionary<string, object> FlexFilters { get; set; }    
+    public Dictionary<string, object> FlexFilters { get; set; }
+    [Parameter]
+    public bool ShowTable { get; set; } = true;
 
     private int _flexRowid = 0;
 
