@@ -115,6 +115,10 @@ namespace Siesa.SDK.Shared.Services
                 {
                     typeFullName = arg.GetType().FullName;
                 }
+                if(typeFullName == null)
+                {
+                    typeFullName = "";
+                }
                 exposedMethodParams.Add(new ExposedMethodParam() { Name = "", Value = value, Type = typeFullName });
             }
             var grpcResult = await Backend.CallBusinessMethod(Name, method, exposedMethodParams);
