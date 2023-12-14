@@ -111,6 +111,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
            
             try
             {
+                if(businessModel is null)
+                {
+                    throw new Exception($"Business not found. Maybe the backend is down.");
+                }
                 businessType = Utilities.SearchType(businessModel.Namespace + "." + businessModel.Name);
 
                 if (businessType is null)
