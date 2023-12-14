@@ -10,25 +10,8 @@
 		<NoWarn>8632,8669,1591</NoWarn>
 	</PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="GrapeCity.ActiveReports.Aspnetcore.Designer" Version="17.1.2" />
-      <PackageReference Include="GrapeCity.ActiveReports.Aspnetcore.Viewer" Version="17.1.2" />
-      <PackageReference Include="GrapeCity.ActiveReports.Blazor.Viewer" Version="17.1.2" />
-		  <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.11" />
-    </ItemGroup>
-    <ItemGroup>
       <ProjectReference Include="..\Siesa.SDK.Frontend\Siesa.SDK.Frontend.csproj" />
+	  <ProjectReference Include="..\Siesa.SDK.CoreReport\Siesa.SDK.CoreReport.csproj" />
     </ItemGroup>
-
-    <ItemGroup>		
-		<EmbeddedResource Include="ActiveReport\templates\*" />
-	</ItemGroup> 
-
-
-	<ItemGroup>
-		<SupportedPlatform Include="browser" />
-	</ItemGroup>
-
-  
 
 </Project>

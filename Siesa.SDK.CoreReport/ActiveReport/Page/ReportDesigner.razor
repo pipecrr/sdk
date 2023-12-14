@@ -49,8 +49,9 @@
         }
         try
         {
-            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/ActiveReport/Page/ReportDesigner.razor.js");
+            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.CoreReport/ActiveReport/Page/ReportDesigner.razor.js");
         }
+        
         catch (Exception)
         {
         }
