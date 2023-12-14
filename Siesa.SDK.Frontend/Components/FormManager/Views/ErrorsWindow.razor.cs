@@ -74,7 +74,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             _errorCount = 0;
             _formErrors = new List<SDKErrorsWindowDTO>();
 
-            MessagesDTO = MessagesDTO.GroupBy(x => x.StackTrace).Select(x => x.First()).ToList();
+            if (MessagesDTO.Exists(x => !string.IsNullOrEmpty(x.StackTrace)))
+            {
+                MessagesDTO = MessagesDTO.GroupBy(x => x.StackTrace).Select(x => x.First()).ToList();
+            }
                 
             if (EditFormContext != null && EditFormContext.GetValidationMessages().Any() && VerifyContext)
             {

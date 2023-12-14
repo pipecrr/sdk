@@ -253,7 +253,8 @@
 }
 
 ::-webkit-scrollbar {
-    width: 6px;
+    width: 6px !important;
+    height: 6px !important;
 }
 
 /* Track */
@@ -738,7 +739,7 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
 
 .rz-data-grid > .rz-data-grid-data > .rz-grid-table > tbody > tr:not(.rz-expanded-row-content):nth-child(even) > td
 {
-    background-color: var(--color_table_even);
+    background-color: var(--color_panel_back);
 }
 .rz-data-grid > .rz-data-grid-data > .rz-grid-table > tbody > tr > td:first-child{
     border-radius: 0.25rem 0 0 0.25rem;
@@ -748,7 +749,7 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
 }
 .rz-data-grid > .rz-data-grid-data > .rz-grid-table > tbody > tr:not(.rz-expanded-row-content):nth-child(odd) > td
 {
-    background-color: var(--color_panel_back);
+    background-color: var(--color_table_even);
 }
 
 .rz-data-grid > .rz-data-grid-data > .rz-grid-table  thead th .rz-column-title 
@@ -1101,6 +1102,10 @@ div .form-control:focus {
 .sdk_home_content {
     padding-top: calc(48px + 1rem);
     padding-bottom: calc(32px + 7rem);
+}
+
+.sdk_home_content:has(.sdk_home_content_no_padding) {
+    padding-bottom: unset;
 }
 
 .area2 {
@@ -2608,6 +2613,16 @@ border-color: var(--color_border) !important;
     position: relative !important;
 }
 
+aside.sdk_dashboard_portal .rz-card {
+    padding: 0 !important;
+    border-radius: var(--pa_border_radius_module);
+    box-shadow: var(--pa_color_module_shadow) !important;
+}
+.sdk_dashboard_portal>.dxbl-gridlayout>.dxbl-gridlayout-root>.sdk_left_dashlets>.dxbl-gridlayout>.dxbl-gridlayout-root {
+    gap: 1rem !important;
+}
+
+
 .sdk_left_dashlets > .dxbl-gridlayout > .dxbl-gridlayout-root > .dxbl-gridlayout-item:first-of-type
 {
     position: sticky;
@@ -2733,7 +2748,25 @@ opacity:40%
   border-color: var(--color_form_border) !important; 
 }
 
-
+.dxbl-checkbox-check-element::before {
+    background-color: var(--color_panel_back) !important;
+    opacity: 1 !important;
+}
+.dxbl-checkbox-unchecked .dxbl-checkbox-check-element::before{
+    border: 2px solid var(--color_border) !important;
+}
+.dxbl-checkbox .dxbl-checkbox-check-element{
+    margin: 0 !important;
+}
+.dxbl-checkbox-checked .dxbl-checkbox-check-element{
+    background-color: var(--color_primary) !important;
+}
+.dxbl-checkbox-indeterminate .dxbl-checkbox-check-element {
+    background-color: var(--color_primary) !important;
+}
+.dxbl-checkbox{
+    --dxbl-checkbox-check-element-checked-color: var(--color_light_text) !important;
+}
 
 
 .modal_stacktrace{

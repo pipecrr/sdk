@@ -6,10 +6,11 @@
 @using Siesa.SDK.Shared.Services
 @using Siesa.Global.Enums
 @using Siesa.SDK.Frontend.Components.Dashboard.UserComponent
+@using Siesa.SDK.Frontend.Services
+@using Siesa.SDK.Frontend.Components.Layout
+@using Siesa.SDK.Frontend.Components
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
-@using Siesa.SDK.Frontend.Services
-@using Siesa.SDK.Frontend.Utils
 @inject MenuService MenuService
 @inject UtilsManager UtilManager
 @inject SDKNotificationService NotificationService
@@ -134,8 +135,12 @@
 
     private async Task Logout()
     {
-        MenuService.ClearMenu();
-        await AuthenticationService.Logout();
+        var result = await DialogService.ShowConfirmDialog(@<LogoutWindow/>, standardWidth: SDKModalWidth.Undefined);
+        if(result != null && result == true)
+        {
+            MenuService.ClearMenu();
+            await AuthenticationService.Logout();
+        }
     }
 
     protected async override Task OnInitializedAsync()

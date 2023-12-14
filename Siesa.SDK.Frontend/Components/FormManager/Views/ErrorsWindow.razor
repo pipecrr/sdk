@@ -33,7 +33,7 @@
             </div>
             <div class="col-12 sdk_card sdk_error_log_box_body py-0">
                 <div class="table-responsive">
-                    @if(_formErrors.Any())
+                    @if(_formErrors.Any() || MessagesDTO.Any(x=> !string.IsNullOrEmpty(x.PropertyName)))
                     {
                         <table class="table table-striped sdk_table_v2">
                             <thead>
@@ -47,7 +47,22 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in _formErrors){
+                                @foreach (var item in MessagesDTO.Where(x=> !string.IsNullOrEmpty(x.PropertyName)))
+                                {
+                                    <tr>
+                                        <td class="align-middle">
+                                            <ResourceViewer ResourceTag= "@item.PropertyName"/>
+                                        </td>
+                                        <td>
+                                            <ul class="ul_list_error">
+                                                <ResourceViewer ResourceTag= "@item.Message" 
+                                                FormatString="@(new object[] {@item.PropertyName})"/>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                }
+                                @foreach (var item in _formErrors)
+                                {
                                     <tr>
                                         <td class="align-middle">
                                             <ResourceViewer ResourceTag= "@item.Field"/>
@@ -60,12 +75,11 @@
                                             </ul>
                                         </td>
                                     </tr>
-                                    
                                 }
                             </tbody>
                         </table>
                     }
-                    @if(MessagesDTO.Any())
+                    @if(MessagesDTO.Any(x=> (x.MessageFormat != null && x.MessageFormat.Any()) || (!string.IsNullOrEmpty(x.Message) && string.IsNullOrEmpty(x.PropertyName))))
                     {
                         <table class="table table-striped sdk_table_v2">
                             <thead>

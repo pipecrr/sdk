@@ -28,6 +28,8 @@ public partial class SDKHtmlEditor : SDKComponent
     [Parameter]
     public SDKHtmlEditorMode Mode { get; set; } = SDKHtmlEditorMode.Design;
 
+    [Parameter]
+    public bool Disabled {get; set;}
 
     /// <summary>
     /// Gets or sets the child content.

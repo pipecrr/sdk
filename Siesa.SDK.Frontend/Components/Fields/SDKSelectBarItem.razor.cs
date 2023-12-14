@@ -37,6 +37,12 @@ public partial class SDKSelectBarItem : SDKComponent
         await base.OnInitializedAsync().ConfigureAwait(true);
     }
 
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync().ConfigureAwait(true);
+        ResourceTag = await GetText().ConfigureAwait(true);
+    }
+
     protected override string GetAutomationId()
     {
         if(string.IsNullOrEmpty(AutomationId))
@@ -48,6 +54,8 @@ public partial class SDKSelectBarItem : SDKComponent
         }
         return base.GetAutomationId();
     }
+
+
 
 
 }

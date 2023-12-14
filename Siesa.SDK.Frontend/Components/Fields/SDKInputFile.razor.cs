@@ -448,7 +448,8 @@ public partial class SDKInputFile : SDKComponent
         var ms = new MemoryStream();
         if (browserFile.Size > MaxSize)
         {
-            throw new Exception("El archivo es demasiado grande");
+            _ = Notification.ShowError("Custom.SDKInputFile.FileMaxSize", new object[] { browserFile.Name });
+            return null;
         }
         
         await browserFile.OpenReadStream(maxAllowedSize: MaxSize).CopyToAsync(ms).ConfigureAwait(true);

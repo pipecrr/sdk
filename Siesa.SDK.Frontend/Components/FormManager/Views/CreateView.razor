@@ -42,7 +42,7 @@ else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
             BusinessObj="@BusinessObj" IsCreateView="true" ShowAditionalFields="@ShowAditionalFields"/>
     }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
     {
-        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" isCreateView="true" ShowAditionalFields="@ShowAditionalFields"/>
+        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" IsCreateView="true" ShowAditionalFields="@ShowAditionalFields"/>
     }
     <CascadingValue Value="@this">
        <ErrorsWindow EditFormContext="@EditFormContext" MessagesDTO="@ErrorList" VerifyContext="@ClickInSave" />
