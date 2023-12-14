@@ -494,7 +494,7 @@ public class FormFile : IFormFile
 
     public string ContentDisposition {get; set;}
 
-    public readonly IHeaderDictionary Headers {get; set;}
+    public IHeaderDictionary Headers {get; set;}
 
     public long Length {get; set;}
 
