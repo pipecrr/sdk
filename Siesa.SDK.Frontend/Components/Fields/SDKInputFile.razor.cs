@@ -445,8 +445,6 @@ public partial class SDKInputFile : SDKComponent
 
     private async Task<FormFile> ConvertToIFormFile(IBrowserFile browserFile)
     {
-        //throw new NotImplementedException(); 
-        //TODO: Implementar el metodo para convertir el IBrowserFile a IFormFile y eliminar el codigo comentado (WASM)
         var ms = new MemoryStream();
         if (browserFile.Size > MaxSize)
         {

@@ -655,7 +655,6 @@
         }
 
         await browserFile.OpenReadStream(maxAllowedSize: 3000000).CopyToAsync(ms);
-        //TODO: fix wasm
         var file = new FormFile(ms, 0, ms.Length, null, browserFile.Name)
             {
                 //Headers = new HeaderDictionary(),
