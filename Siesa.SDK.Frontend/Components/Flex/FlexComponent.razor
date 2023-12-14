@@ -110,12 +110,14 @@
     private Dictionary<string, object> FlexAttributes { get; set; } = new Dictionary<string, object>();
 
     private bool _isMounted = false;
-
+    
+    private bool _isSaveProduct = false;
+    
     private void Init()
     {
         Dictionary<string, object> NewFlexAttributes = new Dictionary<string, object>();
         bool MountFlex = false;
-        if(!IsListView){            
+        if(!IsListView){
             Navigation.TryGetQueryString("sdk_debug",out string SDKDebugVar);
             if(!string.IsNullOrEmpty(SDKDebugVar))
             {
@@ -171,6 +173,12 @@
         }
 
         //_isDebug = true;
+        //por parametro llega is_product, pero se envia al react como is_save_product para diferenciar el del report_header
+        Navigation.TryGetQueryString("is_product",out string isSaveProduct);
+        if(!string.IsNullOrEmpty(isSaveProduct))
+        {
+            _isSaveProduct = true;
+        }
 
         if(EditingFlex){
             _currentView = "edit";
@@ -215,6 +223,10 @@
         NewFlexAttributes.Add("redirect_create", redirectCreate.ToString());
         NewFlexAttributes.Add("show_table", ShowTable.ToString());
         NewFlexAttributes.Add("is_sdk_flex", IsSdkFlex.ToString());
+        if (_isSaveProduct)
+        {
+            NewFlexAttributes.Add("is_save_product", _isSaveProduct.ToString());    
+        }
         if(_flexRowId != 0)
         {
             NewFlexAttributes.Add("base_obj_id", _flexRowId);
