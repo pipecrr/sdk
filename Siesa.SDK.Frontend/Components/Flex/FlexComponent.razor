@@ -375,7 +375,12 @@
 
     void GoToEdit()
     {
-        NavigationService.NavigateTo($"/{_blName}/edit/{_flexRowId}/");
+        string aditionalParams = "";
+        if (_isSaveProduct)
+        {
+            aditionalParams = $"?is_product={_isSaveProduct}";
+        }
+        NavigationService.NavigateTo($"/{_blName}/edit/{_flexRowId}{aditionalParams}");
     }
 
     void GoToList()
