@@ -329,7 +329,7 @@ public partial class SDKInputFile : SDKComponent
         }
     }
 
-    private async Task<string> GetFileUrl(FormFile file)
+    private static async Task<string> GetFileUrl(FormFile file)
     {
         using (var ms = new MemoryStream())
         {
@@ -494,7 +494,7 @@ public class FormFile : IFormFile
 
     public string ContentDisposition {get; set;}
 
-    public IHeaderDictionary Headers {get; set;}
+    public readonly IHeaderDictionary Headers {get; set;}
 
     public long Length {get; set;}
 

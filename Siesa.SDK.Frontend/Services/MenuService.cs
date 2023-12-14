@@ -29,8 +29,6 @@ namespace Siesa.SDK.Frontend.Services
 
         public E00060_Suite SelectedSuite { get; set; } = new();
 
-        private IServiceProvider _provider;
-
         private bool loading = false;
 
         private SDKBusinessModel _menuBL { get { return BackendRouterService.GetSDKBusinessModel("BLAdminMenu", AuthenticationService); } }
@@ -40,7 +38,6 @@ namespace Siesa.SDK.Frontend.Services
             BackendRouterService = backendRouterService;
             AuthenticationService = authenticationService;
             UtilsManager = utilsManager;
-            _provider = provider;
             Menus = new List<E00061_Menu>();
 
             //_ = Init();

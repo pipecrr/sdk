@@ -12,7 +12,7 @@ public static class FrontendUtils
         try
         { 
             localResourceRoot = await jsRuntime.InvokeAsync<string>("getLocalResourceRoot").ConfigureAwait(true);
-        }catch(Exception e)
+        }catch(Exception)
         {
         }
         if (string.IsNullOrEmpty(localResourceRoot))

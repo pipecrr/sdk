@@ -110,7 +110,6 @@ namespace Siesa.SDK.Frontend.Controllers
             string authToken = "";
             var sessionId = "";
             short rowidDbConnection = 1;
-            //Request.Cookies.TryGetValue("sdksession", out sessionId);
             if(!Request.Cookies.TryGetValue("sdksession", out sessionId) && Request.Headers.TryGetValue("x-sdk-session", out StringValues sessionIdHeader)){
                 sessionId = sessionIdHeader.ToString();
             }

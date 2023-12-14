@@ -131,7 +131,7 @@ namespace Siesa.SDK.Frontend.Services
             }
             try
             {
-                await _jsRuntime.ImportJsModule("./_content/Siesa.SDK.Frontend/js/utils.js");
+                await _jsRuntime.ImportJsModule("./_content/Siesa.SDK.Frontend/js/utils.js").ConfigureAwait(true);
             }catch (Exception)
             {
             }
@@ -597,7 +597,6 @@ namespace Siesa.SDK.Frontend.Services
         {
             HttpContext httpContext = _contextAccesor.HttpContext;
             string UrlSystem = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}";
-            //string UrlSystem = "";
             var request = await GetBLUser().ConfigureAwait(true);
 
             await request.Call("SendEmailRecoveryPassword", email, SelectedConnection.Rowid, UrlSystem, isPortal, _hostName);
