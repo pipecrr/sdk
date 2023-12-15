@@ -11,8 +11,6 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.JSInterop;
-using Siesa.Global.Enums;
-using Siesa.SDK.Frontend.Criptography;
 using System.Globalization;
 using Blazor.IndexedDB.Framework;
 using Siesa.SDK.Frontend.Data;
