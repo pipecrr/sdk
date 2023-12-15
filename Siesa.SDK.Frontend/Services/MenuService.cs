@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Hosting;
 using Siesa.SDK.Frontend.Components.Layout.Header;
 using Siesa.SDK.Entities;
 using System;
@@ -34,7 +33,7 @@ namespace Siesa.SDK.Frontend.Services
 
         private SDKBusinessModel _menuBL { get { return BackendRouterService.GetSDKBusinessModel("BLAdminMenu", AuthenticationService); } }
 
-        public MenuService(IBackendRouterService backendRouterService, IAuthenticationService authenticationService, UtilsManager utilsManager)
+        public MenuService(IBackendRouterService backendRouterService, IAuthenticationService authenticationService, UtilsManager utilsManager, IServiceProvider provider)
         {
             BackendRouterService = backendRouterService;
             AuthenticationService = authenticationService;
@@ -78,7 +77,9 @@ namespace Siesa.SDK.Frontend.Services
         private void AddDevMenu(List<E00061_Menu> menus)
         {
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-            if (environment == Environments.Development)
+
+            if (AuthenticationService.User.HostName.Equals("localhost", StringComparison.Ordinal) 
+            || environment.Equals("Development", StringComparison.Ordinal))
             {
                 Menus.Add(new E00061_Menu()
                 {

@@ -16,6 +16,7 @@
 @using Siesa.SDK.Frontend.Components.Fields
 @using Blazor.IndexedDB.Framework;
 @using Microsoft.AspNetCore.Http
+@using Siesa.SDK.Frontend.Utils
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
 @inject IBackendRouterService BackendRouterService
@@ -115,7 +116,7 @@
                                 @bind-Value="model.Username"
                                 AllowAutoComplete="true"
                                 AutomationId="BLLogin.Username"
-                                AutoFocus=true/>
+                                AutoFocus="true" />
                             <SDKValidationMessage For="@(() => model.Username)"/>
                         </div>
                         <div class="form-group">
@@ -465,13 +466,13 @@
     {
         try
         {
-            await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
+            await JSRuntime.ImportJsModule("./_content/Siesa.SDK.Frontend/js/utils.js");
         }catch (Exception)
         {
         }
         try
         {
-            await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Pages/Login/Login.razor.js");
+            await JSRuntime.ImportJsModule("./_content/Siesa.SDK.Frontend/Pages/Login/Login.razor.js");
         }
         catch (Exception)
         {

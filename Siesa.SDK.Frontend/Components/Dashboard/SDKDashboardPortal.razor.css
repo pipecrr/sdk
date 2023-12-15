@@ -22,9 +22,11 @@
     height: calc(100vh - 4rem);
 }
 
-::deep .sdk-dashlet-portal-expanded{
-    height: 100vh !important;
+::deep .sdk-dashlet-portal-expanded
+{
+    height: 60vh !important;
 }
+
 
 .sdk_dashboard_portal ::deep .sdk_left_dashlets::-webkit-scrollbar{
     display: none;
@@ -43,3 +45,6 @@
         padding-right: 1rem;
     }
 }
+
+
+

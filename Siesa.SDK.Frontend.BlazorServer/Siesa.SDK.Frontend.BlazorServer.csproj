@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<AnalysisLevel>latest</AnalysisLevel>
+		<AnalysisMode>All</AnalysisMode>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  		<DisableGclm>true</DisableGclm>
+		<VersionSuffix>dev</VersionSuffix>
+		<NoWarn>8632,8669,1591</NoWarn>
+	</PropertyGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Siesa.SDK.Frontend\Siesa.SDK.Frontend.csproj" />
+	  <ProjectReference Include="..\Siesa.SDK.CoreReport\Siesa.SDK.CoreReport.csproj" />
+    </ItemGroup>
+
+</Project>

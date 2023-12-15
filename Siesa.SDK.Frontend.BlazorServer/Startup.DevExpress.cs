@@ -87,6 +87,11 @@ namespace Siesa.SDK.Frontend
             services.AddServerSideBlazor();
 
             services.AddScoped<IIndexedDbFactory, IndexedDbFactory>();
+            
+            services.Configure<StaticFileOptions>(options =>
+            {
+                options.ServeUnknownFileTypes = true;
+            });
 
             SDKApp.AddAssembly(typeof(LayoutService).Assembly);
         }

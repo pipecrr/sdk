@@ -9,12 +9,14 @@
 @using Siesa.SDK.Frontend.Services
 @using Siesa.SDK.Frontend.Components.Layout
 @using Siesa.SDK.Frontend.Components
+@using Siesa.SDK.Frontend.Utils
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
 @inject MenuService MenuService
 @inject UtilsManager UtilManager
 @inject SDKNotificationService NotificationService
 @inject SDKDialogService DialogService
+@inject IJSRuntime JSRuntime
 
 <input type="checkbox" name="" checked id="menu">
     <label class="sdk_nav_head" for="menu">
@@ -94,6 +96,8 @@
 @code {
     [Parameter]
     public bool ShowMenu { get; set; }
+    
+    private IJSObjectReference _jsModule;
 
     private E00061_Menu SelectedMenu { get; set; }
 
@@ -254,14 +258,10 @@
         StateHasChanged();
     }
 
-    [Inject]
-    public IJSRuntime JSRuntime { get; set; }
-    private IJSObjectReference _jsModule;
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if(firstRender){
-            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Layout/NavMenu/NavMenu.razor.js");
+            _jsModule = await JSRuntime.ImportJsModule("./_content/Siesa.SDK.Frontend/Components/Layout/NavMenu/NavMenu.razor.js");
         }
     }
 

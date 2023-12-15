@@ -255,7 +255,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
         protected override async Task OnAfterRenderAsync(bool firstRender){
             if(firstRender || _jsModule == null){                
-                _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
+                _jsModule = await jsRuntime.ImportJsModule("./_content/Siesa.SDK.Frontend/js/utils.js").ConfigureAwait(true);
             }
         }
 

@@ -89,7 +89,7 @@
     background: var(--color_back_body);
  }
  .file-upload-container img{
-    object-fit: cover;
+    object-fit: contain;
     object-position: top;
     border-radius: var(--border_radius_standar_max);
  }

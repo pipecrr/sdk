@@ -14,6 +14,7 @@ using Microsoft.JSInterop;
 using System.Globalization;
 using Blazor.IndexedDB.Framework;
 using Siesa.SDK.Frontend.Data;
+using Siesa.SDK.Frontend.Utils;
 
 
 namespace Siesa.SDK.Frontend.Services
@@ -90,10 +91,10 @@ namespace Siesa.SDK.Frontend.Services
             NavigationManager navigationManager,
             ILocalStorageService localStorageService,
             IBackendRouterService BackendRouterService,
-            IHttpContextAccessor ContextAccessor,
             IJSRuntime jsRuntime,
             ISDKJWT sdkJWT,
-            IIndexedDbFactory dbFactory
+            IIndexedDbFactory dbFactory,
+            IHttpContextAccessor ContextAccessor
         )
         {
             _navigationManager = navigationManager;
@@ -128,11 +129,10 @@ namespace Siesa.SDK.Frontend.Services
             }
             try
             {
-                await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
+                await _jsRuntime.ImportJsModule("./_content/Siesa.SDK.Frontend/js/utils.js").ConfigureAwait(true);
             }catch (Exception)
             {
             }
-            //Console.WriteLine($"UserToken: {UserToken}");
         }
 
         public async Task<string> LoginSessionByToken(string userAccesstoken, short rowidDBConnection){
@@ -141,7 +141,7 @@ namespace Siesa.SDK.Frontend.Services
             {
                 throw new Exception("Login session not found");
             }
-            
+
             string ipAddress = _contextAccesor.HttpContext.Connection.RemoteIpAddress?.ToString();
 
             string browserName = _contextAccesor.HttpContext.Request.Headers["User-Agent"].ToString();
@@ -266,7 +266,7 @@ namespace Siesa.SDK.Frontend.Services
             {
                 throw new Exception("Login Service not found");
             }
-            
+
             string ipAddress = _contextAccesor.HttpContext?.Connection.RemoteIpAddress?.ToString();
 
             string browserName = _contextAccesor.HttpContext?.Request.Headers["User-Agent"].ToString();
@@ -327,9 +327,8 @@ namespace Siesa.SDK.Frontend.Services
         public async Task RenewToken()
         {
             var sessionId = "";
-            
             _contextAccesor.HttpContext.Request.Cookies.TryGetValue("sdksession", out sessionId);
-
+            
             var BLuser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
             if (BLuser != null)
             {
@@ -596,7 +595,6 @@ namespace Siesa.SDK.Frontend.Services
         {
             HttpContext httpContext = _contextAccesor.HttpContext;
             string UrlSystem = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}";
-
             var request = await GetBLUser().ConfigureAwait(true);
 
             await request.Call("SendEmailRecoveryPassword", email, SelectedConnection.Rowid, UrlSystem, isPortal, _hostName);

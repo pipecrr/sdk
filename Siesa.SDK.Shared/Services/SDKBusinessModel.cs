@@ -36,14 +36,14 @@ namespace Siesa.SDK.Shared.Services
             BackendRouterService = backendRouterService;
         }
 
-        public BackendRegistry Backend {get { return BackendRouterService.GetBackendRegistry(Name, AuthenticationService); } }
+        public virtual BackendRegistry Backend {get { return BackendRouterService.GetBackendRegistry(Name, AuthenticationService); } }
 
-        public dynamic Save(dynamic obj)
+        public  virtual dynamic Save(dynamic obj)
         {
             return Backend.SaveBusiness(Name, obj);
         }
 
-        public dynamic ValidateAndSave(dynamic obj, IList<dynamic> listBaseObj = null)
+        public virtual dynamic ValidateAndSave(dynamic obj, IList<dynamic> listBaseObj = null)
         {
             if(listBaseObj != null && listBaseObj.Count > 0)
             {
@@ -52,17 +52,17 @@ namespace Siesa.SDK.Shared.Services
             return Backend.ValidateAndSaveBusiness(Name, obj);
         }
 
-        public dynamic Delete(Int64 id)
+        public virtual dynamic Delete(Int64 id)
         {
             return Backend.DeleteBusinessObj(Name, id);
         }
 
-        public async Task<dynamic> DeleteAsync(Int64 id)
+        public virtual async Task<dynamic> DeleteAsync(Int64 id)
         {
             return await Backend.DeleteBusinessObj(Name, id);
         }
 
-        public dynamic Get(Int64 id, List<string> extraFields = null)
+        public virtual dynamic Get(Int64 id, List<string> extraFields = null)
         {
             return Backend.GetBusinessObj(Name, id, extraFields);
         }
@@ -104,7 +104,7 @@ namespace Siesa.SDK.Shared.Services
             return response;
         }
 
-        public async Task<ActionResult<dynamic>> Call(string method, params dynamic[] args)
+        public virtual async Task<ActionResult<dynamic>> Call(string method, params dynamic[] args)
         {
             List<ExposedMethodParam> exposedMethodParams = new List<ExposedMethodParam>();
             foreach (var arg in args)
@@ -115,13 +115,17 @@ namespace Siesa.SDK.Shared.Services
                 {
                     typeFullName = arg.GetType().FullName;
                 }
+                if(typeFullName == null)
+                {
+                    typeFullName = "";
+                }
                 exposedMethodParams.Add(new ExposedMethodParam() { Name = "", Value = value, Type = typeFullName });
             }
             var grpcResult = await Backend.CallBusinessMethod(Name, method, exposedMethodParams);
             return await transformCallResponse(grpcResult);
         }
 
-        public async Task<ActionResult<dynamic>> Call(string method, Dictionary<string, dynamic> args)
+        public virtual async Task<ActionResult<dynamic>> Call(string method, Dictionary<string, dynamic> args)
         {
             List<ExposedMethodParam> exposedMethodParams = new List<ExposedMethodParam>();
             foreach (var arg in args)
@@ -139,7 +143,7 @@ namespace Siesa.SDK.Shared.Services
         }
 
 
-        public async Task<Protos.LoadResult> GetData(int? skip, int? take, string filter = "", string orderBy = "", bool includeCount = false, List<string> extraFields = null)
+        public virtual async Task<Protos.LoadResult> GetData(int? skip, int? take, string filter = "", string orderBy = "", bool includeCount = false, List<string> extraFields = null)
         {
             Protos.LoadResult result = new();
             try
@@ -155,7 +159,7 @@ namespace Siesa.SDK.Shared.Services
         /*
         List<string> selectFields, int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false
         */
-        public async Task<Protos.LoadResult> GetUData(int? skip, int? take, string filter = "", string uFilter = "", string orderBy = "", bool includeCount = false, List<string> extraFields = null)
+        public virtual async Task<Protos.LoadResult> GetUData(int? skip, int? take, string filter = "", string uFilter = "", string orderBy = "", bool includeCount = false, List<string> extraFields = null)
         {
             Protos.LoadResult result = new();
             try
@@ -169,7 +173,7 @@ namespace Siesa.SDK.Shared.Services
             return result;
         }
 
-        public async Task<Protos.LoadResult> EntityFieldSearch(string searchText, string filters, int? top = null, string orderBy = "",
+        public virtual async Task<Protos.LoadResult> EntityFieldSearch(string searchText, string filters, int? top = null, string orderBy = "",
          List<string> extraFields = null)
         {
             Protos.LoadResult result = new();

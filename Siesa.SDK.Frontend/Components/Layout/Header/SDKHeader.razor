@@ -175,10 +175,12 @@
     {
         LogoUrl = AuthenticationService.GetConnectionLogo();
         var BL = BackendRouterService.GetSDKBusinessModel("BLSDKCompanyGroup",AuthenticationService);
-        
-        var DataCompanyGroup = await BL.GetData(null, null);
-        
-        CompanyGroups = DataCompanyGroup.Data.Select(x => JsonConvert.DeserializeObject<E00200_CompanyGroup>(x)).ToList();
+        if (BL != null)
+        {
+            var DataCompanyGroup = await BL.GetData(null, null);
+            
+            CompanyGroups = DataCompanyGroup.Data.Select(x => JsonConvert.DeserializeObject<E00200_CompanyGroup>(x)).ToList();
+        }
         
         SelectedGroup = CompanyGroups.FirstOrDefault(x => x.Rowid == AuthenticationService.GetRowidCompanyGroup());
         if(SelectedGroup == null)

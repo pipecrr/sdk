@@ -1,4 +1,5 @@
-﻿@inject IJSRuntime JSRuntime;
+﻿@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime;
 
 <div id="designer-id" class="sdk_reportdesigner"></div>
 
@@ -48,8 +49,9 @@
         }
         try
         {
-            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/ActiveReport/Page/ReportDesigner.razor.js");
+            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.CoreReport/ActiveReport/Page/ReportDesigner.razor.js");
         }
+        
         catch (Exception)
         {
         }

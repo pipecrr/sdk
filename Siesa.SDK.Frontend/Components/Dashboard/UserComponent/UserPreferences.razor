@@ -13,6 +13,7 @@
 @using Microsoft.AspNetCore.Http
 @using Siesa.SDK.Frontend.Components.FormManager.Model
 @using Siesa.SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Utils
 
 
 @inject IServiceProvider ServiceProvider
@@ -628,8 +629,7 @@
     {
         if (firstRender || _jsModule == null)
         {
-            _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import",
-            "./_content/Siesa.SDK.Frontend/Components/Dashboard/UserComponent/UserPreferences.razor.js");
+            _jsModule = await jsRuntime.ImportJsModule("./_content/Siesa.SDK.Frontend/Components/Dashboard/UserComponent/UserPreferences.razor.js");
         }
     }
 
@@ -655,14 +655,12 @@
         }
 
         await browserFile.OpenReadStream(maxAllowedSize: 3000000).CopyToAsync(ms);
-
         var file = new FormFile(ms, 0, ms.Length, null, browserFile.Name)
             {
-                Headers = new HeaderDictionary(),
+                //Headers = new HeaderDictionary(),
                 ContentType = (browserFile.ContentType == "" ? "application/octet-stream" : browserFile.ContentType)
             };
-
-        if (file != null)
+                if (file != null)
         {
             ProfileImageData = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
             HasFile = true;
