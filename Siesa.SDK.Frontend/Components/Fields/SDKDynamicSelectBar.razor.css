@@ -127,3 +127,27 @@
     min-height: 1.9375rem;
 }
 /* Estilos nuevos para button group FIN*/
+
+.sdk_select_button_group>.rz-selectbutton>.rz-button>span i:before {
+    color: var(--color_text_2);
+}
+
+.sdk_select_button_group>.rz-selectbutton>.rz-button.rz-state-active>span i.fa-ban:before {
+    color: var(--color_alert_error);
+}
+
+.sdk_select_button_group>.rz-selectbutton>.rz-button.rz-state-active>span i.fa-circle-dashed:before {
+    color: var(--color_alert_success);
+}
+
+.sdk_select_button_group>.rz-selectbutton>.rz-button.rz-state-active>span i.fa-minus:before {
+    color: var(--color_alert_info);
+}
+
+.sdk_select_button_group>.rz-selectbutton>.rz-button.rz-state-active>span i.fa-file-magnifying-glass:before {
+    color: var(--color_purple_2);
+}
+
+.sdk_select_button_group>.rz-selectbutton>.rz-button>span i.fa-shapes:before {
+    color: var(--color_siesa_3);
+}
