@@ -76,7 +76,7 @@ namespace Siesa.SDK.Frontend.Services
 
         private void AddDevMenu(List<E00061_Menu> menus)
         {
-            if (AuthenticationService.User.HostName.Equals("hola", StringComparison.Ordinal))
+            if (AuthenticationService.User.HostName.Equals("localhost", StringComparison.Ordinal))
             {
                 Menus.Add(new E00061_Menu()
                 {
