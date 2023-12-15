@@ -5,8 +5,10 @@ namespace Siesa.SDK.Shared.DTOS
     public class SDKFlexRequestSaveData
     {
         public string id { get; set; }
+        public string id_flex { get; set; }
         public string name { get; set; }
         public string description { get; set; }
+        public bool is_product { get; set; }
         public string selected_class { get; set; }
         public List<object> visible_users { get; set; }
         public List<object> visible_roles { get; set; }

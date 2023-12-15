@@ -5,7 +5,7 @@
 @using Microsoft.Extensions.DependencyInjection
 
 @if(_flexRowid != 0){
-    <FlexComponent FlexRowid="@_flexRowid" FlexFilters="@_flexFilters"></FlexComponent>
+    <FlexComponent FlexRowid="@_flexRowid" FlexFilters="@_flexFilters" ShowTable="@ShowTable" IsSdkFlex="true" @key="@_guid"></FlexComponent>
 }
 
 @code{
@@ -17,29 +17,34 @@
     public IAuthenticationService AuthenticationService { get; set; }
     [Inject]
     public IServiceProvider ServiceProvider { get; set; }
-
+    [Obsolete("This method is obsolete. Use Param IdFlex", false)]
     [Parameter]
     public int FlexRowid { get; set; }
     [Parameter]
-    public Dictionary<string, object> FlexFilters { get; set; }    
+    public Dictionary<string, object> FlexFilters { get; set; }
+    [Parameter]
+    public bool ShowTable { get; set; } = true;
 
+    [Parameter]
+    public string IdFlex { get; set; } = "";
     private int _flexRowid = 0;
+    private string _guid = System.Guid.NewGuid().ToString();
 
-    private string _flexFilters = "";
+    private string _flexFilters = "";    
+
     protected override async Task OnInitializedAsync(){
         await Init();
-        base.OnInitializedAsync();
+        await base.OnInitializedAsync().ConfigureAwait(true);
     }
 
     private async Task Init(){
-        var BLFlex = BackendRouterService.GetSDKBusinessModel("BLFlex", AuthenticationService);
-        var response = await BLFlex.Call("GetFlexById", FlexRowid.ToString());        
         
+        var blFlexProduct = BackendRouterService.GetSDKBusinessModel("BLFlexProduct", AuthenticationService);
+        var response = await blFlexProduct.Call("GetFlexProduct", IdFlex, FlexRowid);
         if(response.Success){
-            Type BLFlexFront = Utilities.SearchType(BLFlex.Namespace+"."+BLFlex.Name, true);
-            dynamic instanceFlex = ActivatorUtilities.CreateInstance(ServiceProvider,BLFlexFront);
+            Type blFlexProductFront = Utilities.SearchType(blFlexProduct.Namespace+"."+blFlexProduct.Name, true);
+            dynamic instanceFlex = ActivatorUtilities.CreateInstance(ServiceProvider,blFlexProductFront);
 
-            var flex = response.Data;
             var metadata = response.Data.GetType().GetProperty("Metadata").GetValue(response.Data);
             var rowid = response.Data.GetType().GetProperty("Rowid").GetValue(response.Data);
             var metadataObj = JsonConvert.DeserializeObject<SDKFlexRequestSaveData>(metadata);
@@ -53,14 +58,13 @@
                         var splitPath = filter.path.Split("::").Skip(1);
                         nameColumn = string.Join(".", splitPath)+ "." + nameColumn;
                     }                    
-                    if(FlexFilters.ContainsKey(nameColumn)){
-                        var val = FlexFilters[nameColumn];
+                    if(FlexFilters.TryGetValue(nameColumn, out var flexFilter)){
                         if(filter.type.Equals("DateField")){
-                            val = DateTime.Parse(val.ToString());
+                            flexFilter = DateTime.Parse(flexFilter.ToString()!);
                         }else if(filter.type.Equals("ForeignKey")){
-                            var valStr = val.ToString();
-                            if(valStr.StartsWith("System.Collections.Generic.List")){
-                                List<object> list = JsonConvert.DeserializeObject<List<object>>(JsonConvert.SerializeObject(val));
+                            var valStr = flexFilter.ToString();
+                            if(valStr!.StartsWith("System.Collections.Generic.List")){
+                                List<object> list = JsonConvert.DeserializeObject<List<object>>(JsonConvert.SerializeObject(flexFilter));
                                 var listVal = new List<object>();
                                 foreach (object item in list){
                                     var record = await instanceFlex.GetRecordByRowid(item,filter.module_name.ToString());
@@ -68,19 +72,17 @@
                                         listVal.Add(record);
                                     }
                                 }
-                                val = listVal;
+                                flexFilter = listVal;
                             }else{
                                 continue;
                             }
                         }
-                        filter.equal_from = val;
+                        filter.equal_from = flexFilter;
                     }
-                    var filters_to = nameColumn+"__to";
-                    if(FlexFilters.ContainsKey(filters_to)){
-                        var val = FlexFilters[filters_to];
+                    var filtersTo = nameColumn+"__to";
+                    if(FlexFilters.TryGetValue(filtersTo, out var val)){
                         if(filter.type.Equals("DateField")){
-                            //val format yyyy-MM-dd
-                            val = DateTime.Parse(val.ToString()).ToString("yyyy-MM-dd");
+                            val = DateTime.Parse(val.ToString()!).ToString("yyyy-MM-dd");
                         }
                         filter.to = val.ToString();
                     }

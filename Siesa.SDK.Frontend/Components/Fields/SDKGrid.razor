@@ -6,7 +6,9 @@
 <div>
     @if (ShowButtonCreate)
     {
-        <SDKButton ResourceTag="Custom.Document.Button.Create" RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async () => await ClickAddRow())" Enabled="@EnabledCreate" CssClass="@CssClassButtonCreate"/>
+        <div class="mb-3">
+            <SDKButton ResourceTag="Custom.Document.Button.Create" RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async () => await ClickAddRow())" Enabled="@EnabledCreate" CssClass="@CssClassButtonCreate"/>
+        </div>
     }
     <RadzenDataGrid 
         AllowFiltering="@AllowFiltering" 
