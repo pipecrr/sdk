@@ -109,8 +109,7 @@
                                                     <li>
                                                         <ResourceViewer ResourceTag= "@item.Message"/>
                                                         
-                                                        @if((AuthenticationService.User.HostName.Equals("localhost", StringComparison.Ordinal) 
-                                                            || _environment.Equals("Development", StringComparison.Ordinal)) 
+                                                        @if((AuthenticationService.User.HostName.Equals("localhost", StringComparison.Ordinal)) 
                                                             && !string.IsNullOrEmpty(item.StackTrace))
                                                         {
                                                             <SDKButton  RenderStyle="SDKButtonRenderStyle.None"

@@ -27,9 +27,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private string ClassError = "sdk_error_log_box_sup";
 
         private List<SDKErrorsWindowDTO> _formErrors = new();
-
-        private readonly string _environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
         private void FormErrors()
         {
             var groupErrors = EditFormContext.GetValidationMessages().GroupBy(x => {

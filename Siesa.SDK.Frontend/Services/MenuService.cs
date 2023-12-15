@@ -76,10 +76,7 @@ namespace Siesa.SDK.Frontend.Services
 
         private void AddDevMenu(List<E00061_Menu> menus)
         {
-            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
-            if (AuthenticationService.User.HostName.Equals("localhost", StringComparison.Ordinal) 
-            || environment.Equals("Development", StringComparison.Ordinal))
+            if (AuthenticationService.User.HostName.Equals("hola", StringComparison.Ordinal))
             {
                 Menus.Add(new E00061_Menu()
                 {
