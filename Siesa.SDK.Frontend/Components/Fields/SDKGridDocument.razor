@@ -1,5 +1,4 @@
 @using Siesa.SDK.Frontend.Components.FormManager.ViewModels
-@using GrapeCity.ActiveReports.Core.Rendering.ReportParameters
 @if (!IsDetail && !_hiddenCreate)
 {
     <SDKButton ResourceTag="Custom.Document.Button.Create" Click="@(async () => await FormView.ClickAddRow())" Enabled="@_enabledCreate"/>

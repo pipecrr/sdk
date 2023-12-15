@@ -19,6 +19,9 @@ using DevExpress.Data.Mask.Internal;
 using Siesa.SDK.Frontend.Components.Layout;
 using Siesa.Global.Enums;
 using Siesa.SDK.Frontend.Services;
+using Microsoft.Extensions.Primitives;
+using System.Diagnostics.CodeAnalysis;
+using System.Collections;
 
 
 
@@ -139,7 +142,6 @@ public partial class SDKInputFile : SDKComponent
 
     private List<SDKInputFieldDTO> _FilesSelected = new();
     private List<SDKInputFieldDTO> _FilesToSave = new();
-
     private SDKInputFieldDTO _FileSelected = new();
     private List<int> _FilesDeleted = new();
     private string _UrlImage = "";
@@ -297,7 +299,7 @@ public partial class SDKInputFile : SDKComponent
                     SDKInputFieldDTO inputFieldDTO = new()
                     {
                         Url = urlImage,
-                        File = itemFile,
+                        File = file,
                         FileName = itemFile.Name,
                         FileSize = itemFile.Size / 1024
                     };
@@ -327,14 +329,18 @@ public partial class SDKInputFile : SDKComponent
         }
     }
 
-    private async Task<string> GetFileUrl(IFormFile file)
+    private static async Task<string> GetFileUrl(FormFile file)
     {
-        var ms = new MemoryStream();
-        await file.CopyToAsync(ms).ConfigureAwait(true);
-        var base64 = Convert.ToBase64String(ms.ToArray());
-        var url = $"data:{file.ContentType};base64,{base64}";
-
-        return url;
+        using (var ms = new MemoryStream())
+        {
+            var _stream = file.OpenReadStream();
+            ms.Seek(0, SeekOrigin.Begin);
+            await _stream.CopyToAsync(ms).ConfigureAwait(true);         
+            ms.Seek(0, SeekOrigin.Begin);
+            var base64 = Convert.ToBase64String(ms.ToArray());
+            var url = $"data:{file.ContentType};base64,{base64}";
+            return url;
+        }
     }
 
     private void CloseItem(SDKInputFieldDTO sdkInputFieldDTO)
@@ -362,7 +368,7 @@ public partial class SDKInputFile : SDKComponent
     {
         try
         {
-            await IntanceBusinessObj();
+            await IntanceBusinessObj().ConfigureAwait(true);
             if (BusinessObj == null)
             {
                 return;
@@ -437,18 +443,24 @@ public partial class SDKInputFile : SDKComponent
         }
     }
 
-    private async Task<IFormFile> ConvertToIFormFile(IBrowserFile browserFile)
+    private async Task<FormFile> ConvertToIFormFile(IBrowserFile browserFile)
     {
         var ms = new MemoryStream();
-
+        if (browserFile.Size > MaxSize)
+        {
+            _ = Notification.ShowError("Custom.SDKInputFile.FileMaxSize", new object[] { browserFile.Name });
+            return null;
+        }
+        
         await browserFile.OpenReadStream(maxAllowedSize: MaxSize).CopyToAsync(ms).ConfigureAwait(true);
+        
+        ms.Seek(0, SeekOrigin.Begin);
 
         var file = new FormFile(ms, 0, ms.Length, null, browserFile.Name)
         {
-            Headers = new HeaderDictionary(),
+            //Headers = new HeaderDictionary(),
             ContentType = browserFile.ContentType ?? "application/octet-stream"
         };
-
         return file;
     }
 
@@ -467,4 +479,40 @@ public partial class SDKInputFile : SDKComponent
     }
 }
 
+public class FormFile : IFormFile
+{
+    public FormFile(Stream baseStream, long baseStreamOffset, long length, string name, string fileName)
+    {
+        _stream = baseStream ?? throw new ArgumentNullException(nameof(baseStream));
+        Length = length;
+        Name = name;
+        FileName = fileName;
+    }
 
+    private readonly Stream _stream;
+    public string ContentType {get; set;}
+
+    public string ContentDisposition {get; set;}
+
+    public IHeaderDictionary Headers {get; set;}
+
+    public long Length {get; set;}
+
+    public string Name {get; set;}
+
+    public string FileName {get; set;}
+
+    public Stream OpenReadStream()
+    {
+        return _stream;
+    }
+
+    public void CopyTo(Stream target)
+    {
+        _stream.CopyTo(target);   
+    }
+    public Task CopyToAsync(Stream target, CancellationToken cancellationToken = default)
+    {
+        return _stream.CopyToAsync(target, cancellationToken);
+    }
+}

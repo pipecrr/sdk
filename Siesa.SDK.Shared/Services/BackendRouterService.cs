@@ -82,7 +82,7 @@ namespace Siesa.SDK.Shared.Services
         /// </summary>
         /// <param name="_queueName">Nombre de la cola.</param>
         /// <param name="_channel">Canal de mensajes.</param>
-        public void SetChannels(string _queueName, System.Threading.Channels.Channel<QueueMessageDTO> _channel)
+        public virtual void SetChannels(string _queueName, System.Threading.Channels.Channel<QueueMessageDTO> _channel)
         {
             if (!Channels.ContainsKey(_queueName))
             {
@@ -104,7 +104,7 @@ namespace Siesa.SDK.Shared.Services
         /// </summary>
         /// <returns>Diccionario de nombres de cola y listas de canales de mensajes.</returns>
 
-        public ConcurrentDictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>> GetChannels()
+        public virtual ConcurrentDictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>> GetChannels()
         {
             return Channels;
         }
@@ -115,7 +115,7 @@ namespace Siesa.SDK.Shared.Services
         /// <param name="_queueName">Nombre de la cola.</param>
         /// <param name="_channel">Canal de mensajes a eliminar.</param>
 
-        public void RemoveChannels(string _queueName, System.Threading.Channels.Channel<QueueMessageDTO> _channel)
+        public virtual void RemoveChannels(string _queueName, System.Threading.Channels.Channel<QueueMessageDTO> _channel)
         {
             if (Channels.ContainsKey(_queueName))
             {
@@ -134,25 +134,25 @@ namespace Siesa.SDK.Shared.Services
             Instance = this;
         }
 
-        public BusinessModel GetBackend(string businessName)
+        public virtual BusinessModel GetBackend(string businessName)
         {
             if (_backendBusinesses.ContainsKey(businessName))
                 return _backendBusinesses[businessName];
             return null;
         }
 
-        public void AddBackend(string businessName, BusinessModel businessModel)
+        public virtual void AddBackend(string businessName, BusinessModel businessModel)
         {
             if (!_backendBusinesses.ContainsKey(businessName))
                 _backendBusinesses.TryAdd(businessName, businessModel);
         }
 
-        public void SetBackendBusinesses(Dictionary<string, BusinessModel> backendBusinesses)
+        public virtual void SetBackendBusinesses(Dictionary<string, BusinessModel> backendBusinesses)
         {
             _backendBusinesses = new ConcurrentDictionary<string, BusinessModel>(backendBusinesses);
         }
 
-        public void AddObserver(BackendInfo observer)
+        public virtual void AddObserver(BackendInfo observer)
         {
             if (observer.BackendUrl == _masterBackendURL)
             {
@@ -165,7 +165,7 @@ namespace Siesa.SDK.Shared.Services
             _ = NotifyObservers();
         }
 
-        public void RemoveObserver(BackendInfo observer)
+        public virtual void RemoveObserver(BackendInfo observer)
         {
             if (_observers.Contains(observer))
             {
@@ -176,7 +176,7 @@ namespace Siesa.SDK.Shared.Services
         }
 
 
-        public async Task NotifyObservers()
+        public virtual async Task NotifyObservers()
         {
             foreach (var observer in _observers)
             {
@@ -202,7 +202,7 @@ namespace Siesa.SDK.Shared.Services
         /// </summary>
         /// <param name="Callback">Acción a ejecutar al recibir un mensaje en el canal.</param>
         /// <returns>Tarea que devuelve la llamada de streaming dúplex asincrónica.</returns>
-        public async Task<AsyncDuplexStreamingCall<OpeningChannelToBackRequest, QueueMessageDTO>> OpenChannelFrontToBack(Action<QueueMessageDTO> Callback)
+        public virtual async Task<AsyncDuplexStreamingCall<OpeningChannelToBackRequest, QueueMessageDTO>> OpenChannelFrontToBack(Action<QueueMessageDTO> Callback)
         {
             var channel = GrpcUtils.GetChannel(_masterBackendURL);
             var client = new Protos.GRPCBackendManagerService.GRPCBackendManagerServiceClient(channel);
@@ -233,7 +233,7 @@ namespace Siesa.SDK.Shared.Services
         /// <param name="businessNames">Lista de nombres de negocio.</param>
         /// <param name="_isFrontendService">Indica si el servicio es de frontend.</param>
         /// <returns>Lista de modelos de negocio (BL) registrados.</returns>
-        public async Task<List<BusinessModel>> RegisterServiceInMaster(List<BusinessModel> businessNames = null, bool _isFrontendService = false)
+        public virtual async Task<List<BusinessModel>> RegisterServiceInMaster(List<BusinessModel> businessNames = null, bool _isFrontendService = false)
         {
             try
             {
@@ -271,7 +271,7 @@ namespace Siesa.SDK.Shared.Services
             }
         }
 
-        public BackendRegistry GetBackendRegistry(string backendName, IAuthenticationService authenticationService)
+        public virtual BackendRegistry GetBackendRegistry(string backendName, IAuthenticationService authenticationService)
         {
             if (_backendBusinesses.ContainsKey(backendName))
             {
@@ -286,7 +286,7 @@ namespace Siesa.SDK.Shared.Services
             }
         }
 
-        public SDKBusinessModel GetSDKBusinessModel(string backendName, IAuthenticationService authenticationService)
+        public virtual SDKBusinessModel GetSDKBusinessModel(string backendName, IAuthenticationService authenticationService)
         {
             if (_backendBusinesses.ContainsKey(backendName))
             {
@@ -301,7 +301,7 @@ namespace Siesa.SDK.Shared.Services
             }
         }
 
-        public List<BusinessModel> GetBusinessModelList()
+        public virtual List<BusinessModel> GetBusinessModelList()
         {
             return new List<BusinessModel>(_backendBusinesses.Values);
         }

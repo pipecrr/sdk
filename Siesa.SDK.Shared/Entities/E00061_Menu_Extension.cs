@@ -8,7 +8,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.SDK.Shared.Json;
 using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
-using Microsoft.AspNetCore.Components;
 
 namespace Siesa.SDK.Entities
 {

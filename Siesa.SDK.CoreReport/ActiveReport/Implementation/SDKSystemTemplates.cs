@@ -21,8 +21,10 @@ namespace Siesa.SDK.Report.Implementation
                 .Where(x => string.Equals(Path.GetExtension(x), ".rdlx", StringComparison.InvariantCultureIgnoreCase))
                 .Select(name => new TemplateInfo
                 {
-                    Id = name.Replace("Siesa.SDK.Frontend.ActiveReport.templates.",""),
-                    Name = name.Replace("Siesa.SDK.Frontend.ActiveReport.templates.","")
+                    Id = name.Replace("Siesa.SDK.CoreReport.ActiveReport.templates.","", 
+                    StringComparison.Ordinal),
+                    Name = name.Replace("Siesa.SDK.CoreReport.ActiveReport.templates.","", 
+                    StringComparison.Ordinal)
                 }).ToArray();
             return templatesList;
         }
@@ -36,7 +38,7 @@ namespace Siesa.SDK.Report.Implementation
             try
             {
                 templateContent = Utilities.ReadAssemblyResource(this.GetType().Assembly, 
-				$"Siesa.SDK.Frontend.ActiveReport.templates.{id}");
+				$"Siesa.SDK.CoreReport.ActiveReport.templates.{id}");
 
 
             }

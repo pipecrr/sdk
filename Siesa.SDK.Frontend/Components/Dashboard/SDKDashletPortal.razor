@@ -1,6 +1,5 @@
 @using Siesa.SDK.Shared.DTOS
-@using GrapeCity.ActiveReports.Rdl.Tools
-
+@using System.Linq
 <ErrorBoundary>
     <ChildContent>
         <SDKCard StyleCss="@GetStyleCss()">
@@ -78,7 +77,10 @@
         }
         if(Parameters != null)
         {
-            parameters.AddRange(Parameters);
+            foreach (var parameter in Parameters)
+            {
+                parameters.Add(parameter.Key, parameter.Value);
+            }
         }
         return parameters;
     }

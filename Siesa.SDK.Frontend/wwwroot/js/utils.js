@@ -168,3 +168,10 @@ window.closePreviewImage = closePreviewImage;
 window.getUrlsImage = getUrlsImage;
 window.clickInputFile = clickInputFile;
 window.globalVariableExists = globalVariableExists;
+(function(){
+    if(typeof(getLocalResourceRoot) === 'undefined'){
+        window.getLocalResourceRoot = function(){
+            return '';
+        }
+    }
+})()

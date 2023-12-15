@@ -1,5 +1,4 @@
 ﻿@inherits LayoutComponentBase
-@using Microsoft.Extensions.Hosting
 @using Siesa.SDK.Frontend.Components.Layout.Header
 @using System
 @using Microsoft.AspNetCore.Components
@@ -10,6 +9,7 @@
 @using Siesa.SDK.Frontend.Components.FormManager.Model
 @using Siesa.SDK.Frontend.Pages.Login
 @using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Utils
 @using Siesa.SDK.Shared.DTOS
 @inject UtilsManager UtilsManager 
 @inject IJSRuntime JSRuntime
@@ -221,14 +221,14 @@
     {
         try
         {
-            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Layout/MainLayout.razor.js");
+            _jsModule = await JSRuntime.ImportJsModule("./_content/Siesa.SDK.Frontend/Components/Layout/MainLayout.razor.js");
         }
         catch (Exception)
         {
         }
         try
         {
-            await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
+            await JSRuntime.ImportJsModule("./_content/Siesa.SDK.Frontend/js/utils.js");
         }catch (Exception)
         {
         }

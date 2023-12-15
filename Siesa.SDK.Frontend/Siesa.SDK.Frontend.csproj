@@ -1,12 +1,5 @@
 
 <Project Sdk="Microsoft.NET.Sdk.Razor">
-	<!-- <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    	<Exec Command="npm run buildcss" />
-  	</Target> -->
-	<!-- Search all razor components recursively  in Siesa.SDK.Frontend\Components\Documentation and copy to Siesa.SDK.Frontend\Components\Documentation\SourceCode, change extension to .txt -->
-	<Target Name="CopySourceCode" BeforeTargets="Build">
-		<Copy SourceFiles="@(RazorDocumentationCode)" DestinationFiles="@(RazorDocumentationCode->'Components\Documentation\SourceCode\%(Filename).txt')" />
-	</Target> 
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
 		<AnalysisLevel>latest</AnalysisLevel>
@@ -24,28 +17,10 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<OutputPath></OutputPath>
 	</PropertyGroup>	
-	<ItemGroup>
-		<None Remove="Components\Layout\MainLayout.razor.css" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Content Include="Components\Layout\MainLayout.razor.css" />				
-		<Content Update="Components\Dashboard\SDKDashboardPortal.razor.css">
-		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-		</Content>
-	</ItemGroup>
-
-	<ItemGroup>		
-		<EmbeddedResource Include="ActiveReport\templates\*" />
-	</ItemGroup> 
-
-
-	<ItemGroup>
-		<SupportedPlatform Include="browser" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Blazored.Toast" Version="4.1.0" />
+		<Reference Include="Microsoft.Extensions.Hosting.Abstractions" />
 		<PackageReference Include="DevExpress.Drawing.Skia" Version="23.1.4" />
 		<Reference Include="System.Reflection.Emit" />
 		<PackageReference Include="blazor-dragdrop" Version="2.4.0" />
@@ -54,13 +29,9 @@
 		<PackageReference Include="DevExpress.Blazor.es" Version="23.1.4" />
 		<PackageReference Include="DevExpress.Document.Processor" Version="23.1.4" />
 		<PackageReference Include="Google.Protobuf" Version="3.19.1" />
-		<PackageReference Include="GrapeCity.ActiveReports.Aspnetcore.Designer" Version="17.1.2" />
-		<PackageReference Include="GrapeCity.ActiveReports.Aspnetcore.Viewer" Version="17.1.2" />
-		<PackageReference Include="GrapeCity.ActiveReports.Blazor.Viewer" Version="17.1.2" />
-		<PackageReference Include="Grpc.Net.Client" Version="2.40.0" />
+		<PackageReference Include="Grpc.Net.Client.Web" Version="2.40.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.9" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.DataAnnotations.Validation" Version="3.2.0-rc1.20223.4" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.11" />
 		<PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.0.1" />
