@@ -67,6 +67,15 @@
             {
                 return customAttr;
             }
+        }else
+        {
+            switch (attributeName)
+            {
+                case "BooleanYesResourceTag":
+                    return "Custom.Selectbar.Boolean.Yes";
+                case "BooleanNoResourceTag":
+                    return "Custom.Selectbar.Boolean.No";
+            }
         }
         return string.Empty;
     }
