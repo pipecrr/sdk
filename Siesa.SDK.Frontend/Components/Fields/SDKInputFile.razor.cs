@@ -44,6 +44,9 @@ public partial class SDKInputFile : SDKComponent
     [Parameter]
     public bool IsMultiple { get; set; }
 
+    [Parameter]
+    public int MaxFiles { get; set; } = 10;
+
     /// <summary>
     /// File filter type, default is "image/*".
     /// </summary>
@@ -283,7 +286,7 @@ public partial class SDKInputFile : SDKComponent
             _display = "block";
             if (IsMultiple)
             {
-                var files = InputFile.GetMultipleFiles();
+                var files = InputFile.GetMultipleFiles(MaxFiles);
                 foreach (var itemFile in files)
                 {
                     if (itemFile.Size > MaxSize)
