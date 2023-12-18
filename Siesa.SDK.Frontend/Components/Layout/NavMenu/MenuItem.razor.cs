@@ -71,6 +71,11 @@ public partial class MenuItem : SDKComponent
                     }
                 }
             }
+
+            if (Menu != null && Menu.Level <= 1 )
+            {
+                AutomationId = $"{Title}";
+            }
         }
         return base.GetAutomationId();
     }
