@@ -82,7 +82,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         {
             if(!BusinessName.Equals("BLAttachmentDetail"))
             {
-                CanAccess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Access, AuthenticationService);
+                string businessName = BusinessName;
+                if(businessName.Equals("BLFlexProduct"))
+                {
+                    businessName = "BLFlex";
+                }
+                CanAccess = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Access, AuthenticationService);
             }else
             {
                 CanAccess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService);

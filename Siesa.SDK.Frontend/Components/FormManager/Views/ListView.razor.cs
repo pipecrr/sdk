@@ -179,7 +179,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private Button CreateButton { get; set; }
         public RadzenDataGrid<object> _gridRef;
         private FlexComponent _flexComponentRef;
-        
+        private bool _isSdkFlex;
         /// <summary>
         /// Gets or sets the fields hidden.
         /// </summary>
@@ -250,7 +250,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 bName = BusinessName;
             }
-
+            if(bName.Equals("BLFlexProduct")){
+                _isSdkFlex = true;
+            }
             if (ResourceTag == null)
             {
                 ResourceTag = $"{BusinessName}.Plural";
@@ -531,13 +533,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                {
                     try
                     {
-                        CanAccess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Access, AuthenticationService).ConfigureAwait(true);
-                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Create, AuthenticationService).ConfigureAwait(true);
-                        CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Edit, AuthenticationService).ConfigureAwait(true);
-                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService).ConfigureAwait(true);
-                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService).ConfigureAwait(true);
-                        CanImport = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Import, AuthenticationService).ConfigureAwait(true);
-                        CanExport = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Export, AuthenticationService).ConfigureAwait(true);
+                        string businessName = BusinessName;
+                        if(businessName.Equals("BLFlexProduct", StringComparison.Ordinal)){
+                            businessName = "BLFlex";
+                        }
+                        CanAccess = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Access, AuthenticationService).ConfigureAwait(true);
+                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Create, AuthenticationService).ConfigureAwait(true);
+                        CanEdit = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Edit, AuthenticationService).ConfigureAwait(true);
+                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Delete, AuthenticationService).ConfigureAwait(true);
+                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Detail, AuthenticationService).ConfigureAwait(true);
+                        CanImport = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Import, AuthenticationService).ConfigureAwait(true);
+                        CanExport = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Export, AuthenticationService).ConfigureAwait(true);
                     }
                     catch (System.Exception ex)
                     {
@@ -1054,7 +1060,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             else
             {
-                NavManager.NavigateTo($"{BusinessName}/edit/{id}/");
+                if(BusinessName.Equals("BLFlexProduct", StringComparison.Ordinal)){
+                    NavManager.NavigateTo($"/BLFlex/Render/?currentView=edit&flexRowid={id}&is_product=true", replace : true);
+                }else{
+                    NavManager.NavigateTo($"{BusinessName}/edit/{id}");
+                }
             }
 
         }
@@ -1090,7 +1100,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             else
             {
-                NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
+                if(BusinessName.Equals("BLFlexProduct", StringComparison.Ordinal)){
+                    NavManager.NavigateTo($"/BLFlex/Render/?currentView=detail&flexRowid={id}&is_product=true", replace : true);
+                }else{
+                    NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
+                }
             }
         }
         [JSInvokable]
