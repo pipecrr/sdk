@@ -131,7 +131,7 @@
             throw;
         }
 
-        foreach (var option in enumValues)
+        foreach (var option in enumValues.OrderBy(x => x.Key))
         {
             _options = _options.Append(new SelectBarItemWrap<TItem>
             {
