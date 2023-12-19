@@ -449,7 +449,7 @@
         {
             try
             {
-                await _refinputFile.SDKUploadFile();
+                await _refinputFile.SDKUploadFile(true);
                 BLUser.BaseObj.RowidAttachmentUserProfilePicture = _refinputFile.RowidAttachmentDetail;
             }
             catch (Exception ex)
