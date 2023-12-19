@@ -393,13 +393,17 @@ public partial class SDKInputFile : SDKComponent
                 }
                 foreach (var itemFile in _FilesToSave)
                 {
-                    await SaveAttachment(itemFile.File,ignorePermissions, itemFile).ConfigureAwait(true);
+
+                    await SaveAttachment(itemFile.File, ignorePermissions, itemFile).ConfigureAwait(true);
+                    
                     _FilesToSave = new();
                 }
             }
             else
             {
-                await SaveAttachment(InputFile.File, ignorePermissions).ConfigureAwait(true);
+                var singleFile = await ConvertToIFormFile(InputFile.File).ConfigureAwait(true);
+                
+                await SaveAttachment(singleFile, ignorePermissions).ConfigureAwait(true);
             }
         }
         catch (Exception ex)
@@ -408,9 +412,9 @@ public partial class SDKInputFile : SDKComponent
         }
     }
 
-    private async Task SaveAttachment(IBrowserFile itemFile,bool ignorePermissions, SDKInputFieldDTO item = null)
+    private async Task SaveAttachment(FormFile formFile,bool ignorePermissions, SDKInputFieldDTO item = null)
     {        
-        var formFile = await ConvertToIFormFile(itemFile).ConfigureAwait(true);
+        //var formFile = await ConvertToIFormFile(itemFile).ConfigureAwait(true);
         var fileUploadDTO = new SDKFileUploadDTO();
 
         if (SaveBytes)
