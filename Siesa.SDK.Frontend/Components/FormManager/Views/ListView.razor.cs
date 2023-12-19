@@ -948,16 +948,20 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         break;
                     case FieldTypes.DateField:
                     case FieldTypes.DateTimeField:
+
+                        DateTime selectedDate = searchValue;
+                        DateTime endDate = selectedDate.AddDays(1).AddSeconds(-1);
+                        
                         if (!fieldObj.IsNullable)
                         {
-                            tmpFilter = $"{fieldName} == DateTime.Parse(\"{searchValue}\")";
+                            tmpFilter = $"{fieldName} >= DateTime.Parse(\"{selectedDate:yyyy-MM-dd}\") && {fieldName} <= DateTime.Parse(\"{endDate:yyyy-MM-dd HH:mm:ss}\")";
                         }
                         else
                         {
                             tmpFilter =
-                                $"({fieldName} == null ? DateTime.MinValue : {fieldName}) == DateTime.Parse(\"{searchValue}\")";
+                                $"({fieldName} == null ? DateTime.MinValue : {fieldName}) >= DateTime.Parse(\"{selectedDate:yyyy-MM-dd}\") && " +
+                                $"({fieldName} == null ? DateTime.MinValue : {fieldName}) <= DateTime.Parse(\"{endDate:yyyy-MM-dd HH:mm:ss}\")";
                         }
-
                         break;
 
                     case FieldTypes.EntityField:
