@@ -1185,6 +1185,11 @@ namespace Siesa.SDK.Business
                                                 .Select(x => x.Message)
                                                 .SelectMany(msg => regex.Matches(msg).Cast<Match>())
                                                 .Select(match => match?.Groups[1].Value.Split('.').Last()).Distinct().FirstOrDefault();
+
+                            if (!string.IsNullOrEmpty(relatedTable))
+                            {
+                               relatedTable = ToPascalCase(relatedTable);
+                            }
                             response.Errors.Add(new OperationError() 
                             { 
                                 Message = $"Custom.Generic.Message.DeleteErrorWithRelations",
@@ -1204,6 +1209,36 @@ namespace Siesa.SDK.Business
                 response.Errors.Add(new OperationError() { Message = "Custom.Generic.Message.DeleteError" });
             }
             return response;
+        }
+        private static string ToCamelCase(string snakeCase)
+        {
+            if (string.IsNullOrEmpty(snakeCase))
+            {
+                return snakeCase;
+            }
+
+            var sb = new StringBuilder();
+            bool capitalizeNext = true;
+            bool firtStripe = true;
+            foreach (var c in snakeCase)
+            {
+                if (c.Equals('_'))
+                {
+                    if (firtStripe)
+                    {
+                        firtStripe = false;
+                        sb.Append(c);
+                    }
+                    capitalizeNext = true;
+                }
+                else
+                {
+                    sb.Append(capitalizeNext ? char.ToUpper(c) : char.ToLower(c));
+                    capitalizeNext = false;
+                }
+            }
+
+            return sb.ToString();
         }
 
         [SDKExposedMethod]
