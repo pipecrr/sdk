@@ -1,7 +1,3 @@
-// $.ajaxSetup({
-//     cache: false
-// });
-
 function ListViewInstance(dotnethelper, key){
     if(!window.dotnethelpersListView){
         var data = new Map();

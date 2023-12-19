@@ -68,20 +68,16 @@
     public bool ServerPagination {get;set;} = false;
     [Parameter]
     public string FilterSearch {get;set;} = "";
-
     [Parameter]
     public string FlexFilters {get;set;} = "";
-
     [Parameter]
     public string GuidFlex {get;set;} = "";
     [Parameter]
     public List<dynamic> ActionIcons {get;set;} = new List<dynamic>();
-
     [Parameter]
     public bool HasSearch {get;set;} = false;
     [Parameter]
     public bool IsMultiple {get;set;} = false;
-
     [Parameter]
     public int FlexRowId {get;set;} = 0;
     [Parameter]
@@ -104,7 +100,7 @@
     private string _blName = "BLFlex";
     private string _currentView = "create";
     private string _flexElementId;
-    private bool _flexDesigned;
+    private bool _flexDesigner;
     private Dictionary<string, object> FlexAttributes { get; set; } = new Dictionary<string, object>();
 
     private bool _isMounted = false;
@@ -221,10 +217,10 @@
         newFlexAttributes.Add("redirect_create", redirectCreate.ToString());
         newFlexAttributes.Add("show_table", ShowTable.ToString());
         newFlexAttributes.Add("is_sdk_flex", IsSdkFlex.ToString());
-        newFlexAttributes.Add("flex_designed", _flexDesigned.ToString());
+        newFlexAttributes.Add("flex_designer", _flexDesigner.ToString());
         if (_isSaveProduct)
         {
-            newFlexAttributes.Add("is_save_product", _isSaveProduct.ToString());    
+            newFlexAttributes.Add("is_save_product", _isSaveProduct.ToString());
         }
         if(_flexRowId != 0)
         {
@@ -323,15 +319,15 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        Init();
         if(Business != null)
         {
-            var response = await Business.Backend.Call("GetFlexDesigned");
+            var response = await Business.Backend.Call("GetFlexDesigner").ConfigureAwait(true);
             if(response != null && response.Success)
             {
-                _flexDesigned = response.Data;
-            }   
+                _flexDesigner = response.Data;
+            }
         }
+        Init();
         await base.OnParametersSetAsync().ConfigureAwait(true);
     }
 
