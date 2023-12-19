@@ -1188,7 +1188,7 @@ namespace Siesa.SDK.Business
 
                             if (!string.IsNullOrEmpty(relatedTable))
                             {
-                               relatedTable = ToPascalCase(relatedTable);
+                               relatedTable = ToCamelCase(relatedTable);
                             }
                             response.Errors.Add(new OperationError() 
                             { 
