@@ -21,28 +21,21 @@ else if (BusinessObj != null)
 
 @code {
     [Parameter] public string SubpanelFilter { get; set; }
-
     [Parameter] public Action<string> OnClickEdit { get; set; } = null;
     [Parameter] public Action<string> OnClickDetail { get; set; } = null;
     [Parameter] public Action<string,string> OnClickDelete { get; set; } = null;
     [Parameter] public Action OnClickNew { get; set; } = null;
-
     [Parameter] public bool AllowCreate { get; set; } = true;
     [Parameter] public bool AllowEdit { get; set; } = true;
     [Parameter] public bool AllowDelete { get; set; } = true;
     [Parameter] public bool AllowDetail { get; set; } = true;
     [Parameter] public Action<IList<dynamic>> OnSelectedRow { get; set; } = null;
-
     [Parameter] public string ViewdefName { get; set; } = "related_list";
-
     [Parameter] public IEnumerable<object> Data { get; set; } = null;
     [Parameter] public bool FromEntityField { get; set; } = false;
     [Parameter] public bool IsMultiple { get; set; } = false;
-
-    [Parameter] public IList<dynamic> SelectedItems { get; set; }
-    
+    [Parameter] public IList<dynamic> SelectedItems { get; set; }    
     [Parameter] public dynamic businessObj { get; set; }
-
     [Parameter] public bool IsEntityField {get; set;} 
     [Parameter] public bool ShowSearchForm { get; set; } = true;
     /// <summary>

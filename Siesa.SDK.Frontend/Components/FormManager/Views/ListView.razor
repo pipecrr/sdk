@@ -340,7 +340,7 @@ else
         FilterFlex = GetFilters(_base_filter);
     }
     @if(ShowList && UseFlex){
-        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@(CanEdit && AllowEdit)" CanDelete="@(CanDelete && AllowDelete)" CanDetail="@(CanDetail && AllowDetail)" EditingFlex="@_isEditingFlex" Take="@FlexTake" ServerPagination="@ServerPaginationFlex" FilterSearch="@FilterFlex" ActionIcons=@CustomActionIcons HasSearch=@HasSearchViewdef IsMultiple="@IsMultiple" FieldsHiddenList="@FieldsHiddenList" ShowActions="@_showActions" @ref="@_flexComponentRef" FromEntityField="@FromEntityField"></FlexComponent>
+        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@(CanEdit && AllowEdit)" CanDelete="@(CanDelete && AllowDelete)" CanDetail="@(CanDetail && AllowDetail)" EditingFlex="@_isEditingFlex" Take="@FlexTake" ServerPagination="@ServerPaginationFlex" FilterSearch="@FilterFlex" ActionIcons=@CustomActionIcons HasSearch=@HasSearchViewdef IsMultiple="@IsMultiple" FieldsHiddenList="@FieldsHiddenList" ShowActions="@_showActions" @ref="@_flexComponentRef" FromEntityField="@FromEntityField" IsSdkFlex="@_isSdkFlex"></FlexComponent>
 
         <ErrorsWindow MessagesDTO="@ErrorList"/>
 
