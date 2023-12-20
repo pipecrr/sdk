@@ -80,17 +80,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         protected virtual async Task CheckAccessPermission(bool disableAccessValidation = false)
         {
-            if(!BusinessName.Equals("BLAttachmentDetail"))
+            if(!BusinessName.Equals("BLAttachmentDetail", StringComparison.Ordinal))
             {
                 string businessName = BusinessName;
-                if(businessName.Equals("BLFlexProduct"))
+                if(businessName.Equals("BLFlexProduct", StringComparison.Ordinal))
                 {
                     businessName = "BLFlex";
                 }
-                CanAccess = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Access, AuthenticationService);
+                CanAccess = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Access, AuthenticationService).ConfigureAwait(true);
             }else
             {
-                CanAccess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService);
+                CanAccess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService).ConfigureAwait(true);
             }
 
             if(!disableAccessValidation && !CanAccess)

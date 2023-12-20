@@ -250,16 +250,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 bName = BusinessName;
             }
-            if(bName.Equals("BLFlexProduct")){
+            if(bName.Equals("BLFlexProduct", StringComparison.Ordinal)){
                 _isSdkFlex = true;
             }
             if (ResourceTag == null)
             {
                 ResourceTag = $"{BusinessName}.Plural";
             }
-            await CheckPermissions();
+            await CheckPermissions().ConfigureAwait(true);
             var metadata = GetViewdef(bName);
-            if (metadata == null || metadata == "")
+            if (string.IsNullOrEmpty(metadata))
             {
                 //ErrorMsg = "No hay definición para la vista de lista";
                 ErrorMsg = "Custom.Generic.ViewdefNotFound";
