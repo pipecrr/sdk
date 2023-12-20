@@ -25,6 +25,32 @@ namespace Siesa.SDK.Utils.Test
 
             dynamic Business = ActivatorUtilities.CreateInstance(serviceProvider, typeof(T));
             Business.SetProvider(serviceProvider);
+
+            using(var context = Business.CreateDbContext())
+            {
+                E00200_CompanyGroup companyGroup = new E00200_CompanyGroup()
+                {
+                    Rowid = 1,
+                    Id = "CompanyGroupTest",
+                    Name = "CompanyGroupTest"
+                };
+                E00220_User user = new E00220_User()
+                {
+                    Rowid = 1,
+                    Id = "UserTest",
+                    Path = "Path",
+                    Password = "Password",
+                    Name = "Test User",
+                    RowidCulture = 1,
+                    PasswordAssignmentDate = DateTime.Now,
+                    PasswordLastUpdate = DateTime.Now,
+                    ChangePasswordFirstLogin = false,
+                    StartDateValidity = DateTime.Now,
+                };
+                context.Add(companyGroup);
+                context.Add(user);
+                context.SaveChanges();
+            }
             return Business;
         }
         public static IServiceProvider GetProvider<T>(Type _tDbContext, Dictionary<string, List<string>> ListPermission)
