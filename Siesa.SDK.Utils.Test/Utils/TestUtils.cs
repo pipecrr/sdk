@@ -30,13 +30,11 @@ namespace Siesa.SDK.Utils.Test
             {
                 E00200_CompanyGroup companyGroup = new E00200_CompanyGroup()
                 {
-                    Rowid = 1,
                     Id = "CompanyGroupTest",
                     Name = "CompanyGroupTest"
                 };
                 E00220_User user = new E00220_User()
                 {
-                    Rowid = 1,
                     Id = "UserTest",
                     Path = "Path",
                     Password = "Password",
