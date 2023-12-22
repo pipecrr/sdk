@@ -29,37 +29,41 @@ namespace Siesa.SDK.Utils.Test
 
             using(SDKContext context = Business.CreateDbContext())
             {
-
                 var existCompanyGroup = context.Set<E00200_CompanyGroup>().Where(x => x.Rowid == 1).FirstOrDefault();
                 var existUser = context.Set<E00220_User>().Where(x => x.Rowid == 1).FirstOrDefault();
 
-                if (existCompanyGroup != null && existUser != null)
+                if (existCompanyGroup == null)
                 {
-                    return Business;
+                    context.Add(new E00200_CompanyGroup
+                    {
+                        Rowid = 1,
+                        Id = "CompanyGroupTest",
+                        Name = "CompanyGroupTest"
+                    });
+                }
+
+                if (existUser == null)
+                {
+                    context.Add(new E00220_User
+                    {
+                        Rowid = 1,
+                        Id = "UserTest",
+                        Path = "Path",
+                        Password = "Password",
+                        Name = "Test User",
+                        RowidCulture = 1,
+                        PasswordAssignmentDate = DateTime.Now,
+                        PasswordLastUpdate = DateTime.Now,
+                        ChangePasswordFirstLogin = false,
+                        StartDateValidity = DateTime.Now,
+                    });
+                }
+
+                if (context.ChangeTracker.HasChanges())
+                {
+                    context.SaveChanges(); 
                 }
                 
-                E00200_CompanyGroup companyGroup = new E00200_CompanyGroup()
-                {   
-                    Rowid = 1,
-                    Id = "CompanyGroupTest",
-                    Name = "CompanyGroupTest"
-                };
-                E00220_User user = new E00220_User()
-                {
-                    Rowid = 1,
-                    Id = "UserTest",
-                    Path = "Path",
-                    Password = "Password",
-                    Name = "Test User",
-                    RowidCulture = 1,
-                    PasswordAssignmentDate = DateTime.Now,
-                    PasswordLastUpdate = DateTime.Now,
-                    ChangePasswordFirstLogin = false,
-                    StartDateValidity = DateTime.Now,
-                };
-                context.Add(companyGroup);
-                context.Add(user);
-                context.SaveChanges();
             }
             return Business;
         }
