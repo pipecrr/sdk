@@ -22,8 +22,10 @@
     }    
 }else{
    <div class="text-center">
-        <p>@GetName()</p>
-        <a href="@Url" target="_blank"><SDKIcon Name="fa-file-arrow-down"/></a>
+        @* <p>@GetName()</p>
+        <a href="@Url" target="_blank"><SDKIcon Name="fa-file-arrow-down"/></a> *@
+        <p>@Name</p>
+        <SDKIcon Name="fa-file"></SDKIcon>
     </div>
 }
 
@@ -41,7 +43,7 @@
     public string BLName {get; set;}
 
     [Parameter]
-    public string Name {get; set;}
+    public string Name {get; set;} = "";
 
     [Parameter]
     public string Height {get; set;}

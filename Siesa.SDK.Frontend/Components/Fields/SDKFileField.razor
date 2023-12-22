@@ -11,9 +11,9 @@
 
 <div class="sdk-file-field @ParentStyleCss" id="@Id">
     @if(HasValue){
-        <SDKImageViewer Url="@UrlFile" Type="@TypeFile" Height="@HeightView" StyleCss="@ImgStyleCss"></SDKImageViewer>
+        <SDKImageViewer Name="@FileName" Url="@UrlFile" Type="@TypeFile" Height="@HeightView" StyleCss="@ImgStyleCss"></SDKImageViewer>
     }else{
-        <SDKImageViewer Type="@TypeFile" Height="@HeightView" StyleCss="@ImgStyleCss"></SDKImageViewer>
+        <SDKImageViewer Name="@FileName" Type="@TypeFile" Height="@HeightView" StyleCss="@ImgStyleCss"></SDKImageViewer>
     }
     @if(string.IsNullOrEmpty(View) || !View.Equals("DetailView")){
         <RadzenUpload 
@@ -62,6 +62,7 @@
     private int RowidAttachmentDetail {get; set;}
     private string ResourceChooseText {get; set;}
     private string UrlFile {get; set;}
+    private string FileName {get; set;}
 
     private SDKTypeFile TypeFile {get; set;} = SDKTypeFile.Image;
 
@@ -107,6 +108,7 @@
                         UrlFile = response.Data.Url;
                         TypeFile = response.Data.FileType.Contains("image") ? SDKTypeFile.Image : SDKTypeFile.Other;
                         HasValue = true;
+                        FileName = response.Data.FileName;
                     }
                 }
             }
@@ -185,18 +187,20 @@
             HasValue = true;
         }
 
-        if(Change != null){
+        if(Change != null)
+        {
             SDKUploadChangeEventArgsDTO sDKUploadChangeEventArgsDTO = new SDKUploadChangeEventArgsDTO();
             List<SDKFileInfoDTO> files = new List<SDKFileInfoDTO>();
             foreach (FileInfo item in args.Files){
                 SDKFileInfoDTO fileInfoDTO = new SDKFileInfoDTO();
+                FileName = item.Name;
+                
                 fileInfoDTO.Name = item.Name;
                 fileInfoDTO.Size = item.Size;
                 files.Add(fileInfoDTO);
             }
             sDKUploadChangeEventArgsDTO.Files = files;
             Change(sDKUploadChangeEventArgsDTO);
-
         }
     }
 
