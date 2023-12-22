@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using Siesa.SDK.Shared.DTOS;
 using Siesa.SDK.Entities;
 
+
 namespace Siesa.SDK.Utils.Test
 {
     public class TestUtils
@@ -26,15 +27,26 @@ namespace Siesa.SDK.Utils.Test
             dynamic Business = ActivatorUtilities.CreateInstance(serviceProvider, typeof(T));
             Business.SetProvider(serviceProvider);
 
-            using(var context = Business.CreateDbContext())
+            using(SDKContext context = Business.CreateDbContext())
             {
-                E00200_CompanyGroup companyGroup = new E00200_CompanyGroup()
+
+                var existCompanyGroup = context.Set<E00200_CompanyGroup>().Where(x => x.Rowid == 1).FirstOrDefault();
+                var existUser = context.Set<E00220_User>().Where(x => x.Rowid == 1).FirstOrDefault();
+
+                if (existCompanyGroup != null && existUser != null)
                 {
+                    return Business;
+                }
+                
+                E00200_CompanyGroup companyGroup = new E00200_CompanyGroup()
+                {   
+                    Rowid = 1,
                     Id = "CompanyGroupTest",
                     Name = "CompanyGroupTest"
                 };
                 E00220_User user = new E00220_User()
                 {
+                    Rowid = 1,
                     Id = "UserTest",
                     Path = "Path",
                     Password = "Password",
@@ -54,6 +66,8 @@ namespace Siesa.SDK.Utils.Test
         public static IServiceProvider GetProvider<T>(Type _tDbContext, Dictionary<string, List<string>> ListPermission)
         {
             var ServiceConf = Options.Create(new ServiceConfiguration());
+
+            string InMemoryTestGuid  = Guid.NewGuid().ToString();
 
             var ActionsList = new List<string>()
             {
@@ -139,7 +153,7 @@ namespace Siesa.SDK.Utils.Test
             mockLoggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(() => mockLogger.Object);
             var mockDbFactory = new Mock<IDbContextFactory<SDKContext>>();
             mockDbFactory.Setup(f => f.CreateDbContext())
-                .Returns(() => (SDKContext)Activator.CreateInstance(_tDbContext, new DbContextOptionsBuilder<SDKContext>().UseInMemoryDatabase("InMemoryTest").Options));
+                .Returns(() => (SDKContext)Activator.CreateInstance(_tDbContext, new DbContextOptionsBuilder<SDKContext>().UseInMemoryDatabase($"InMemoryTest_{InMemoryTestGuid}").Options));
 
 
             var services = new ServiceCollection();
