@@ -20,9 +20,9 @@ namespace Siesa.SDK.Utils.Test
 {
     public class TestUtils
     {
-        public static T GetBusiness<T>(Type DbContext, Dictionary<string, List<string>> ListPermission = null)
+        public static T GetBusiness<T>(Type DbContext, Dictionary<string, List<string>> ListPermission = null, string BdName = "")
         {
-            var serviceProvider = GetProvider<T>(DbContext, ListPermission);
+            var serviceProvider = GetProvider<T>(DbContext, ListPermission, BdName);
 
             dynamic Business = ActivatorUtilities.CreateInstance(serviceProvider, typeof(T));
             Business.SetProvider(serviceProvider);
@@ -63,11 +63,14 @@ namespace Siesa.SDK.Utils.Test
             }
             return Business;
         }
-        public static IServiceProvider GetProvider<T>(Type _tDbContext, Dictionary<string, List<string>> ListPermission)
+        public static IServiceProvider GetProvider<T>(Type _tDbContext, Dictionary<string, List<string>> ListPermission, string BdName = "")
         {
             var ServiceConf = Options.Create(new ServiceConfiguration());
 
-            string InMemoryTestGuid  = Guid.NewGuid().ToString();
+            if (string.IsNullOrEmpty(BdName))
+            {
+                BdName  = Guid.NewGuid().ToString();
+            }
 
             var ActionsList = new List<string>()
             {
@@ -153,7 +156,7 @@ namespace Siesa.SDK.Utils.Test
             mockLoggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(() => mockLogger.Object);
             var mockDbFactory = new Mock<IDbContextFactory<SDKContext>>();
             mockDbFactory.Setup(f => f.CreateDbContext())
-                .Returns(() => (SDKContext)Activator.CreateInstance(_tDbContext, new DbContextOptionsBuilder<SDKContext>().UseInMemoryDatabase($"InMemoryTest_{InMemoryTestGuid}").Options));
+                .Returns(() => (SDKContext)Activator.CreateInstance(_tDbContext, new DbContextOptionsBuilder<SDKContext>().UseInMemoryDatabase($"InMemoryTest_{BdName}").Options));
 
 
             var services = new ServiceCollection();
