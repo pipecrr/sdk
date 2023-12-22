@@ -15,47 +15,66 @@ using System.Collections.Generic;
 using Siesa.SDK.Shared.DTOS;
 using Siesa.SDK.Entities;
 
+
 namespace Siesa.SDK.Utils.Test
 {
     public class TestUtils
     {
-        public static T GetBusiness<T>(Type DbContext, Dictionary<string, List<string>> ListPermission = null)
+        public static T GetBusiness<T>(Type DbContext, Dictionary<string, List<string>> ListPermission = null, string BdName = "")
         {
-            var serviceProvider = GetProvider<T>(DbContext, ListPermission);
+            var serviceProvider = GetProvider<T>(DbContext, ListPermission, BdName);
 
             dynamic Business = ActivatorUtilities.CreateInstance(serviceProvider, typeof(T));
             Business.SetProvider(serviceProvider);
 
-            using(var context = Business.CreateDbContext())
+            using(SDKContext context = Business.CreateDbContext())
             {
-                E00200_CompanyGroup companyGroup = new E00200_CompanyGroup()
+                var existCompanyGroup = context.Set<E00200_CompanyGroup>().Where(x => x.Rowid == 1).FirstOrDefault();
+                var existUser = context.Set<E00220_User>().Where(x => x.Rowid == 1).FirstOrDefault();
+
+                if (existCompanyGroup == null)
                 {
-                    Rowid = 1,
-                    Id = "CompanyGroupTest",
-                    Name = "CompanyGroupTest"
-                };
-                E00220_User user = new E00220_User()
+                    context.Add(new E00200_CompanyGroup
+                    {
+                        Rowid = 1,
+                        Id = "CompanyGroupTest",
+                        Name = "CompanyGroupTest"
+                    });
+                }
+
+                if (existUser == null)
                 {
-                    Rowid = 1,
-                    Id = "UserTest",
-                    Path = "Path",
-                    Password = "Password",
-                    Name = "Test User",
-                    RowidCulture = 1,
-                    PasswordAssignmentDate = DateTime.Now,
-                    PasswordLastUpdate = DateTime.Now,
-                    ChangePasswordFirstLogin = false,
-                    StartDateValidity = DateTime.Now,
-                };
-                context.Add(companyGroup);
-                context.Add(user);
-                context.SaveChanges();
+                    context.Add(new E00220_User
+                    {
+                        Rowid = 1,
+                        Id = "UserTest",
+                        Path = "Path",
+                        Password = "Password",
+                        Name = "Test User",
+                        RowidCulture = 1,
+                        PasswordAssignmentDate = DateTime.Now,
+                        PasswordLastUpdate = DateTime.Now,
+                        ChangePasswordFirstLogin = false,
+                        StartDateValidity = DateTime.Now,
+                    });
+                }
+
+                if (context.ChangeTracker.HasChanges())
+                {
+                    context.SaveChanges(); 
+                }
+                
             }
             return Business;
         }
-        public static IServiceProvider GetProvider<T>(Type _tDbContext, Dictionary<string, List<string>> ListPermission)
+        public static IServiceProvider GetProvider<T>(Type _tDbContext, Dictionary<string, List<string>> ListPermission, string BdName = "")
         {
             var ServiceConf = Options.Create(new ServiceConfiguration());
+
+            if (string.IsNullOrEmpty(BdName))
+            {
+                BdName  = Guid.NewGuid().ToString();
+            }
 
             var ActionsList = new List<string>()
             {
@@ -141,7 +160,7 @@ namespace Siesa.SDK.Utils.Test
             mockLoggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(() => mockLogger.Object);
             var mockDbFactory = new Mock<IDbContextFactory<SDKContext>>();
             mockDbFactory.Setup(f => f.CreateDbContext())
-                .Returns(() => (SDKContext)Activator.CreateInstance(_tDbContext, new DbContextOptionsBuilder<SDKContext>().UseInMemoryDatabase("InMemoryTest").Options));
+                .Returns(() => (SDKContext)Activator.CreateInstance(_tDbContext, new DbContextOptionsBuilder<SDKContext>().UseInMemoryDatabase($"InMemoryTest_{BdName}").Options));
 
 
             var services = new ServiceCollection();
