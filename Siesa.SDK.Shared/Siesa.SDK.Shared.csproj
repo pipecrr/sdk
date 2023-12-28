@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFrameworks>net7.0;net8.0</TargetFrameworks>
 		<VersionSuffix>dev</VersionSuffix>
 		<VersionPrefix>1.0.0</VersionPrefix>
 		<NoWarn>8632,8669,1591</NoWarn>
@@ -31,10 +31,16 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="HtmlAgilityPack" Version="1.11.53" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.11" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Condition="'$(TargetFramework)' == 'net7.0'" Version="7.0.11" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Condition="'$(TargetFramework)' == 'net7.0'" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Condition="'$(TargetFramework)' == 'net7.0'" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Condition="'$(TargetFramework)' == 'net7.0'" Version="7.0.0" />
+		
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Condition="'$(TargetFramework)' == 'net8.0'" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Condition="'$(TargetFramework)' == 'net8.0'" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Condition="'$(TargetFramework)' == 'net8.0'" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Condition="'$(TargetFramework)' == 'net8.0'" Version="8.0.0" />
+
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.2" />
 		<PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.15" />
